@@ -429,18 +429,18 @@ body {
 .tl-dot.promo { background:var(--accent); box-shadow:0 0 6px var(--accent); }
 .tl-dot.fire { background:#ef4444; border-color:#ef4444; box-shadow:0 0 6px #ef4444; }
 .tl-dot.gold { background:#f59e0b; border-color:#f59e0b; box-shadow:0 0 6px #f59e0b; }
-.tl-content { padding:0 0 8px 6px; }
+.tl-content { padding:0 0 4px 6px; }
 .tl-year-row { display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
 .tl-year-label { font-size:9px; font-weight:700; color:var(--accent); }
 .tl-event { font-size:11px; font-weight:600; color:var(--text); line-height:1.3; }
 .tl-rank { font-size:9px; color:var(--text-muted); }
-.tl-stats { display:flex; gap:4px; flex-wrap:wrap; margin-top:2px; }
-.tl-stat { font-size:8px; color:var(--text-muted); background:var(--bg-secondary); padding:1px 4px; border-radius:3px; }
+.tl-stats { display:flex; gap:3px; flex-wrap:wrap; margin-top:1px; }
+.tl-stat { font-size:8px; color:var(--text-muted); background:var(--bg-secondary); padding:1px 3px; border-radius:3px; }
 .tl-stat .pos { color:var(--green); font-weight:700; }
 .tl-stat .neg { color:var(--danger); font-weight:700; }
 .tl-chart { margin-top:8px; padding:6px 8px; background:var(--bg-secondary); border-radius:var(--radius-sm); }
 .tl-chart-title { font-size:10px; color:var(--text-muted); margin-bottom:4px; text-align:center; }
-.tl-bars { display:flex; align-items:flex-end; gap:3px; height:32px; padding:0 2px; }
+.tl-bars { display:flex; align-items:flex-end; gap:3px; height:28px; padding:0 2px; }
 .tl-bar { flex:1; border-radius:2px 2px 0 0; min-height:2px; position:relative; transition:height 0.3s; }
 .tl-bar:hover::after { content:attr(data-tip); position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--bg-card); color:var(--text); padding:2px 6px; border-radius:4px; font-size:9px; white-space:nowrap; box-shadow:var(--shadow-sm); z-index:10; }
 .tl-bar-labels { display:flex; gap:3px; padding:2px 0 0; }
@@ -3796,16 +3796,8 @@ function showEnding() {
   if (propCount > 0) { totalAsset += propCount * 2000000; }
   var startHealth = state._yearlyRecords.length > 0 ? state._yearlyRecords[0].health : 80;
 
-  // Life Summary section
-  var html = '<div style="background:rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin:0 16px 16px;border:1px solid rgba(255,255,255,0.08)">';
-  html += '<div style="font-size:15px;font-weight:700;color:#fbbf24;margin-bottom:16px;text-align:center;letter-spacing:2px">📖 人生总结</div>';
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
-  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">💰</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">累计收入</div><div style="font-size:16px;font-weight:700;color:#fbbf24">¥' + (cumIncome >= 10000 ? Math.round(cumIncome/10000) + '万' : cumIncome.toLocaleString()) + '</div></div>';
-  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">💼</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">最终月薪</div><div style="font-size:16px;font-weight:700;color:#fff">¥' + state.salary.toLocaleString() + '</div></div>';
-  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">🏦</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">总资产</div><div style="font-size:16px;font-weight:700;color:#10b981">¥' + (totalAsset >= 10000 ? Math.round(totalAsset/10000) + '万' : totalAsset.toLocaleString()) + '</div></div>';
-  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">❤️</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">健康</div><div style="font-size:16px;font-weight:700;color:#ef4444">' + startHealth + '→' + state.health + '</div></div>';
-  html += '</div></div>';
-  html += '<div style="text-align:center;margin-bottom:8px"><div style="font-size:13px;color:#b0a590;margin-bottom:12px">🎯 十年过去，这就是你的职场结局——</div></div>';
+  // Start ending card
+  var html = '<div style="text-align:center;margin-bottom:8px"><div style="font-size:13px;color:#b0a590;margin-bottom:8px">🎯 十年过去，这就是你的职场结局——</div></div>';
   html += '<div class="id-card ' + themeClass + '">';
   html += '<div class="id-card-badge">平行人生 · 职场鉴定报告</div>';
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
