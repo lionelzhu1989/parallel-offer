@@ -1128,25 +1128,33 @@ body.dark-mode .entry-btn {
   font-size:12px; color:var(--text-muted); text-align:center;
   margin-bottom:18px;
 }
-.avatar-section-label {
+.char-section-label {
   font-size:13px; font-weight:600; color:var(--text-secondary);
   margin-bottom:8px;
 }
-.avatar-grid {
-  display:grid; grid-template-columns:repeat(5,1fr); gap:8px;
+.char-cards-wrap {
+  display:flex; flex-wrap:wrap; gap:8px;
   margin-bottom:18px;
+  max-height:240px; overflow-y:auto;
+  padding-right:4px;
 }
-.avatar-option {
-  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
-  font-size:32px; border-radius:14px; cursor:pointer;
+.char-cards-wrap::-webkit-scrollbar { width:4px; }
+.char-cards-wrap::-webkit-scrollbar-thumb { background:#d1d5db; border-radius:4px; }
+.char-card {
+  width:calc(25% - 6px); min-width:70px;
+  display:flex; flex-direction:column; align-items:center;
+  padding:8px 2px 6px; border-radius:12px; cursor:pointer;
   border:2px solid transparent; background:var(--bg-page);
-  transition:all 0.2s ease;
+  transition:all 0.2s ease; text-align:center;
 }
-.avatar-option:hover { transform:scale(1.08); }
-.avatar-option.selected {
-  border-color:var(--primary); background:#ede9fe;
-  box-shadow:0 0 0 3px rgba(99,102,241,0.2);
+.char-card:hover { transform:scale(1.05); border-color:#e0e0e0; }
+.char-card.selected {
+  border-color:var(--primary); background:linear-gradient(135deg,#ede9fe,#f0f0ff);
+  box-shadow:0 2px 10px rgba(99,102,241,0.2);
 }
+.char-card-emoji { font-size:28px; line-height:1; margin-bottom:4px; }
+.char-card-name { font-size:10px; font-weight:700; color:var(--text-primary); line-height:1.2; margin-bottom:2px; }
+.char-card-tag { font-size:8px; color:var(--text-muted); line-height:1.2; padding:0 2px; }
 .char-input-group { margin-bottom:14px; }
 .char-input-label {
   font-size:12px; font-weight:600; color:var(--text-secondary);
@@ -2751,7 +2759,7 @@ var _shownRandomEvents = [];
 
 function initState() {
   state = {
-    track: null, year: 0, salary: 0, rankIdx: 0, playerName: '', playerAvatar: '', playerMotto: '',
+    track: null, year: 0, salary: 0, rankIdx: 0, playerName: '', playerAvatar: '', playerMotto: '', playerType: '',
     skill: 30, network: 20, health: 80, hair: 60,
     money: 0, persona: null, talents: [],
     _shownEvents: {}, _shownRandom: [], _yearlyRecords: [],
@@ -3101,13 +3109,18 @@ function showCharacterCreator() {
   setTimeout(function() { var inp = document.getElementById('charNameInput'); if (inp) inp.focus(); }, 300);
 }
 
-function selectAvatar(avatar, el) {
-  _selectedAvatar = avatar;
-  var grid = el.parentElement;
-  grid.querySelectorAll('.avatar-option').forEach(function(o) { o.classList.remove('selected'); });
+function selectCharType(idx, el) {
+  _selectedCharIdx = idx;
+  _selectedAvatar = _charTypes[idx].emoji;
+  var wrap = el.parentElement;
+  wrap.querySelectorAll('.char-card').forEach(function(o) { o.classList.remove('selected'); });
   el.classList.add('selected');
   var av = document.getElementById('charPreviewAvatar');
-  if (av) av.textContent = avatar;
+  if (av) av.textContent = _selectedAvatar;
+  var pn = document.getElementById('charPreviewName');
+  if (pn) pn.textContent = _charTypes[idx].name.replace('\u2022 ', '');
+  var pm = document.getElementById('charPreviewMotto');
+  if (pm) pm.textContent = _charTypes[idx].desc;
 }
 
 function onCharInputChange() {
@@ -3117,8 +3130,8 @@ function onCharInputChange() {
   _playerMotto = mottoInput ? mottoInput.value.trim() : '';
   var pn = document.getElementById('charPreviewName');
   var pm = document.getElementById('charPreviewMotto');
-  if (pn) pn.textContent = _playerName || '你的角色';
-  if (pm) pm.textContent = _playerMotto || '等待你来定义';
+  if (pn) pn.textContent = _playerName || _charTypes[_selectedCharIdx].name.replace('\u2022 ', '');
+  if (pm) pm.textContent = _playerMotto || _charTypes[_selectedCharIdx].desc;
   var btn = document.getElementById('charStartBtn');
   if (btn) btn.disabled = !_playerName;
 }
@@ -3128,6 +3141,7 @@ function confirmCharacter() {
   state.playerName = _playerName;
   state.playerAvatar = _selectedAvatar;
   state.playerMotto = _playerMotto || '';
+  state.playerType = _charTypes[_selectedCharIdx].tag + ' ' + _charTypes[_selectedCharIdx].name.replace('\u2022 ', '');
   startGame();
 }
 
@@ -3984,7 +3998,8 @@ function showEnding() {
   if (state.playerName) {
     html += '<div style="margin:6px 0 2px;font-size:20px">' + state.playerAvatar + '</div>';
     html += '<div style="font-size:16px;font-weight:700;margin-bottom:2px">' + state.playerName + '</div>';
-    if (state.playerMotto) html += '<div style="font-size:11px;color:rgba(0,0,0,0.4);margin-bottom:4px">「' + state.playerMotto + '」</div>';
+    if (state.playerMotto) html += '<div style="font-size:11px;color:rgba(0,0,0,0.4);margin-bottom:2px">「' + state.playerMotto + '」</div>';
+    if (state.playerType) html += '<div style="font-size:10px;color:rgba(99,102,241,0.8);margin-bottom:4px;font-weight:600">' + state.playerType + '</div>';
   }
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
   html += '<div class="id-card-ending">' + ending.name + '</div>';
@@ -4624,7 +4639,12 @@ function generatePoster() {
       ctx.fillStyle = 'rgba(255,255,255,0.7)';
       ctx.fillText('「' + state.playerMotto + '」', w/2, posterY + 72);
     }
-    posterY += state.playerMotto ? 100 : 70;
+    if (state.playerType) {
+      ctx.font = 'bold 18px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillStyle = '#6366f1';
+      ctx.fillText(state.playerType, w/2, posterY + (state.playerMotto ? 100 : 80));
+    }
+    posterY += state.playerMotto ? (state.playerType ? 130 : 100) : (state.playerType ? 110 : 70);
   }
 
   // Get ending
