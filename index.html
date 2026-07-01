@@ -2302,9 +2302,11 @@ function showIntro() {
 
 function selectTrack(id, el) {
   _selectedTrack = id;
-  var cards = el.parentElement.querySelectorAll('.track-card');
-  cards.forEach(function(c) { c.classList.remove('selected'); });
-  el.classList.add('selected');
+  if (el && el.parentElement) {
+    var cards = el.parentElement.querySelectorAll('.track-card');
+    cards.forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+  }
   document.getElementById('step1Btn').disabled = false;
 }
 
@@ -2953,7 +2955,7 @@ function chooseRandom(optIdx) {
   state.health = clamp(state.health, 0, healthMax);
   state.hair = clamp(state.hair, 0, 100);
 
-  state.year++;;
+  state.year++;
   
       // Apply option buff/debuff
       if (opt.__buff) {
@@ -4058,10 +4060,10 @@ function renderHospital() {
 
 function hospitalAction(action) {
   var days = state.year - state._hospitalYear;
-  if (action === 'buy_heal') { state.money -= 30000; state.health = clamp(state.health + 25, 0, 100); showToast('💊 进口药效果显著！', 'success'); }
-  else if (action === 'buy_basic') { state.money -= 10000; state.health = clamp(state.health + 10, 0, 100); showToast('💊 基础治疗完成', 'success'); }
-  else if (action === 'endure') { var r = randInt(3, 12); state.health = clamp(state.health + r, 0, 100); showToast('😰 硬抗了...健康+' + r, r >= 8 ? 'success' : 'warning'); }
-  else if (action === 'wait') { state.health = clamp(state.health + randInt(2, 8), 0, 100); showToast('💤 躺了一天...'); }
+  if (action === 'buy_heal') { state.money -= 30000; state.health = clamp(state.health + 25, 0, 100); toast('💊 进口药效果显著！'); }
+  else if (action === 'buy_basic') { state.money -= 10000; state.health = clamp(state.health + 10, 0, 100); toast('💊 基础治疗完成'); }
+  else if (action === 'endure') { var r = randInt(3, 12); state.health = clamp(state.health + r, 0, 100); toast('😰 硬抗了...健康+' + r, r >= 8 ? 'success' : 'warning'); }
+  else if (action === 'wait') { state.health = clamp(state.health + randInt(2, 8), 0, 100); toast('💤 躺了一天...'); }
   else if (action.startsWith('evt_')) {
     var oi = parseInt(action.replace('evt_', ''));
     var o = HOSPITAL_EVENTS[days % HOSPITAL_EVENTS.length].opts[oi];
@@ -4073,7 +4075,7 @@ function hospitalAction(action) {
   }
   state.year++;
   if (state.year > 10) { state._playEnded = true; showEnding(); return; }
-  if (state.health > 20 && Math.random() < 0.4) { state._isHospitalized = false; showToast('🎉 你出院了！', 'success'); render(); return; }
+  if (state.health > 20 && Math.random() < 0.4) { state._isHospitalized = false; toast('🎉 你出院了！'); render(); return; }
   applyYearlyEffects();
   render();
 }
@@ -4137,7 +4139,7 @@ function showYearReview(event, opt, before) {
 
 function closeYearReview() {
   var ov = document.getElementById('yearReviewOverlay');
-  if (ov) ov.parentElement.remove();
+  if (ov && ov.parentElement) ov.parentElement.remove();
 
   // Maybe trigger random event
   if (Math.random() < 0.35 && state.year <= 9) {
@@ -4369,7 +4371,7 @@ function showDeathScreen() {
   html += '<div class="death-title">' + d.title + '</div>';
   html += '<div class="death-desc">' + d.desc + '</div>';
   html += '<div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px">第' + state.year + '年 · ' + CAREER_TRACKS[state.track].label + '</div>';
-  html += '<button class="death-btn" onclick="document.getElementById(\'deathOverlay\').parentElement.remove();showIntro()">🔄 重新开始</button>';
+  html += '<button class="death-btn" onclick="var _do=document.getElementById(\'deathOverlay\');if(_do&&_do.parentElement)_do.parentElement.remove();showIntro()">🔄 重新开始</button>';
   html += '</div></div>';
 
   var ov = document.createElement('div');
