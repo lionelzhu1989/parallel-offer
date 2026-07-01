@@ -1104,12 +1104,89 @@ body.dark-mode .entry-btn {
 @keyframes slideDown { from{opacity:0;transform:translateY(-100%)} to{opacity:1;transform:translateY(0)} }
 @keyframes modalFadeIn { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
 #importModal > div { animation: modalFadeIn 0.3s ease; }
+
+/* ===== Character Creator ===== */
+.char-creator-overlay {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.85); z-index:600;
+  display:flex; align-items:center; justify-content:center;
+  animation: fadeIn 0.3s ease;
+}
+.char-creator-box {
+  background:var(--bg-card); border-radius:var(--radius-xl);
+  padding:28px 22px; width:90%; max-width:380px;
+  box-shadow:var(--shadow-lg);
+  max-height:90vh; overflow-y:auto;
+}
+.char-creator-title {
+  font-size:20px; font-weight:800; text-align:center;
+  background:linear-gradient(135deg,#6366f1,#a855f7);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  margin-bottom:4px;
+}
+.char-creator-sub {
+  font-size:12px; color:var(--text-muted); text-align:center;
+  margin-bottom:18px;
+}
+.avatar-section-label {
+  font-size:13px; font-weight:600; color:var(--text-secondary);
+  margin-bottom:8px;
+}
+.avatar-grid {
+  display:grid; grid-template-columns:repeat(5,1fr); gap:8px;
+  margin-bottom:18px;
+}
+.avatar-option {
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  font-size:32px; border-radius:14px; cursor:pointer;
+  border:2px solid transparent; background:var(--bg-page);
+  transition:all 0.2s ease;
+}
+.avatar-option:hover { transform:scale(1.08); }
+.avatar-option.selected {
+  border-color:var(--primary); background:#ede9fe;
+  box-shadow:0 0 0 3px rgba(99,102,241,0.2);
+}
+.char-input-group { margin-bottom:14px; }
+.char-input-label {
+  font-size:12px; font-weight:600; color:var(--text-secondary);
+  margin-bottom:4px; display:block;
+}
+.char-input {
+  width:100%; padding:10px 14px; border:1.5px solid var(--border);
+  border-radius:var(--radius-md); font-size:14px; font-weight:500;
+  background:var(--bg-page); color:var(--text-primary);
+  outline:none; transition:border-color 0.2s;
+  box-sizing:border-box;
+}
+.char-input:focus { border-color:var(--primary); }
+.char-input::placeholder { color:var(--text-muted); font-weight:400; }
+.char-preview {
+  display:flex; align-items:center; gap:12px;
+  background:linear-gradient(135deg,#ede9fe,#f0fdf4);
+  border-radius:var(--radius-md); padding:12px 16px;
+  margin-bottom:18px;
+}
+.char-preview-avatar { font-size:36px; }
+.char-preview-info { flex:1; }
+.char-preview-name { font-size:16px; font-weight:700; color:var(--text-primary); }
+.char-preview-motto { font-size:11px; color:var(--text-muted); margin-top:2px; }
+.char-start-btn {
+  width:100%; padding:14px; border:none; border-radius:var(--radius-md);
+  background:linear-gradient(135deg,#6366f1,#a855f7);
+  color:#fff; font-size:16px; font-weight:700; cursor:pointer;
+  transition:all 0.2s; box-shadow:0 4px 14px rgba(99,102,241,0.3);
+}
+.char-start-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,0.4); }
+.char-start-btn:active { transform:translateY(0); }
+.char-start-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
 </style>
 </head>
 <body>
 <div class="top-bar" id="topBar">
   <div class="main-row">
     <span class="year-label" id="yearLabel">准备开始</span>
+    <span class="player-info" id="playerInfo" style="display:none;font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;background:rgba(255,255,255,0.12);padding:3px 10px;border-radius:16px;"></span>
     <div id="undoIndicator" style="display:none;font-size:11px;color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:12px">↩️ <span id="undoCount">3</span>/3</div>
   </div>
   <div class="year-progress-wrap" id="yearProgress" style="display:none">
@@ -2674,7 +2751,7 @@ var _shownRandomEvents = [];
 
 function initState() {
   state = {
-    track: null, year: 0, salary: 0, rankIdx: 0,
+    track: null, year: 0, salary: 0, rankIdx: 0, playerName: '', playerAvatar: '', playerMotto: '',
     skill: 30, network: 20, health: 80, hair: 60,
     money: 0, persona: null, talents: [],
     _shownEvents: {}, _shownRandom: [], _yearlyRecords: [],
@@ -2718,6 +2795,16 @@ function updateTopBar() {
   ab.style.display = 'flex';
   yp.style.display = 'block';
   yl.textContent = '第' + state.year + '年 / 10年';
+  // Show player avatar + name
+  var pi = document.getElementById('playerInfo');
+  if (pi) {
+    if (state.playerName) {
+      pi.innerHTML = state.playerAvatar + ' ' + state.playerName;
+      pi.style.display = '';
+    } else {
+      pi.style.display = 'none';
+    }
+  }
   if (ui) { ui.style.display = 'inline-block'; var uc = document.getElementById('undoCount'); if(uc) uc.textContent = Math.max(0, state._undoMax - state._undoUsed); }
   var ypf = document.getElementById('yearProgressFill');
   if (ypf) ypf.style.width = (state.year / 10 * 100) + '%';
@@ -2946,7 +3033,7 @@ function showTalentDraw() {
   html += '</div>';
   html += '<div class="talent-hint" id="talentHint">已选择 0/3 张天赋卡</div>';
   html += '<div class="setup-back"><button onclick="showSetupStep(2)">← 返回重选属性</button></div>';
-  html += '<button class="confirm-btn" id="step3Btn" disabled onclick="startGame()">🎮 开始平行人生</button></div>';
+  html += '<button class="confirm-btn" id="step3Btn" disabled onclick="showCharacterCreator()">🎭 设置角色</button></div>';
   main.innerHTML = html;
 }
 
@@ -2963,6 +3050,85 @@ function toggleTalent(id) {
   document.getElementById('talentHint').textContent = '已选择 ' + _talentSelections.length + '/3 张天赋卡';
   var btn = document.getElementById('step3Btn');
   if (btn) btn.disabled = _talentSelections.length !== 3;
+}
+
+// ====== Character Creator ======
+var _selectedAvatar = '';
+var _playerName = '';
+var _playerMotto = '';
+
+function showCharacterCreator() {
+  var avatars = ['🧑‍💻','👩‍💻','🧑‍🎨','👩‍🎨','🧑‍🔬','👩‍🔬','🧑‍🏫','👩‍🏫','🧑‍⚕️','👩‍⚕️',
+                 '🧑‍🍳','👩‍🍳','🧑‍🚀','👩‍🚀','🦸‍♂️','🦸‍♀️','🧙‍♂️','🧙‍♀️','🧑‍🎤','👩‍🎤'];
+  _selectedAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+  _playerName = '';
+  _playerMotto = '';
+  var main = document.getElementById('mainContent');
+  var html = '<div class="char-creator-overlay" onclick="if(event.target===this)this.remove()">';
+  html += '<div class="char-creator-box">';
+  html += '<div class="char-creator-title">🎭 创建你的角色</div>';
+  html += '<div class="char-creator-sub">给你的平行人生取个名字，选一个代表形象</div>';
+  // Avatar grid
+  html += '<div class="avatar-section-label">选择头像</div>';
+  html += '<div class="avatar-grid">';
+  for (var i = 0; i < avatars.length; i++) {
+    var sel = avatars[i] === _selectedAvatar ? ' selected' : '';
+    html += '<div class="avatar-option' + sel + '" data-avatar="' + avatars[i] + '" onclick="selectAvatar(\'' + avatars[i] + '\', this)">' + avatars[i] + '</div>';
+  }
+  html += '</div>';
+  // Name input
+  html += '<div class="char-input-group">';
+  html += '<label class="char-input-label">角色昵称</label>';
+  html += '<input class="char-input" id="charNameInput" placeholder="给自己起个名字吧" maxlength="8" oninput="onCharInputChange()">';
+  html += '</div>';
+  // Motto input
+  html += '<div class="char-input-group">';
+  html += '<label class="char-input-label">人生宣言 <span style="font-weight:400;color:var(--text-muted)">(选填)</span></label>';
+  html += '<input class="char-input" id="charMottoInput" placeholder="比如：我要改变世界" maxlength="20" oninput="onCharInputChange()">';
+  html += '</div>';
+  // Preview
+  html += '<div class="char-preview" id="charPreview">';
+  html += '<div class="char-preview-avatar" id="charPreviewAvatar">' + _selectedAvatar + '</div>';
+  html += '<div class="char-preview-info">';
+  html += '<div class="char-preview-name" id="charPreviewName">你的角色</div>';
+  html += '<div class="char-preview-motto" id="charPreviewMotto">等待你来定义</div>';
+  html += '</div></div>';
+  // Start button
+  html += '<button class="char-start-btn" id="charStartBtn" disabled onclick="confirmCharacter()">🎮 开始平行人生</button>';
+  html += '</div></div>';
+  main.innerHTML = html;
+  // Auto-focus name input
+  setTimeout(function() { var inp = document.getElementById('charNameInput'); if (inp) inp.focus(); }, 300);
+}
+
+function selectAvatar(avatar, el) {
+  _selectedAvatar = avatar;
+  var grid = el.parentElement;
+  grid.querySelectorAll('.avatar-option').forEach(function(o) { o.classList.remove('selected'); });
+  el.classList.add('selected');
+  var av = document.getElementById('charPreviewAvatar');
+  if (av) av.textContent = avatar;
+}
+
+function onCharInputChange() {
+  var nameInput = document.getElementById('charNameInput');
+  var mottoInput = document.getElementById('charMottoInput');
+  _playerName = nameInput ? nameInput.value.trim() : '';
+  _playerMotto = mottoInput ? mottoInput.value.trim() : '';
+  var pn = document.getElementById('charPreviewName');
+  var pm = document.getElementById('charPreviewMotto');
+  if (pn) pn.textContent = _playerName || '你的角色';
+  if (pm) pm.textContent = _playerMotto || '等待你来定义';
+  var btn = document.getElementById('charStartBtn');
+  if (btn) btn.disabled = !_playerName;
+}
+
+function confirmCharacter() {
+  if (!_playerName) { toast('请先输入角色昵称'); return; }
+  state.playerName = _playerName;
+  state.playerAvatar = _selectedAvatar;
+  state.playerMotto = _playerMotto || '';
+  startGame();
 }
 
 // ====== Start Game ======
@@ -3815,6 +3981,11 @@ function showEnding() {
   var html = '<div style="text-align:center;margin-bottom:8px"><div style="font-size:13px;color:#b0a590;margin-bottom:8px">🎯 十年过去，这就是你的职场结局——</div></div>';
   html += '<div class="id-card ' + themeClass + '">';
   html += '<div class="id-card-badge">平行人生 · 职场鉴定报告</div>';
+  if (state.playerName) {
+    html += '<div style="margin:6px 0 2px;font-size:20px">' + state.playerAvatar + '</div>';
+    html += '<div style="font-size:16px;font-weight:700;margin-bottom:2px">' + state.playerName + '</div>';
+    if (state.playerMotto) html += '<div style="font-size:11px;color:rgba(0,0,0,0.4);margin-bottom:4px">「' + state.playerMotto + '」</div>';
+  }
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
   html += '<div class="id-card-ending">' + ending.name + '</div>';
   html += '<div class="personality-tag">' + (function(){var p=getPersonality(state);return p?p.animal+(p.traits.length?' \xb7 '+p.traits.join(' \xb7 '):''):'';})() + '</div>';
@@ -4440,6 +4611,21 @@ function generatePoster() {
   ctx.moveTo(120, 100);
   ctx.lineTo(w - 120, 100);
   ctx.stroke();
+
+
+  // Draw player info on poster
+  var posterY = 100;
+  if (state.playerName) {
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 28px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillText(state.playerAvatar + ' ' + state.playerName, w/2, posterY + 40);
+    if (state.playerMotto) {
+      ctx.font = '18px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillText('「' + state.playerMotto + '」', w/2, posterY + 72);
+    }
+    posterY += state.playerMotto ? 100 : 70;
+  }
 
   // Get ending
   var ending = null;
