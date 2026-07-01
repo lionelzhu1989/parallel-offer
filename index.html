@@ -1407,12 +1407,12 @@ var ENDINGS = [
   { id:'winner', emoji:'🎭', name:'人生赢家', track:null, desc:'你做到了大多数人做不到的事：有钱，有闲，还有朋友。', theme:'gold', condition:function(s){ return s.skill>=70 && s.network>=70 && s.health>=70 && s.happy>=70; } },
   { id:'parallel', emoji:'💫', name:'平行宇宙的你', track:null, desc:'你活成了最普通的自己。但也许，这就是最好的结局。', theme:'blue', condition:function(s){ return s.skill>=35 && s.skill<=65 && s.network>=35 && s.network<=65 && s.health>=35 && s.health<=65; } },
   // Hidden endings
-  { id:'cat_life', emoji:'🐱', name:'猫奴人生', track:null, desc:'你最大的成就是在工位上养了一只猫。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('catlovers')>=0 && s.happy>=70; }, hidden:true },
-  { id:'social_legend', emoji:'👻', name:'社恐传奇', track:null, desc:'你从来不和同事说话，但你的代码替你说了所有。', theme:'blue', condition:function(s){ return s._talents && s._talents.indexOf('shy')>=0 && s.skill>=85; }, hidden:true },
+  { id:'cat_life', emoji:'🐱', name:'猫奴人生', track:null, desc:'你最大的成就是在工位上养了一只猫。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('catlovers')>=0 && s.happy>=70; }, hidden:true },
+  { id:'social_legend', emoji:'👻', name:'社恐传奇', track:null, desc:'你从来不和同事说话，但你的代码替你说了所有。', theme:'blue', condition:function(s){ return s.talents && s.talents.indexOf('shy')>=0 && s.skill>=85; }, hidden:true },
   // Combo endings (rare — talent synergy triggers)
-  { id:'night_owl_boss', emoji:'🦉', name:'深夜CEO', track:null, desc:'你同时拥有了"夜猫子"和"卷王"天赋。白天开会，晚上写代码，凌晨复盘。你的日历App以为自己坏了。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('nightowl')>=0 && s._talents.indexOf('hardwork')>=0 && s.rankIdx>=3; }, hidden:true },
-  { id:'cat_boss', emoji:'😼', name:'猫系老板', track:null, desc:'你有"猫奴"天赋，养了三只猫，开了家公司专门做猫粮。员工都是猫。KPI是喵喵叫的次数。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('catlovers')>=0 && s._talents.indexOf('geek')>=0; }, hidden:true },
-  { id:'social_butterfly', emoji:'🦋', name:'社交蝴蝶', track:null, desc:'你有"社牛"和"锦鲤"双重天赋。人脉是你的超能力，运气是你的护城河。别人投简历，你投微信。', theme:'gold', condition:function(s){ return s._talents && s._talents.indexOf('social')>=0 && s._talents.indexOf('lucky')>=0 && s.network>=70; }, hidden:true },
+  { id:'night_owl_boss', emoji:'🦉', name:'深夜CEO', track:null, desc:'你同时拥有了"夜猫子"和"卷王"天赋。白天开会，晚上写代码，凌晨复盘。你的日历App以为自己坏了。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('nightowl')>=0 && s.talents.indexOf('hardwork')>=0 && s.rankIdx>=3; }, hidden:true },
+  { id:'cat_boss', emoji:'😼', name:'猫系老板', track:null, desc:'你有"猫奴"天赋，养了三只猫，开了家公司专门做猫粮。员工都是猫。KPI是喵喵叫的次数。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('catlovers')>=0 && s.talents.indexOf('geek')>=0; }, hidden:true },
+  { id:'social_butterfly', emoji:'🦋', name:'社交蝴蝶', track:null, desc:'你有"社牛"和"锦鲤"双重天赋。人脉是你的超能力，运气是你的护城河。别人投简历，你投微信。', theme:'gold', condition:function(s){ return s.talents && s.talents.indexOf('social')>=0 && s.talents.indexOf('lucky')>=0 && s.network>=70; }, hidden:true },
 ];
 
 // ====== DATA: Achievements ======
@@ -1471,7 +1471,7 @@ function updateTopBar() {
   document.getElementById('attrHappy').textContent = state.happy;
   var moneyEl = document.getElementById('attrMoney');
   if (moneyEl) moneyEl.textContent = state.money >= 10000 ? Math.round(state.money/10000) + 'W' : state.money + '';
-  document.getElementById('barSalary').style.width = Math.min(100, state.salary / 3000) + '%';
+  document.getElementById('barSalary').style.width = Math.min(100, state.salary / 25000) + '%';
   document.getElementById('barSkill').style.width = state.skill + '%';
   document.getElementById('barNetwork').style.width = state.network + '%';
   document.getElementById('barHealth').style.width = state.health + '%';
