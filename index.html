@@ -844,7 +844,7 @@ var CAREER_EVENTS = {
       {text:'直接放弃这个客户', happy:5, money:-5000}
     ]}
     ,{ year:[5,7], title:'团队管理难题', desc:'核心骨干要离职，开出的竞业限制你付不起。', opts:[
-      {text:'加薪挽留，赌他值得', money:-20000, network:5, happy:-3}
+      {text:'加薪挽留，赌他值得', money:-20000, network:5, happy:-3} addBuff('leadership','管理压力','团队管理消耗精力',3,{health:-4,skill:-2});
       {text:'接受现实，培养新人', skill:5, happy:-5, network:-3}
       {text:'干脆自己接手他的活', health:-10, skill:5, happy:-8}
     ]}
@@ -956,7 +956,7 @@ var CAREER_EVENTS = {
       {text:'申请转岗，换个环境', skill:3, network:5}
     ],health:-5},
       ,{ year:[4,6], title:'职称评定', desc:'高级职称评审开始了，名额只有2个，竞争者有5个。', opts:[
-      {text:'全力准备材料', skill:8, health:-5, happy:-5}
+      {text:'全力准备材料', skill:8, health:-5, happy:-5} addBuff('bureaucracy','文山会海','写材料消耗精力',2,{health:-3,happy:-5});
       {text:'找关系打点一下', money:-10000, network:5, happy:-3}
       {text:'这次先不评了，让给年轻人', happy:10, skill:-3}
     ]}
@@ -1073,7 +1073,7 @@ var CAREER_EVENTS = {
       {text:'转型做独立顾问', skill:8, happy:5}
     ]}
       ,{ year:[4,6], title:'海外轮岗', desc:'总部给了你一个海外轮岗的机会，但要离开家人半年。', opts:[
-      {text:'义无反顾去海外', skill:15, network:10, happy:-10, health:-5}
+      {text:'义无反顾去海外', skill:15, network:10, happy:-10, health:-5} addBuff('overseas','海外适应','异国他乡需要适应',3,{network:5,health:-3});
       {text:'带上家人一起去', money:-30000, happy:5, skill:10}
       {text:'放弃机会，家人优先', happy:10, health:5, skill:-5}
     ]}
@@ -1190,7 +1190,7 @@ var CAREER_EVENTS = {
       {text:'卖掉公司，开始新的人生', money:100000, happy:10}
     ]}
       ,{ year:[4,6], title:'产品上线', desc:'你们的产品终于上线了！但第一天只有100个用户。', opts:[
-      {text:'疯狂拉新，地推扫楼', network:10, health:-10, money:-5000}
+      {text:'疯狂拉新，地推扫楼', network:10, health:-10, money:-5000} addBuff('hustle','疯狂拉新','地推消耗体力',2,{health:-8,skill:2});
       {text:'专注打磨产品，口碑传播', skill:10, money:-3000, happy:-5}
       {text:'花钱投广告买量', money:-20000, network:5, happy:-3}
     ]}
