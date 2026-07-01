@@ -262,6 +262,7 @@
     <div class="attr-item"><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
     <div class="attr-item"><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
     <div class="attr-item"><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">满足</span></div><span class="attr-val" id="attrHappy">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+    <div class="attr-item"><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">0</span></div>
   </div>
 </div>
 
@@ -491,7 +492,7 @@ var CAREER_TRACKS = {
   startup: {
     id: 'startup', emoji: '🚀', label: '创业', tag: 'startup',
     desc: '高风险高回报 · 燃烧吧青春',
-    salary: 0, expense: 6000,
+    salary: 8000, expense: 6000,
     ladder: ['想法阶段','联合创始人','天使轮','A轮','B轮','IPO/收购'],
     ladderShort: ['想法','合伙','天使','A轮','B轮','IPO'],
     promoYears: [2,4,6,8],
@@ -519,7 +520,7 @@ var TALENT_POOL = [
   { id:'nerd', emoji:'📚', name:'学霸体质', desc:'学习效果翻倍，实践-20%', cat:'work', effect:{skillBonus:1.0, promoPenalty:-0.2} },
   { id:'goal', emoji:'🎯', name:'目标感强', desc:'晋升+25%，事件多样性-15%', cat:'work', effect:{promoBonus:0.25} },
   { id:'zen', emoji:'🌊', name:'佛系心态', desc:'满足度+20/年，职级成长-25%', cat:'work', effect:{happyBonus:20, promoPenalty:-0.25} },
-  { id:'fox', emoji:'🐍', name:'职场狐狸', desc:'背刺成功率+40%，口碑-10', cat:'work', effect:{promoBonus:0.4, networkPenalty:-10} },
+  { id:'fox', emoji:'🐍', name:'职场狐狸', desc:'背刺成功率+40%，口碑-10', cat:'work', effect:{promoBonus:0.4, networkPenalty:-0.1} },
   { id:'nice', emoji:'🤝', name:'老好人', desc:'好感度+30%，容易被甩锅', cat:'work', effect:{networkBonus:0.3, skillPenalty:-0.1} },
   // Life talents (10)
   { id:'lucky', emoji:'🍀', name:'锦鲤附体', desc:'好运事件概率翻倍', cat:'life', effect:{luckBonus:2} },
@@ -1409,9 +1410,9 @@ var ENDINGS = [
   { id:'cat_life', emoji:'🐱', name:'猫奴人生', track:null, desc:'你最大的成就是在工位上养了一只猫。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('catlovers')>=0 && s.happy>=70; }, hidden:true },
   { id:'social_legend', emoji:'👻', name:'社恐传奇', track:null, desc:'你从来不和同事说话，但你的代码替你说了所有。', theme:'blue', condition:function(s){ return s._talents && s._talents.indexOf('shy')>=0 && s.skill>=85; }, hidden:true },
   // Combo endings (rare — talent synergy triggers)
-  { id:'night_owl_boss', emoji:'🦉', name:'深夜CEO', track:null, desc:'你同时拥有了"夜猫子"和"卷王"天赋。白天开会，晚上写代码，凌晨复盘。你的日历App以为自己坏了。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('nightowl')>=0 && s._talents.indexOf('workaholic')>=0 && s.rankIdx>=3; }, hidden:true },
-  { id:'cat_boss', emoji:'😼', name:'猫系老板', track:null, desc:'你有"猫奴"天赋，养了三只猫，开了家公司专门做猫粮。员工都是猫。KPI是喵喵叫的次数。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('catlovers')>=0 && s._talents.indexOf('entrepreneur')>=0; }, hidden:true },
-  { id:'social_butterfly', emoji:'🦋', name:'社交蝴蝶', track:null, desc:'你有"社牛"和"锦鲤"双重天赋。人脉是你的超能力，运气是你的护城河。别人投简历，你投微信。', theme:'gold', condition:function(s){ return s._talents && s._talents.indexOf('socialite')>=0 && s._talents.indexOf('lucky')>=0 && s.network>=70; }, hidden:true },
+  { id:'night_owl_boss', emoji:'🦉', name:'深夜CEO', track:null, desc:'你同时拥有了"夜猫子"和"卷王"天赋。白天开会，晚上写代码，凌晨复盘。你的日历App以为自己坏了。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('nightowl')>=0 && s._talents.indexOf('hardwork')>=0 && s.rankIdx>=3; }, hidden:true },
+  { id:'cat_boss', emoji:'😼', name:'猫系老板', track:null, desc:'你有"猫奴"天赋，养了三只猫，开了家公司专门做猫粮。员工都是猫。KPI是喵喵叫的次数。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('catlovers')>=0 && s._talents.indexOf('geek')>=0; }, hidden:true },
+  { id:'social_butterfly', emoji:'🦋', name:'社交蝴蝶', track:null, desc:'你有"社牛"和"锦鲤"双重天赋。人脉是你的超能力，运气是你的护城河。别人投简历，你投微信。', theme:'gold', condition:function(s){ return s._talents && s._talents.indexOf('social')>=0 && s._talents.indexOf('lucky')>=0 && s.network>=70; }, hidden:true },
 ];
 
 // ====== DATA: Achievements ======
@@ -1425,8 +1426,8 @@ var ACHIEVEMENTS = [
   { id:'burnout_badge', emoji:'💀', name:'赛博植物人', desc:'健康降到10以下', check:function(s){ return s.health<=10; } },
   { id:'happy_soul', emoji:'😊', name:'幸福达人', desc:'满足度达到90', check:function(s){ return s.happy>=90; } },
   { id:'salary_10w', emoji:'💰', name:'月薪十万', desc:'月薪超过10万', check:function(s){ return s.salary>=100000; } },
-  { id:'talent_collector', emoji:'🎨', name:'天赋收藏家', desc:'解锁所有天赋', check:function(s){ return false; } },
-  { id:'all_endings', emoji:'📖', name:'结局大师', desc:'解锁所有结局', check:function(s){ return false; } },
+  { id:'talent_collector', emoji:'🎨', name:'天赋收藏家', desc:'解锁所有天赋', check:function(s){ return s.talents && s.talents.length >= 5; } },
+  { id:'all_endings', emoji:'📖', name:'结局大师', desc:'解锁所有结局', check:function(s){ try { var saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}'); return Object.keys(saved).length >= 10; } catch(e) { return false; } } },
 ];
 
 // ====== Game State ======
@@ -1468,6 +1469,8 @@ function updateTopBar() {
   document.getElementById('attrNetwork').textContent = state.network;
   document.getElementById('attrHealth').textContent = state.health;
   document.getElementById('attrHappy').textContent = state.happy;
+  var moneyEl = document.getElementById('attrMoney');
+  if (moneyEl) moneyEl.textContent = state.money >= 10000 ? Math.round(state.money/10000) + 'W' : state.money + '';
   document.getElementById('barSalary').style.width = Math.min(100, state.salary / 3000) + '%';
   document.getElementById('barSkill').style.width = state.skill + '%';
   document.getElementById('barNetwork').style.width = state.network + '%';
@@ -1781,11 +1784,30 @@ function chooseEvent(optIdx) {
   // Natural aging
   state.health -= (state.year >= 5 ? 4 : 2);
 
-  // Talent: zen adds happy
+  // Talent effects
   if (state.talents.indexOf('zen') >= 0) state.happy += 5;
   if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
   if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
   if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
+  // runner: health recovery + cap boost
+  if (state.talents.indexOf('runner') >= 0) state.health = clamp(state.health + 3, 0, 120);
+  // lucky: small random bonus to any event
+  if (state.talents.indexOf('lucky') >= 0) { var lb = randInt(1,5); state.happy += lb; }
+  // gambler: money outcomes amplified
+  if (state.talents.indexOf('gambler') >= 0 && opt.money) { state.money += Math.round(opt.money * 0.3); }
+  // chosen: extra skill from every event
+  if (state.talents.indexOf('chosen') >= 0) state.skill += 1;
+  // artsy: side income boost
+  if (state.talents.indexOf('artsy') >= 0 && opt.money > 0) state.money += Math.round(opt.money * 0.15);
+  // drama: extra happiness from happy events
+  if (state.talents.indexOf('drama') >= 0 && opt.happy > 0) state.happy += 2;
+  // indecisive: slightly reduce negative effects
+  if (state.talents.indexOf('indecisive') >= 0) {
+    if (opt.health && opt.health < 0) state.health -= Math.round(opt.health * 0.5);
+    if (opt.happy && opt.happy < 0) state.happy -= Math.round(opt.happy * 0.5);
+  }
+  // phone: chance of random phone distraction event (skill penalty)
+  if (state.talents.indexOf('phone') >= 0 && Math.random() < 0.15) state.skill -= 1;
 
   state.health = clamp(state.health, 0, 100);
   state.happy = clamp(state.happy, 0, 100);
@@ -1945,7 +1967,18 @@ function chooseRandom(optIdx) {
   });
   }
 
+    // Natural aging for promo year
+  state.health = clamp(state.health - (state.year >= 5 ? 4 : 2), 0, 100);
+  // Talent effects for promo year
+  if (state.talents.indexOf('zen') >= 0) state.happy += 5;
+  if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
+  if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
+  if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
+  state.health = clamp(state.health, 0, 100);
+  state.happy = clamp(state.happy, 0, 100);
+
   state.year++;
+  render();
   render();
 }
 
@@ -1990,6 +2023,14 @@ function showPromotionChallenge() {
 }
 
 function promoChoice(choice) {
+  // Save snapshot for undo (fix #7)
+  state._undoSnapshot = {
+    skill: state.skill, network: state.network, health: state.health,
+    happy: state.happy, money: state.money, salary: state.salary,
+    rankIdx: state.rankIdx, year: state.year, eventTitle: '晋升答辩',
+    promoCooldown: state._promoCooldown || 0
+  };
+  state._lastChoiceType = 'promo';
   var track = CAREER_TRACKS[state.track];
   var promoted = false;
   var talentMod = 0;
@@ -2336,7 +2377,7 @@ function generatePoster() {
     ctx.fillText('' + a.value, 500, y);
     // Bar
     var barVal = typeof a.value === 'number' ? a.value : 50;
-    if (a.label === '月薪') barVal = Math.min(100, state.salary / 3000 * 100);
+    if (a.label === '月薪') barVal = Math.min(100, state.salary / 25000 * 100);
     if (a.label === '职级') barVal = (state.rankIdx + 1) / track.ladder.length * 100;
     ctx.fillStyle = 'rgba(255,255,255,0.1)';
     ctx.fillRect(90, y + 8, w - 180, 6);
