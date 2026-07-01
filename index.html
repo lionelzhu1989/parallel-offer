@@ -1119,9 +1119,10 @@ body.dark-mode .entry-btn {
 }
 .char-creator-box {
   background:var(--bg-card); border-radius:var(--radius-xl);
-  padding:28px 22px; width:90%; max-width:380px;
+  padding:20px 16px; width:90%; max-width:380px;
   box-shadow:var(--shadow-lg);
-  max-height:90vh; overflow-y:auto;
+  max-height:80vh; overflow-y:auto;
+  scrollbar-width:thin;
 }
 .char-creator-title {
   font-size:20px; font-weight:800; text-align:center;
@@ -1138,15 +1139,16 @@ body.dark-mode .entry-btn {
   margin-bottom:8px;
 }
 .char-cards-wrap {
-  display:flex; flex-wrap:wrap; gap:8px;
+  display:flex; flex-wrap:wrap; gap:6px;
   margin-bottom:18px;
-  max-height:320px; overflow-y:auto;
-  padding-right:4px;
+  max-height:260px; overflow-y:auto;
+  padding-right:2px;
+  scrollbar-width:thin;
 }
-.char-cards-wrap::-webkit-scrollbar { width:4px; }
-.char-cards-wrap::-webkit-scrollbar-thumb { background:#d1d5db; border-radius:4px; }
+.char-cards-wrap::-webkit-scrollbar { width:3px; }
+.char-cards-wrap::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
 .char-card {
-  width:calc(33.33% - 6px); min-width:80px;
+  width:calc(50% - 4px); min-width:100px;
   display:flex; flex-direction:column; align-items:center;
   padding:10px 4px 8px; border-radius:12px; cursor:pointer;
   border:2px solid transparent; background:var(--bg-page);
@@ -4718,8 +4720,8 @@ function generatePoster() {
   if (!ending) ending = ENDINGS[ENDINGS.length - 1];
 
   // Big emoji (floating style)
-  ctx.font = '80px -apple-system, sans-serif';
-  ctx.fillText(ending.emoji, w/2, 190);
+  ctx.font = '60px -apple-system, sans-serif';
+  ctx.fillText(ending.emoji, w/2, 160);
 
   // Ending name - gradient effect via multiple draws
   ctx.font = 'bold 52px -apple-system, "PingFang SC", sans-serif';
@@ -4728,7 +4730,7 @@ function generatePoster() {
   nameGrad.addColorStop(0.5, '#f59e0b');
   nameGrad.addColorStop(1, '#f97316');
   ctx.fillStyle = nameGrad;
-  ctx.fillText(ending.name, w/2, 310);
+  ctx.fillText(ending.name, w/2, 270);
 
   // Personality tag
   var posterPersLabel = '';
@@ -4745,7 +4747,7 @@ function generatePoster() {
   if (posterPersLabel) {
     ctx.font = '22px -apple-system, "PingFang SC", sans-serif';
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillText(posterPersLabel, w/2, 355);
+    ctx.fillText(posterPersLabel, w/2, 315);
   }
 
   // Description
@@ -4753,7 +4755,7 @@ function generatePoster() {
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
   var desc = ending.desc;
   var line = '';
-  var lineY = 420;
+  var lineY = 380;
   for (var k = 0; k < desc.length; k++) {
     line += desc[k];
     if (ctx.measureText(line).width > 560 || k === desc.length - 1) {
@@ -5552,5 +5554,5 @@ function loadDarkMode() {
 
 </script>
 </body>
-<!-- v13 - poster fix + char creator fix -->
+<!-- v15 - poster fix + char creator fix -->
 </html>
