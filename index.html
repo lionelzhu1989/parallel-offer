@@ -275,7 +275,9 @@ body {
 .talent-header { text-align:center; margin-bottom:16px; }
 .talent-title { font-size:22px; font-weight:800; color:var(--text-primary); }
 .talent-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; }
-.talent-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+.talent-grid { display:grid; grid-template-columns:1fr; gap:10px; max-height:50vh; overflow-y:auto; padding-right:4px; scrollbar-width:thin; }
+.talent-grid::-webkit-scrollbar { width:3px; }
+.talent-grid::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
 .talent-card {
   display:flex; align-items:flex-start; gap:12px;
   background:var(--bg-card); border:1.5px solid var(--border);
@@ -1121,8 +1123,11 @@ body.dark-mode .entry-btn {
   background:var(--bg-card); border-radius:var(--radius-xl);
   padding:20px 16px; width:90%; max-width:380px;
   box-shadow:var(--shadow-lg);
-  max-height:85vh; overflow-y:auto;
+  max-height:80vh; overflow-y:auto;
+  scrollbar-width:thin;
 }
+.char-creator-box::-webkit-scrollbar { width:3px; }
+.char-creator-box::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
 .char-creator-title {
   font-size:20px; font-weight:800; text-align:center;
   background:linear-gradient(135deg,#6366f1,#a855f7);
@@ -1140,8 +1145,12 @@ body.dark-mode .entry-btn {
 .char-cards-wrap {
   display:grid; grid-template-columns:1fr 1fr; gap:6px;
   margin-bottom:18px;
+  max-height:280px; overflow-y:auto;
   padding-right:2px;
+  scrollbar-width:thin;
 }
+.char-cards-wrap::-webkit-scrollbar { width:3px; }
+.char-cards-wrap::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
 /* char-cards-wrap scrollbar removed - uses grid layout */
 .char-card {
   display:flex; flex-direction:column; align-items:center;
@@ -2922,7 +2931,7 @@ function showIntro() {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v16 · 2026.07.02</div>';
+  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v17 · 2026.07.02</div>';
   html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
@@ -4672,39 +4681,8 @@ function generatePoster() {
   ctx.fillRect(0, 0, w, h);
   ctx.globalAlpha = 1;
 
-  // Badge
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
-  ctx.fillText('‘ 平行人生 · 职场鉴定报告 ’', w/2, 80);
-
-  // Divider line
-  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(120, 100);
-  ctx.lineTo(w - 120, 100);
-  ctx.stroke();
 
 
-  // Draw player info on poster
-  var posterY = 100;
-  if (state.playerName) {
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 28px -apple-system, "PingFang SC", sans-serif';
-    ctx.fillText(state.playerAvatar + ' ' + state.playerName, w/2, posterY + 40);
-    if (state.playerMotto) {
-      ctx.font = '18px -apple-system, "PingFang SC", sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
-      ctx.fillText('「' + state.playerMotto + '」', w/2, posterY + 72);
-    }
-    if (state.playerType) {
-      ctx.font = 'bold 18px "PingFang SC","Microsoft YaHei",sans-serif';
-      ctx.fillStyle = '#6366f1';
-      ctx.fillText(state.playerType, w/2, posterY + (state.playerMotto ? 100 : 80));
-    }
-    posterY += state.playerMotto ? (state.playerType ? 130 : 100) : (state.playerType ? 110 : 70);
-  }
 
   // Get ending
   var ending = null;
@@ -4714,18 +4692,61 @@ function generatePoster() {
   }
   if (!ending) ending = ENDINGS[ENDINGS.length - 1];
 
-  // Big emoji (floating style)
-  ctx.font = '42px -apple-system, sans-serif';
-  ctx.fillText(ending.emoji, w/2, 128);
+  // --- Draw all elements with flowing Y ---
+  var py = 80;  // start Y for content
 
-  // Ending name - gradient effect via multiple draws
-  ctx.font = 'bold 52px -apple-system, "PingFang SC", sans-serif';
-  var nameGrad = ctx.createLinearGradient(w/2 - 120, 300, w/2 + 120, 360);
+  // Badge
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
+  ctx.fillText('‘ 平行人生 · 职场鉴定报告 ’', w/2, py);
+  py += 30;
+
+  // Player info
+  if (state.playerName) {
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 28px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillText(state.playerAvatar + ' ' + state.playerName, w/2, py + 30);
+    py += 40;
+    if (state.playerMotto) {
+      ctx.font = '18px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillText('「' + state.playerMotto + '」', w/2, py + 16);
+      py += 28;
+    }
+    if (state.playerType) {
+      ctx.font = 'bold 18px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillStyle = '#6366f1';
+      ctx.fillText(state.playerType, w/2, py + 16);
+      py += 26;
+    }
+    py += 10;
+  }
+
+  // Divider
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(150, py);
+  ctx.lineTo(w - 150, py);
+  ctx.stroke();
+  py += 24;
+
+  // Big emoji
+  ctx.font = '48px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(ending.emoji, w/2, py + 36);
+  py += 56;
+
+  // Ending name
+  ctx.font = 'bold 48px -apple-system, "PingFang SC", sans-serif';
+  var nameGrad = ctx.createLinearGradient(w/2 - 120, py, w/2 + 120, py + 50);
   nameGrad.addColorStop(0, '#fbbf24');
   nameGrad.addColorStop(0.5, '#f59e0b');
   nameGrad.addColorStop(1, '#f97316');
   ctx.fillStyle = nameGrad;
-  ctx.fillText(ending.name, w/2, 230);
+  ctx.fillText(ending.name, w/2, py + 38);
+  py += 56;
 
   // Personality tag
   var posterPersLabel = '';
@@ -4740,17 +4761,18 @@ function generatePoster() {
     if (pers) posterPersLabel = pers.animal + (pers.traits.length ? ' \xb7 ' + pers.traits.join(' \xb7 ') : '');
   }
   if (posterPersLabel) {
-    ctx.font = '22px -apple-system, "PingFang SC", sans-serif';
+    ctx.font = '20px -apple-system, "PingFang SC", sans-serif';
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillText(posterPersLabel, w/2, 275);
+    ctx.fillText(posterPersLabel, w/2, py + 14);
+    py += 30;
   }
 
   // Description
-  ctx.font = '24px -apple-system, "PingFang SC", sans-serif';
+  ctx.font = '22px -apple-system, "PingFang SC", sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
   var desc = ending.desc;
   var line = '';
-  var lineY = 340;
+  var lineY = py + 20;
   for (var k = 0; k < desc.length; k++) {
     line += desc[k];
     if (ctx.measureText(line).width > 560 || k === desc.length - 1) {
