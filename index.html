@@ -603,7 +603,7 @@ var TALENT_POOL = [
   // ====== 万金油（无流派） ======
   { id:'fox', name:'职场狐狸', emoji:'🦊', school:'neutral',
     desc:'精于算计。人脉微增，但大家觉得你油滑。',
-    talentEffect:{}, debuff:'人脉增长-10%（被人看穿）',
+    talentEffect:{}, debuff:'每年人脉-1（被人看穿）',
     yearlyEffect:function(s){ s.network=Math.max(0,s.network-1); },
     promoBonus:0 },
   { id:'newbie', name:'职场小白', emoji:'🐣', school:'neutral',
@@ -628,7 +628,7 @@ var CAREER_EVENTS = {
     ]},
     { year:[1,2], title:'第一次Code Review', desc:'你的代码被高级工程师批得体无完肤。"这个命名是什么鬼？这个if嵌套是在写俄罗斯套娃吗？"', opts:[
       {text:'虚心接受，逐行修改', skill:8, happy:-3},
-      {text:'嘴上说好，心里不服', skill:3, happy:2},
+      {text:'嘴上说好，心里不服', skill:3, happy:2,health:-3},
       {text:'偷偷去学了设计模式', skill:10, happy:-5}
     ]},
     { year:[2,3], title:'线上事故！', desc:'凌晨3点，你写的代码在生产环境炸了。告警群炸锅，你开始思考人生的意义。', opts:[
@@ -638,19 +638,19 @@ var CAREER_EVENTS = {
     ]},
     { year:[3,4], title:'技术选型争论', desc:'团队为用React还是Vue吵了三天。你作为唯一一个两个都会的人，被两边拉拢。', opts:[
       {text:'提出一个全新框架（Svelte）', skill:5, network:-5, happy:-3},
-      {text:'两边都不得罪，建议用团队熟悉的', network:5, happy:3},
+      {text:'两边都不得罪，建议用团队熟悉的', network:5, happy:3,health:-4},
       {text:'写了个性能对比报告，用数据说话', skill:8, network:3}
-    ]},
+    ],health:-3},
     { year:[4,5], title:'AI替代焦虑', desc:'公司开始用AI写代码了。你发现自己日常写的80%的CRUD，AI 30秒就写完了。', opts:[
       {text:'转型学AI，拥抱变化', skill:12, health:-5, happy:-3},
-      {text:'专注架构和系统设计，AI写不了这个', skill:8, happy:5},
+      {text:'专注架构和系统设计，AI写不了这个', skill:8, happy:5,health:-3},
       {text:'开始在简历里加新技能点', skill:3, network:3, happy:-5}
     ]},
     { year:[5,6], title:'带新人', desc:'领导让你带一个实习生。第一天他问你"git push -f 会怎样"，你沉默了。', opts:[
-      {text:'耐心教学，写了份新人指南', skill:5, network:8, happy:3},
+      {text:'耐心教学，写了份新人指南', skill:5, network:8, happy:3,health:-7},
       {text:'让TA先看文档，有问题再问', skill:2, happy:-2},
       {text:'教了一些"职场生存技巧"而非技术', network:5, happy:5}
-    ]},
+    ],health:-6},
     { year:[6,7], title:'架构师的噩梦', desc:'你负责设计的新系统上线后，QPS从100飙到10万。数据库开始尖叫。', opts:[
       {text:'紧急扩容+重构，连续加班一周', skill:12, health:-15, happy:-10},
       {text:'限流降级先扛住，后面慢慢优化', skill:8, happy:-3},
@@ -660,7 +660,7 @@ var CAREER_EVENTS = {
       {text:'放水让TA过，反正来了再说', network:3, happy:-3},
       {text:'认真评估，严格把关', skill:3, happy:-5},
       {text:'推荐TA去做产品（开玩笑）', happy:8}
-    ]},
+    ],health:-4},
     { year:[8,9], title:'裁员潮来袭', desc:'HR群里传出了"优化"的消息。隔壁组已经有人开始收拾工位了。你心里咯噔一下。', opts:[
       {text:'疯狂刷题，准备跳槽', skill:8, happy:-10, network:5},
       {text:'主动找领导谈，确认自己安全', network:8, happy:-5},
@@ -670,7 +670,7 @@ var CAREER_EVENTS = {
       {text:'继续写代码，直到写不动的那天', skill:5, health:-8},
       {text:'转型管理，告别键盘', skill:-5, network:10, happy:3},
       {text:'搞技术博客/开源，给自己留点遗产', skill:8, happy:8}
-    ]},
+    ],health:-2},
     { year:[1,2], title:'Bug赏金猎人', desc:'你写的代码里藏了一个bug，QA找了一周没找到，最后上线后被客户发现了。全组开会复盘。', opts:[
       {text:'主动认领，连夜修复', skill:5, health:-8, happy:-5},
       {text:'假装不知道，等别人发现', happy:2, network:-5},
@@ -680,17 +680,17 @@ var CAREER_EVENTS = {
       {text:'下次做个live demo，用代码说话', skill:8, happy:-3},
       {text:'算了，以后不主动揽这活了', happy:-2},
       {text:'分享完请同事喝奶茶挽回好感', network:5}
-    ]},
+    ],health:-7},
     { year:[3,4], title:'远程办公翻车', desc:'在家办公摸鱼被老板发现——不是因为工作没做完，是因为你Zoom摄像头里出现了外卖小哥。', opts:[
       {text:'道歉说家里网不好卡了', happy:3, network:-2},
       {text:'以后开会前检查摄像头背景', happy:-2},
       {text:'直接说去拿外卖了，坦诚', network:3, happy:5}
-    ]},
+    ],health:-3},
     { year:[4,5], title:'开源项目被点赞', desc:'你写的开源项目被GitHub上一个万星大佬star了。你的GitHub通知瞬间炸了。', opts:[
-      {text:'趁热打铁，赶紧完善文档', skill:8, happy:10},
-      {text:'截图发朋友圈吹一年', happy:15, network:5},
+      {text:'趁热打铁，赶紧完善文档', skill:8, happy:10,health:-6},
+      {text:'截图发朋友圈吹一年', happy:15, network:5,health:-4},
       {text:'趁机写篇技术博客引流', skill:5, network:8}
-    ]},
+    ],health:-2},
     { year:[5,6], title:'35岁危机', desc:'招聘JD开始写"35岁以下优先"。你看了看自己的工牌，发现已经34了。', opts:[
       {text:'开始准备Plan B：考公/教资/自媒体', skill:5, happy:-10},
       {text:'专注深耕，成为不可替代的人', skill:8, happy:-3},
@@ -698,9 +698,9 @@ var CAREER_EVENTS = {
     ]},
     { year:[5,6], title:'年终述职翻车', desc:'年终述职时你发现隔壁组的PPT用了动画特效，你的还是纯文字。领导表情微妙。', opts:[
       {text:'回去苦练PPT，明年卷死他们', skill:3, happy:-5},
-      {text:'内容为王，不搞花里胡哨的', happy:3},
+      {text:'内容为王，不搞花里胡哨的', happy:3,health:-5},
       {text:'找设计师朋友帮忙做模板', network:3, happy:5}
-    ]},
+    ],health:-4},
     { year:[6,7], title:'被挖角了', desc:'猎头打电话说有个VP级别的机会，薪资翻倍。但需要去一个你没听过的创业公司。', opts:[
       {text:'跳！高风险高回报', skill:-3, network:5, happy:5},
       {text:'婉拒，稳定性更重要', happy:-2},
@@ -708,24 +708,24 @@ var CAREER_EVENTS = {
     ]},
     { year:[7,8], title:'代码洁癖发作', desc:'你发现前任写的代码全是spaghetti code，注释写着"这里不能改，改了会炸"。', opts:[
       {text:'重写！受不了一点', skill:10, health:-10, happy:-5},
-      {text:'在旁边写新模块，旧的不动', skill:5, happy:3},
+      {text:'在旁边写新模块，旧的不动', skill:5, happy:3,health:-5},
       {text:'加一行注释"前任写的，别动"', happy:8}
-    ]},
+    ],health:-4},
     { year:[8,9], title:'带团队的心累', desc:'你终于当上了技术主管。但每天不是在开会就是在救火。代码？已经三个月没写了。', opts:[
       {text:'适应管理角色，专注协调', network:8, skill:-3, happy:-5},
       {text:'偷偷写side project保持手感', skill:5, health:-5},
       {text:'招几个靠谱的人，放权', network:5, happy:5}
-    ]},
+    ],health:-2},
     { year:[9,10], title:'技术债清算日', desc:'十年积累的技术债终于爆发了。系统三天两头出问题，新功能开发速度降到零。', opts:[
       {text:'说服老板给三个月重构', skill:10, health:-10, happy:-8},
       {text:'在现有框架上打补丁续命', skill:3, happy:-5},
       {text:'写个技术债文档，留着下次', happy:3}
-    ]},
+    ],health:-4},
   ],
   biz: [
     { year:[1,2], title:'第一个客户', desc:'你终于约到了人生中第一个大客户。但见面时发现——对方是个比你还能聊的销售。', opts:[
       {text:'硬着头皮上，把PPT翻烂了讲', skill:5, network:5, happy:-3},
-      {text:'先聊感情再聊业务', network:8, happy:3},
+      {text:'先聊感情再聊业务', network:8, happy:3,health:-4},
       {text:'直接报最低价，用价格说话', skill:-3, happy:-5}
     ]},
     { year:[1,2], title:'KPI压力', desc:'月底还差30%的业绩。你开始在朋友圈发广告了。前任给你点了个赞。', opts:[
@@ -737,9 +737,9 @@ var CAREER_EVENTS = {
       {text:'以价换价，死守渠道', skill:-5, happy:-5},
       {text:'请渠道商吃饭，打感情牌', network:8, happy:-3},
       {text:'开发新渠道，不把鸡蛋放一个篮子', skill:5, network:5}
-    ]},
+    ],health:-6},
     { year:[3,4], title:'大客户谈判', desc:'年度大单来了！但客户的采购总监特别难搞——砍价、拖期、改需求，全套服务。', opts:[
-      {text:'找关系绕过采购，直接找决策层', network:5, skill:3},
+      {text:'找关系绕过采购，直接找决策层', network:5, skill:3,health:-2},
       {text:'耐心周旋，满足每一个需求', health:-10, happy:-8, skill:3},
       {text:'报价翻倍再让他砍，心理战', skill:8, happy:-3}
     ]},
@@ -752,7 +752,7 @@ var CAREER_EVENTS = {
       {text:'接受！终于可以不当工具人了', network:10, skill:-5, happy:5},
       {text:'再等等，我还想多做几年业务', skill:5, happy:-3},
       {text:'提出独立带新业务线的方案', skill:8, network:3}
-    ]},
+    ],health:-2},
     { year:[6,7], title:'数据造假的诱惑', desc:'季度目标差了15%。有同事建议把下个季度的单子提前签了。', opts:[
       {text:'不行，底线不能破', happy:5, network:-3},
       {text:'灰色地带操作一下', happy:-8, network:-5},
@@ -762,25 +762,25 @@ var CAREER_EVENTS = {
       {text:'转型to B服务，找新方向', skill:10, happy:-5},
       {text:'深耕老客户，保住基本盘', network:5, happy:-3},
       {text:'趁机休息一下，调整心态', happy:8, health:5}
-    ]},
+    ],health:-6},
     { year:[8,9], title:'创业的种子', desc:'有个前同事找你合伙创业。他的想法很疯狂，但你觉得——好像有点意思。', opts:[
       {text:'热血上头，加入！', skill:-5, network:5, happy:8},
-      {text:'投资一点钱，但不辞职', happy:3, skill:3},
+      {text:'投资一点钱，但不辞职', happy:3, skill:3,health:-4},
       {text:'理性分析后婉拒', happy:-3, skill:5}
     ]},
     { year:[9,10], title:'业绩封王', desc:'十年了。你累计签过的合同金额，够买一栋楼了。虽然你连首付都凑不齐。', opts:[
-      {text:'写了一本《销售实战手册》', skill:8, happy:8},
-      {text:'组织了一次大型客户答谢会', network:10, happy:5},
+      {text:'写了一本《销售实战手册》', skill:8, happy:8,health:-6},
+      {text:'组织了一次大型客户答谢会', network:10, happy:5,health:-5},
       {text:'申请了VP的竞聘', skill:5, network:5}
-    ]},
+    ],health:-6},
     { year:[1,2], title:'陌拜冷启动', desc:'你第一次陌拜客户，敲了二十扇门，十九扇直接关了，剩下一扇——是外卖小哥开的。', opts:[
       {text:'调整话术，明天继续', skill:5, happy:-3},
-      {text:'转战线上获客', skill:3, network:3},
+      {text:'转战线上获客', skill:3, network:3,health:-5},
       {text:'怀疑自己选错了行业', happy:-8}
     ]},
     { year:[2,3], title:'直播带货首秀', desc:'公司让你直播卖货。在线人数最高30人，其中15个是同事。', opts:[
       {text:'硬着头皮播完，复盘改进', skill:5, happy:-3},
-      {text:'搞个"仅限直播间"的限时优惠', skill:8, happy:5},
+      {text:'搞个"仅限直播间"的限时优惠', skill:8, happy:5,health:-5},
       {text:'以后再也不主动揽这活了', happy:-2}
     ]},
     { year:[3,4], title:'客户投诉升级', desc:'一个大客户在行业群里投诉你们产品。老板让你去灭火，但客户已经拉黑了你微信。', opts:[
@@ -799,27 +799,27 @@ var CAREER_EVENTS = {
       {text:'改成线上外卖模式试试', money:-3000, skill:3}
     ]},
     { year:[5,6], title:'行业峰会演讲', desc:'你被邀请在行业峰会上做15分钟分享。台下坐着你曾经的面试官。', opts:[
-      {text:'精心准备，惊艳全场', skill:8, network:10, happy:10},
+      {text:'精心准备，惊艳全场', skill:8, network:10, happy:10,health:-2},
       {text:'正常发挥，别丢人就行', happy:-2},
       {text:'临场发挥，freestyle', skill:-3, happy:5}
     ]},
     { year:[6,7], title:'裁员名单上有你', desc:'HR找你谈话，说公司架构调整。你看了看赔偿方案——N+1，还行。', opts:[
-      {text:'接受赔偿，重新出发', money:30000, happy:3},
+      {text:'接受赔偿，重新出发', money:30000, happy:3,health:-6},
       {text:'主动谈更好的条件', network:5, happy:-5},
       {text:'趁机创业，反正早想走了', skill:5, happy:5}
-    ]},
+    ],health:-5},
     { year:[7,8], title:'甲方的无理要求', desc:'甲方要求"五彩斑斓的黑"。你深吸一口气，打开了招聘网站。', opts:[
       {text:'忍了，甲方就是上帝', happy:-10, money:5000},
       {text:'用专业术语怼回去', skill:5, happy:5, network:-3},
       {text:'做个最丑的方案让他们改主意', happy:8, skill:3}
-    ]},
+    ],health:-3},
     { year:[8,9], title:'行业寒冬来袭', desc:'整个行业都在裁员。你的朋友圈一半在发"感谢公司"，一半在发求职帖。', opts:[
       {text:'苟住，等待春天', happy:-5},
       {text:'转型到相关行业', skill:5, happy:-3},
       {text:'趁低谷期学习新技能', skill:8, health:-3}
     ]},
     { year:[9,10], title:'十年销冠', desc:'你拿到了年度销售冠军奖杯。老板在群里发了个红包——88块。', opts:[
-      {text:'感恩，继续努力', happy:5},
+      {text:'感恩，继续努力', happy:5,health:-7},
       {text:'要求兑现承诺的奖金', network:-3, happy:-3},
       {text:'带着客户资源跳槽', skill:-3, network:8, happy:5}
     ]}
@@ -827,17 +827,17 @@ var CAREER_EVENTS = {
   state: [
     { year:[1,2], title:'第一份材料', desc:'领导让你写一份汇报材料。你写了三天，改了八稿，最后用的还是领导自己改的版本。', opts:[
       {text:'认真总结学习，下次写得更好', skill:8, happy:-5},
-      {text:'研究领导的风格，投其所好', network:5, skill:3},
+      {text:'研究领导的风格，投其所好', network:5, skill:3,health:-2},
       {text:'心态放平，反正是份稳定工作', happy:8, skill:-3}
     ]},
     { year:[1,2], title:'迎检来了', desc:'上面要来检查了。整个部门开始疯狂补材料、打扫卫生、排练汇报流程。', opts:[
       {text:'主动承担最难的材料整理', skill:5, health:-8, happy:-5},
-      {text:'做好自己分内的就行', happy:3, skill:2},
+      {text:'做好自己分内的就行', happy:3, skill:2,health:-2},
       {text:'趁乱摸鱼，反正检查的不是我', happy:5, network:-3}
     ]},
     { year:[2,3], title:'饭局文化', desc:'部门聚餐。领导举杯说"大家随意"，但你注意到——不喝的那个人已经很久没升过了。', opts:[
       {text:'喝！舍命陪领导', health:-8, network:8, happy:-5},
-      {text:'以茶代酒，真诚沟通', network:3, happy:3},
+      {text:'以茶代酒，真诚沟通', network:3, happy:3,health:-2},
       {text:'身体不舒服，先走一步', health:3, network:-8, happy:5}
     ]},
     { year:[3,4], title:'职称评定', desc:'今年的职称评定开始了。名额只有2个，但符合条件的有8个人。', opts:[
@@ -846,7 +846,7 @@ var CAREER_EVENTS = {
       {text:'今年不评了，让给年轻人', happy:5, skill:-3}
     ]},
     { year:[4,5], title:'关系户', desc:'新来了一个同事，是某领导的亲戚。啥也不会，但坐的位置比你好。', opts:[
-      {text:'心态放平，做好自己的事', happy:3, skill:3},
+      {text:'心态放平，做好自己的事', happy:3, skill:3,health:-5},
       {text:'主动教TA，搞好关系', network:8, happy:-3},
       {text:'向组织反映不公平', network:-10, skill:5, happy:-8}
     ]},
@@ -854,7 +854,7 @@ var CAREER_EVENTS = {
       {text:'去！这是机会', health:-10, skill:10, network:5},
       {text:'找理由推掉，家里有困难', happy:5, network:-5},
       {text:'去了但想办法轻松度过', happy:3, skill:3}
-    ]},
+    ],health:-6},
     { year:[6,7], title:'站队选择', desc:'两个副局在竞争局长位置，都来拉拢你。你夹在中间，左右为难。', opts:[
       {text:'选一个，押宝到底', network:8, happy:-10},
       {text:'两个都不得罪，做好本职', network:3, happy:-3},
@@ -862,7 +862,7 @@ var CAREER_EVENTS = {
     ]},
     { year:[7,8], title:'写材料到凌晨', desc:'上级临时要一份汇报，明天早上就要。你已经连续加班一周了。', opts:[
       {text:'硬着头皮写完', skill:5, health:-12, happy:-10},
-      {text:'写个框架，让同事帮忙完善', network:5, skill:3},
+      {text:'写个框架，让同事帮忙完善', network:5, skill:3,health:-4},
       {text:'跟领导说需要更多时间', happy:-3, network:-5}
     ]},
     { year:[8,9], title:'巡视组来了', desc:'巡视组进驻了。所有人的材料都要被翻一遍。你突然想起去年那笔不太对的报销。', opts:[
@@ -871,23 +871,23 @@ var CAREER_EVENTS = {
       {text:'提前把材料整理好，没问题的', skill:5, happy:-3}
     ]},
     { year:[9,10], title:'十年老科员', desc:'你看着镜子里的自己，头发少了一半，职级升了一级。值吗？也许吧。', opts:[
-      {text:'感恩组织培养，继续奋斗', skill:5, happy:3},
-      {text:'写了一篇《体制内生存指南》发在知乎', skill:5, happy:8},
+      {text:'感恩组织培养，继续奋斗', skill:5, happy:3,health:-3},
+      {text:'写了一篇《体制内生存指南》发在知乎', skill:5, happy:8,health:-4},
       {text:'盘算着还能再熬几年就退休', happy:5, skill:-3}
     ]},
     { year:[1,2], title:'第一份公文', desc:'你写的第一份公文被退回了五次。领导说"格式不对、措辞不当、层级不清"。你开始怀疑自己的语文水平。', opts:[
       {text:'认真学习公文写作规范', skill:5, happy:-3},
-      {text:'找老同事借模板照抄', skill:3, happy:3},
+      {text:'找老同事借模板照抄', skill:3, happy:3,health:-5},
       {text:'用AI帮你润色', skill:2, happy:5}
-    ]},
+    ],health:-6},
     { year:[2,3], title:'值班到深夜', desc:'节假日值班，整栋楼只有你和保安。你开始思考：这份稳定到底值不值得。', opts:[
       {text:'刷手机等下班', happy:-3},
       {text:'趁安静学点东西', skill:5, happy:-2},
       {text:'跟保安大叔聊天，意外收获人生智慧', network:3, happy:3}
-    ]},
+    ],health:-5},
     { year:[3,4], title:'领导的饭局', desc:'领导带你参加饭局。你被安排坐在最大的客户旁边，但你不会喝酒。', opts:[
       {text:'以茶代酒，硬撑到底', network:5, happy:-5},
-      {text:'坦诚说不能喝，以诚动人', network:3, happy:3},
+      {text:'坦诚说不能喝，以诚动人', network:3, happy:3,health:-6},
       {text:'偷偷练酒量，下次不能再怂', health:-5, happy:-3}
     ]},
     { year:[4,5], title:'职称评定', desc:'今年评职称，名额只有两个，但符合条件的有八个人。你开始研究"规则"。', opts:[
@@ -901,40 +901,40 @@ var CAREER_EVENTS = {
       {text:'先打听清楚借调后能不能留', happy:-3}
     ]},
     { year:[5,6], title:'食堂阿姨的偏爱', desc:'食堂阿姨记住了你的口味，每次打菜都多给一勺。你获得了全单位最幸福的午餐体验。', opts:[
-      {text:'每天准时去吃饭', happy:8, health:3},
-      {text:'给阿姨送点小礼物', network:3, happy:5},
+      {text:'每天准时去吃饭', happy:8, health:3,health:-4},
+      {text:'给阿姨送点小礼物', network:3, happy:5,health:-6},
       {text:'开始担心体重问题', happy:3, health:-2}
     ]},
     { year:[6,7], title:'材料写到头秃', desc:'领导让你写一份万字调研报告。你复制粘贴了三天，终于凑够了字数。', opts:[
       {text:'认真调研，写一篇有质量的报告', skill:8, health:-10, happy:-8},
-      {text:'AI辅助+人工润色，效率翻倍', skill:5, happy:5},
+      {text:'AI辅助+人工润色，效率翻倍', skill:5, happy:5,health:-6},
       {text:'找同事分工合作', network:5, happy:3}
-    ]},
+    ],health:-3},
     { year:[7,8], title:'同事的晋升', desc:'同期入职的同事升了副科。你还在原地踏步。领导说"下次一定"。', opts:[
       {text:'继续努力，相信组织', happy:-5},
       {text:'主动找领导谈谈想法', network:3, happy:-3},
       {text:'调整心态，专注本职工作', happy:3, skill:3}
-    ]},
+    ],health:-3},
     { year:[8,9], title:'躺平的诱惑', desc:'你发现很多老同事每天就是喝茶看报。你也开始想：要不也躺平算了？', opts:[
       {text:'坚持理想，不随波逐流', skill:5, happy:-3},
       {text:'适当躺平，保持健康', health:5, happy:5, skill:-3},
       {text:'发展副业，两条腿走路', skill:5, happy:3}
-    ]},
+    ],health:-4},
     { year:[9,10], title:'十年老科员', desc:'你已经在体制内待了十年。看着新来的年轻人，你仿佛看到了当年的自己。', opts:[
       {text:'继续坚守，等待机会', happy:-3},
-      {text:'总结经验，写本回忆录', skill:8, happy:5},
+      {text:'总结经验，写本回忆录', skill:8, happy:5,health:-3},
       {text:'申请转岗，换个环境', skill:3, network:5}
-    ]},
+    ],health:-5},
   ],
   mnc: [
     { year:[1,2], title:'First Day at Work', desc:'你穿着新买的西装走进写字楼。前台用英文问候你，你回了一句"Fine, thank you"。', opts:[
       {text:'恶补商务英语，每天听BBC', skill:10, happy:-5},
       {text:'反正同事们也讲中文', happy:5, skill:-3},
       {text:'直接用翻译软件，效率至上', skill:3, happy:3}
-    ]},
+    ],health:-5},
     { year:[1,2], title:'PPT地狱', desc:'老板要求一份"简洁有力"的50页PPT。你花了一周调格式、对齐、配色。', opts:[
       {text:'做出一份惊艳全场的PPT', skill:8, health:-10, happy:-5},
-      {text:'用模板快速搞定，内容为王', skill:3, happy:3},
+      {text:'用模板快速搞定，内容为王', skill:3, happy:3,health:-5},
       {text:'花钱找外包做，自己聚焦内容', happy:-3}
     ]},
     { year:[2,3], title:'出差到凌晨', desc:'连续出差三周，住了五家酒店。你已经分不清自己在哪个城市了。', opts:[
@@ -943,7 +943,7 @@ var CAREER_EVENTS = {
       {text:'在出差中寻找当地美食，苦中作乐', happy:5, health:-3}
     ]},
     { year:[3,4], title:'文化冲突', desc:'总部发来一封邮件，抄送了20个人。内容只有两行字，但你读了三遍也没理解什么意思。', opts:[
-      {text:'约个电话会议当面问清楚', network:5, skill:3},
+      {text:'约个电话会议当面问清楚', network:5, skill:3,health:-3},
       {text:'找翻译好的同事帮你解读', network:3, happy:-3},
       {text:'写一封更看不懂的邮件回复', happy:8, network:-3}
     ]},
@@ -954,12 +954,12 @@ var CAREER_EVENTS = {
     ]},
     { year:[5,6], title:'被挖角了', desc:'猎头打来电话，一家中国互联网公司开双倍薪水挖你。', opts:[
       {text:'跳！钱多事少离家近', salary:2, skill:-5, happy:5},
-      {text:'留在外企，稳定+title', happy:3, skill:5},
+      {text:'留在外企，稳定+title', happy:3, skill:5,health:-4},
       {text:'跟领导谈，要求加薪+晋升', network:5, happy:-3}
     ]},
     { year:[6,7], title:'全球化项目', desc:'你被选入一个跨国项目组。团队成员来自5个国家，时区跨越12小时。', opts:[
       {text:'全力投入，锻炼国际视野', skill:10, health:-10, happy:-5},
-      {text:'做好分内事就行，不主动揽活', happy:3, skill:3},
+      {text:'做好分内事就行，不主动揽活', happy:3, skill:3,health:-6},
       {text:'主动承担跨时区协调工作', network:10, health:-8}
     ]},
     { year:[7,8], title:'Headcount冻结', desc:'总部宣布全球Headcount冻结。你申请的HC被毙了，但活还是那些活。', opts:[
@@ -968,7 +968,7 @@ var CAREER_EVENTS = {
       {text:'开始更新LinkedIn', happy:-5, network:5}
     ]},
     { year:[8,9], title:'VP走了', desc:'你的VP突然离职了。新VP是从对手公司空降来的，风格完全不同。', opts:[
-      {text:'适应新风格，展现价值', network:5, skill:5},
+      {text:'适应新风格，展现价值', network:5, skill:5,health:-3},
       {text:'保持低调，先观察', happy:-3, skill:3},
       {text:'趁乱扩大自己的影响力', network:8, happy:-5}
     ]},
@@ -976,27 +976,27 @@ var CAREER_EVENTS = {
       {text:'申请Partner或Director', skill:5, network:8, happy:-3},
       {text:'回国企/创业，换个活法', happy:5, skill:-3},
       {text:'写了一本《外企生存指南》', skill:8, happy:8}
-    ]},
+    ],health:-2},
     { year:[1,2], title:'全英文会议', desc:'你第一次参加全英文会议。听了半小时只听懂了"OK"和"Any questions?"。', opts:[
       {text:'会后疯狂补英语', skill:5, happy:-5},
       {text:'找同事要会议纪要补课', skill:3, happy:-2},
       {text:'以后开会前先看议程准备关键词', skill:3, happy:3}
-    ]},
+    ],health:-4},
     { year:[2,3], title:'PPT治国', desc:'你花了一周做了一个50页的PPT。客户只看了封面就问"所以结论是什么？"', opts:[
-      {text:'精简到10页，结论放第一页', skill:8, happy:5},
+      {text:'精简到10页，结论放第一页', skill:8, happy:5,health:-5},
       {text:'坚持，好PPT需要细节支撑', happy:-5, skill:3},
       {text:'准备两个版本：详细版+摘要版', skill:5, happy:3}
-    ]},
+    ],health:-4},
     { year:[3,4], title:'Global Meeting翻车', desc:'你在全球电话会议上分享方案。讲到一半，东京的同事说"Sorry, I have a different understanding..."', opts:[
       {text:'礼貌回应，会后深入沟通', network:5, happy:-3},
-      {text:'用数据和case反驳', skill:5, happy:3},
+      {text:'用数据和case反驳', skill:5, happy:3,health:-2},
       {text:'承认差异，邀请对方分享观点', network:8, happy:5}
-    ]},
+    ],health:-4},
     { year:[4,5], title:'年终评估360度', desc:'360度评估结果出来了。你给同事打了高分，但你收到的评语是"需要更主动地沟通"。', opts:[
       {text:'制定改进计划，每周主动同步', skill:5, happy:-3},
       {text:'下次评估前多搞搞关系', network:5, happy:-3},
       {text:'接受反馈，慢慢改进', happy:3}
-    ]},
+    ],health:-2},
     { year:[5,6], title:'被派去海外出差', desc:'公司派你去硅谷总部出差两周。兴奋之余，你发现自己要倒时差还要做汇报。', opts:[
       {text:'全力以赴，拓展国际视野', skill:8, network:10, health:-5},
       {text:'顺便旅游一圈', happy:10, health:-3},
@@ -1006,7 +1006,7 @@ var CAREER_EVENTS = {
       {text:'享受出差生活', happy:5, health:-5},
       {text:'申请转到非出差项目', happy:-3, health:5},
       {text:'把出差当成旅游', network:5, happy:8}
-    ]},
+    ],health:-4},
     { year:[6,7], title:'裁员预警', desc:'公司全球裁员10%。你开始更新LinkedIn，但发现竞争对手也在裁员。', opts:[
       {text:'主动找老板确认自己位置', network:3, happy:-8},
       {text:'疯狂networking，广撒网', network:8, happy:-5},
@@ -1016,12 +1016,12 @@ var CAREER_EVENTS = {
       {text:'贷款去读，投资未来', money:-150000, skill:10, happy:-5},
       {text:'读在线MBA，性价比高', money:-30000, skill:5},
       {text:'不读了，经验比学历重要', happy:5}
-    ]},
+    ],health:-3},
     { year:[8,9], title:'跨国团队管理', desc:'你开始管理一个跨三个时区的团队。每天从早上8点开到晚上11点，覆盖全球。', opts:[
       {text:'制定轮班制，公平分担', skill:8, network:5, health:-8},
-      {text:'核心会议固定时间，其余异步', skill:5, happy:3},
+      {text:'核心会议固定时间，其余异步', skill:5, happy:3,health:-6},
       {text:'招一个本地team lead帮忙', network:5, happy:5}
-    ]},
+    ],health:-8},
     { year:[9,10], title:'外企十年总结', desc:'你在这家外企待了十年。从Analyst到Manager，PPT做了上万页。但你已经不太确定自己还会什么。', opts:[
       {text:'继续升，目标Partner', skill:5, network:8, happy:-3},
       {text:'跳到甲方做高管', skill:-3, network:5, happy:5},
@@ -1031,7 +1031,7 @@ var CAREER_EVENTS = {
   startup: [
     { year:[1,2], title:'找到合伙人', desc:'你在网上发了找合伙人的帖子，来了三个候选人。一个有技术没时间，一个有时间没钱，一个什么都没有但很热情。', opts:[
       {text:'选有技术的那个，兼职也行', skill:5, network:5, happy:-5},
-      {text:'选热情的那个，态度最重要', network:3, happy:5},
+      {text:'选热情的那个，态度最重要', network:3, happy:5,health:-4},
       {text:'自己干算了，不找合伙人了', skill:8, health:-10, happy:-8}
     ]},
     { year:[1,2], title:'第一个产品', desc:'你花三个月做出了MVP。上线第一天，除了你妈没人用。', opts:[
@@ -1045,10 +1045,10 @@ var CAREER_EVENTS = {
       {text:'考虑卖掉公司', happy:-10, skill:-5}
     ]},
     { year:[3,4], title:'拿到了天使轮', desc:'终于有个投资人说"投"。你激动得差点哭出来。钱到账的那天，你请全团队吃了顿火锅。', opts:[
-      {text:'招人扩张，快速做大', skill:5, network:5, happy:8},
-      {text:'精打细算，这笔钱要花2年', skill:8, happy:3},
+      {text:'招人扩张，快速做大', skill:5, network:5, happy:8,health:-5},
+      {text:'精打细算，这笔钱要花2年', skill:8, happy:3,health:-5},
       {text:'先给自己发一个月工资', happy:10}
-    ]},
+    ],health:-3},
     { year:[4,5], title:'核心员工离职', desc:'你最重要的技术负责人说要走了。他去了一家大厂，薪水翻了三倍。', opts:[
       {text:'加薪挽留', happy:-8, skill:3},
       {text:'祝福他，然后赶紧招人', network:5, skill:-3, happy:-5},
@@ -1056,9 +1056,9 @@ var CAREER_EVENTS = {
     ]},
     { year:[5,6], title:'产品终于爆发了', desc:'某个KOL无意中推荐了你的产品。下载量一夜暴涨10倍。服务器差点崩了。', opts:[
       {text:'趁热打铁，疯狂迭代', skill:10, health:-10, happy:8},
-      {text:'稳住节奏，别被冲昏头', skill:5, happy:5},
+      {text:'稳住节奏，别被冲昏头', skill:5, happy:5,health:-8},
       {text:'赶紧融资，趁估值高的时候', network:8, happy:3}
-    ]},
+    ],health:-3},
     { year:[6,7], title:'A轮融资', desc:'投资人终于从"再看看"变成了"我投"。但TA要求30%的股份和一票否决权。', opts:[
       {text:'接受，先活下去', happy:-5, skill:3},
       {text:'谈判，最多给15%', network:5, happy:-3},
@@ -1066,19 +1066,19 @@ var CAREER_EVENTS = {
     ]},
     { year:[7,8], title:'996的代价', desc:'连续加班三个月后，你在工位上晕倒了。救护车来的时候，你手里还握着手机。', opts:[
       {text:'住院一周，然后回来继续', health:-20, happy:-10},
-      {text:'强制休息，学会放手', health:5, happy:8, skill:3},
+      {text:'强制休息，学会放手', health:5, happy:8, skill:3,health:-6},
       {text:'把工作交给团队，转型做战略', skill:5, network:5}
-    ]},
+    ],health:-2},
     { year:[8,9], title:'被大厂看上了', desc:'一个大厂提出收购你的公司。价格诱人，但你觉得——再等等也许能更大。', opts:[
       {text:'卖了！财务自由', happy:10, skill:-5},
       {text:'不卖，我还能做得更大', happy:-5, skill:8, health:-10},
       {text:'反向谈判，要更多钱和title', network:5, happy:3}
-    ]},
+    ],health:-4},
     { year:[9,10], title:'创业十年', desc:'回头看，你从一个人变成了几十人的团队。中间差点死掉三次。但你活下来了。', opts:[
-      {text:'写了一篇《创业十年》发在朋友圈', happy:10, network:8},
-      {text:'准备IPO或下一轮融资', skill:8, network:5},
+      {text:'写了一篇《创业十年》发在朋友圈', happy:10, network:8,health:-3},
+      {text:'准备IPO或下一轮融资', skill:8, network:5,health:-4},
       {text:'休息一下，想想下一步', happy:8, health:5}
-    ]},
+    ],health:-4},
     { year:[1,2], title:'第一个用户', desc:'你产品上线了第一个月，终于来了一个用户——是你自己。', opts:[
       {text:'优化产品，继续推广', skill:8, happy:-5, money:-5000},
       {text:'找朋友帮忙转发', network:5, happy:-3},
@@ -1103,7 +1103,7 @@ var CAREER_EVENTS = {
       {text:'打官司维权', money:-20000, happy:-10},
       {text:'做差异化，打不过就绕', skill:8, happy:-3},
       {text:'考虑被收购变现', money:50000, happy:5}
-    ]},
+    ],health:-3},
     { year:[5,6], title:'团队扩张', desc:'拿到融资后开始招人。但你发现招到的人比你预期的差很多。', opts:[
       {text:'亲自面试每一个人', skill:5, health:-10, happy:-5},
       {text:'请专业HR来把关', network:3, happy:-3},
@@ -1111,22 +1111,22 @@ var CAREER_EVENTS = {
     ]},
     { year:[5,6], title:'产品经理的崩溃', desc:'用户反馈里有人说"这什么垃圾产品"。你看了看竞品，发现他们也一样烂。', opts:[
       {text:'认真分析每一条反馈', skill:8, happy:-5},
-      {text:'过滤掉噪音，专注核心需求', happy:3},
+      {text:'过滤掉噪音，专注核心需求', happy:3,health:-4},
       {text:'在评论区回复"感谢反馈，我们会改进"', happy:5}
-    ]},
+    ],health:-5},
     { year:[6,7], title:'被大厂挖人', desc:'大厂HR开始定向挖你的核心员工。你收到消息说CTO在面试。', opts:[
       {text:'跟CTO坦诚聊，加薪留人', money:-10000, happy:-5},
       {text:'接受现实，培养backup', skill:5, happy:-3},
       {text:'也去挖大厂的人', network:5, happy:3}
-    ]},
+    ],health:-4},
     { year:[7,8], title:'增长停滞', desc:'用户增长曲线从陡峭变平缓。你试了所有增长黑客的方法，用户就是不动。', opts:[
       {text:'转型B端，换条路走', skill:8, happy:-5},
-      {text:'深耕现有用户，提高留存', skill:5, happy:3},
+      {text:'深耕现有用户，提高留存', skill:5, happy:3,health:-5},
       {text:'all in 短视频营销', skill:3, happy:-3}
     ]},
     { year:[9,10], title:'创业十年盘点', desc:'你从一个想法开始，走过了十年。公司还在，你还活着。这本身就是一个奇迹。', opts:[
       {text:'继续冲，目标上市', skill:8, health:-10, happy:-5},
-      {text:'找个CEO接手，自己退居二线', happy:10, network:5},
+      {text:'找个CEO接手，自己退居二线', happy:10, network:5,health:-2},
       {text:'卖掉公司，开始新的人生', money:100000, happy:10}
     ]}
   ],
@@ -1135,7 +1135,7 @@ var CAREER_EVENTS = {
       {text:'全力以赴，做出超预期的作品', skill:10, health:-8, happy:-3},
       {text:'按"随便做做"的标准交付', happy:5, skill:-3},
       {text:'先签合同再动手，避免扯皮', skill:3, network:3}
-    ]},
+    ],health:-3},
     { year:[1,2], title:'收款困难', desc:'做完了甲方说"效果不错，先欠着"。这已经是第三个拖欠尾款的客户了。', opts:[
       {text:'催！疯狂催！打到他接电话', network:-5, happy:-8},
       {text:'以后只接受预付50%', skill:5, happy:-3},
@@ -1148,7 +1148,7 @@ var CAREER_EVENTS = {
     ]},
     { year:[3,4], title:'全职的诱惑', desc:'前同事在大厂当总监，问你要不要来。年薪翻倍，还有期权。', opts:[
       {text:'回去上班！稳定的真香', happy:8, skill:-5},
-      {text:'继续自由职业，自由无价', happy:5, skill:5},
+      {text:'继续自由职业，自由无价', happy:5, skill:5,health:-2},
       {text:'兼职做，两边都不得罪', skill:3, health:-8}
     ]},
     { year:[4,5], title:'作品集危机', desc:'你发现自己的作品集越来越杂。什么都会一点，但什么都不精通。', opts:[
@@ -1158,42 +1158,42 @@ var CAREER_EVENTS = {
     ]},
     { year:[5,6], title:'接了个大单', desc:'一个品牌方给了你一个大单。预算够你半年不开张。但deadline只有两周。', opts:[
       {text:'拼了！这是翻身的机会', skill:8, health:-15, happy:5},
-      {text:'找几个freelancer一起做', network:8, skill:3},
+      {text:'找几个freelancer一起做', network:8, skill:3,health:-4},
       {text:'谈延期，质量比速度重要', skill:5, happy:3}
-    ]},
+    ],health:-3},
     { year:[6,7], title:'开了工作室', desc:'你终于从单打独斗变成了一个小团队。三个人，一间共享办公空间。', opts:[
       {text:'招兵买马，做大团队', network:8, skill:5, health:-8},
-      {text:'保持小而美，控制成本', happy:5, skill:3},
+      {text:'保持小而美，控制成本', happy:5, skill:3,health:-2},
       {text:'专注品牌化，做个人IP', skill:8, happy:8}
-    ]},
+    ],health:-2},
     { year:[7,8], title:'税务噩梦', desc:'自由职业三年了，你终于搞明白了什么叫"劳务报酬""经营所得""个税申报"。头大。', opts:[
-      {text:'请个专业会计', happy:5, skill:3},
+      {text:'请个专业会计', happy:5, skill:3,health:-3},
       {text:'自己研究政策，省了不少钱', skill:5, happy:-5},
       {text:'注册公司，变成正规军', skill:8, network:3}
-    ]},
+    ],health:-6},
     { year:[8,9], title:'行业寒冬', desc:'经济不好，品牌方都在砍预算。你的客户从20个缩减到了8个。', opts:[
       {text:'降价保客户', happy:-8, skill:-3},
-      {text:'转型线上课程/知识付费', skill:8, happy:5},
+      {text:'转型线上课程/知识付费', skill:8, happy:5,health:-4},
       {text:'趁机休息，存够的钱够撑一年', happy:3, health:5}
-    ]},
+    ],health:-6},
     { year:[9,10], title:'工作室主理人', desc:'你的工作室已经有了稳定的客户群和口碑。虽然不大，但——这是你自己的事。', opts:[
       {text:'继续扩大，目标年入百万', skill:5, network:5, happy:-3},
-      {text:'保持现状，享受工作生活平衡', happy:10, skill:3},
+      {text:'保持现状，享受工作生活平衡', happy:10, skill:3,health:-4},
       {text:'出一本书《自由职业的艺术》', skill:8, happy:8}
-    ]},
+    ],health:-6},
     { year:[1,2], title:'第一单交付', desc:'你终于接到了第一单！客户说"效果不错，就是能不能再改改？"这一改就是七遍。', opts:[
       {text:'改到满意为止', skill:5, health:-5, happy:-5},
-      {text:'明确修改次数限制', skill:3, happy:3},
+      {text:'明确修改次数限制', skill:3, happy:3,health:-2},
       {text:'加钱，每次修改收50%', skill:5, happy:8}
-    ]},
+    ],health:-5},
     { year:[1,2], title:'报价的艺术', desc:'你第一次给客户报价。报高了怕跑，报低了怕亏。最后报了个中间价——客户秒答应。', opts:[
-      {text:'开心接单', money:3000, happy:5},
+      {text:'开心接单', money:3000, happy:5,health:-2},
       {text:'后悔报低了，下次加价', happy:-3},
       {text:'研究市场行情，建立报价体系', skill:5, happy:3}
-    ]},
+    ],health:-6},
     { year:[2,3], title:'催款之路', desc:'客户说"月底结"，月底说"下月初"，下月初说"财务在走流程"。你开始怀疑人生。', opts:[
       {text:'催催催，不收到钱不干活', network:-3, happy:-5},
-      {text:'以后要求预付50%', skill:5, happy:3},
+      {text:'以后要求预付50%', skill:5, happy:3,health:-5},
       {text:'忍了，维持关系', money:-5000, happy:-8}
     ]},
     { year:[3,4], title:'税务噩梦', desc:'你发现自己要交的税比想象中多得多。以前在公司有HR帮你搞，现在全靠自己。', opts:[
@@ -1203,9 +1203,9 @@ var CAREER_EVENTS = {
     ]},
     { year:[4,5], title:'旺季爆单', desc:'突然来了五个项目同时要交付。你一个人24小时不够用。', opts:[
       {text:'接了！熬夜也要做完', money:15000, health:-15, happy:-10},
-      {text:'只接两个，保证质量', money:5000, happy:5},
+      {text:'只接两个，保证质量', money:5000, happy:5,health:-2},
       {text:'外包一部分给同行', money:3000, skill:3, happy:3}
-    ]},
+    ],health:-4},
     { year:[5,6], title:'客户跑路', desc:'做完项目后客户公司倒闭了，尾款收不回来。你白干了两个月。', opts:[
       {text:'认栽，以后要求分期付款', money:-8000, happy:-10},
       {text:'找律师追讨', money:-3000, happy:-5},
@@ -1215,14 +1215,14 @@ var CAREER_EVENTS = {
       {text:'学习管理，做团队leader', skill:5, network:5, happy:-3},
       {text:'还是自己干靠谱', happy:3, skill:-3},
       {text:'招个合伙人分担管理', network:8, happy:5}
-    ]},
+    ],health:-6},
     { year:[6,7], title:'作品集的力量', desc:'你整理了过去几年的作品，发现质量参差不齐。有些作品让你骄傲，有些让你想删掉。', opts:[
-      {text:'精选最好的10个案例', skill:5, happy:8},
+      {text:'精选最好的10个案例', skill:5, happy:8,health:-4},
       {text:'把旧作品翻新重做', skill:8, health:-5, happy:-3},
       {text:'开始记录每个项目的过程', skill:3, happy:3}
-    ]},
+    ],health:-4},
     { year:[7,8], title:'AI冲击', desc:'AI工具让很多设计/文案工作自动化了。你的客户开始问"你用AI吗？用AI的话我就不需要你了"。', opts:[
-      {text:'拥抱AI，提升效率10倍', skill:10, happy:5},
+      {text:'拥抱AI，提升效率10倍', skill:10, happy:5,health:-2},
       {text:'强调人工创意的价值', happy:-3, skill:3},
       {text:'转型做AI不能替代的工作', skill:8, happy:-5}
     ]},
@@ -1242,8 +1242,8 @@ var RANDOM_EVENTS = [
     {text:'请假回去陪护一周', money:-8000, health:-3, happy:5}
   ]},
   { emoji:'💸', title:'意外之财', desc:'你随手买的东西居然中奖了。不记得什么时候买的，但奖品是真的。', weight:2, opts:[
-    {text:'全部存起来', money:15000, happy:5},
-    {text:'请朋友吃顿好的', money:5000, network:5, happy:3},
+    {text:'全部存起来', money:15000, happy:5,health:-5},
+    {text:'请朋友吃顿好的', money:5000, network:5, happy:3,health:-2},
     {text:'投资自己，报个课程', money:-3000, skill:8, happy:3}
   ]},
   { emoji:'🐱', title:'捡了一只流浪猫', desc:'下班路上在单元门口看到一只小猫缩在纸箱里。眼睛还没睁开。', weight:1, opts:[
@@ -1252,7 +1252,7 @@ var RANDOM_EVENTS = [
     {text:'放回去，自己都养不活', happy:-3}
   ]},
   { emoji:'🎂', title:'爸妈催婚了', desc:'过年回家，七大姑八大姨轮番上阵："你也老大不小了！"', weight:2, opts:[
-    {text:'认真聊聊自己的想法', happy:3, skill:2},
+    {text:'认真聊聊自己的想法', happy:3, skill:2,health:-3},
     {text:'打哈哈转移话题', happy:-3},
     {text:'相亲APP充个会员试试', money:-500, happy:-5, network:3}
   ]},
@@ -1267,55 +1267,55 @@ var RANDOM_EVENTS = [
     {text:'去私立诊所当天搞定', money:-5000, health:5}
   ]},
   { emoji:'🌧️', title:'暴雨淹了出租屋', desc:'台风天暴雨，你的负一层出租屋水漫进来了。鞋和杂物泡了汤。', weight:2, opts:[
-    {text:'找房东索赔', money:2000, network:3},
+    {text:'找房东索赔', money:2000, network:3,health:-4},
     {text:'自己收拾', money:-1000, happy:-5},
     {text:'趁机换个更好的房子', money:-6000, happy:5}
   ]},
   { emoji:'🎂', title:'年终奖发了', desc:'今年公司业绩超预期，多发了两个月年终奖。同事群炸了锅。', weight:2, opts:[
-    {text:'全部存起来', money:30000, happy:5},
-    {text:'奖励自己一趟旅行', money:10000, happy:10, health:5},
+    {text:'全部存起来', money:30000, happy:5,health:-3},
+    {text:'奖励自己一趟旅行', money:10000, happy:10, health:5,health:-3},
     {text:'投资学习，报个MBA', money:-15000, skill:10}
   ]},
   { emoji:'💔', title:'失恋了', desc:'在一起三年的TA说"我们不合适"。你在被窝里哭了一晚上。', weight:1, opts:[
     {text:'找朋友倾诉，大醉一场', money:-2000, network:5, happy:-5},
     {text:'把悲伤化为工作的动力', skill:8, happy:-8, health:-3},
     {text:'开始健身，变成更好的自己', health:8, happy:3, skill:3}
-  ]},
+  ],health:-4},
   { emoji:'🎰', title:'朋友圈都在炒股', desc:'行情好，连你那个从来不投资的同学都赚了30%。', weight:1, opts:[
     {text:'拿1万试水', money: Math.random()>0.5 ? 5000 : -3000, happy:-3},
     {text:'系统学习投资知识', money:-2000, skill:5},
     {text:'不看朋友圈最省心', happy:5}
-  ]},
+  ],health:-4},
   { emoji:'🎓', title:'同学聚会', desc:'大学班长组织同学会。人均600。看着群里接龙——去的都是混得好的。', weight:1, opts:[
     {text:'参加！不能输面子', money:-2000, network:5, happy:-3},
     {text:'不去，省钱', happy:-3},
     {text:'私聊班长说下次约', happy:0}
   ]},
   { emoji:'🏃', title:'体检报告亮红灯', desc:'年度体检，报告上好几个指标偏高。医生说要注意休息和饮食。', weight:2, opts:[
-    {text:'开始规律运动', health:10, happy:3, skill:2},
+    {text:'开始规律运动', health:10, happy:3, skill:2,health:-5},
     {text:'买一堆保健品', money:-3000, health:3},
     {text:'忽略它，年轻扛得住', health:-8, happy:-3}
   ]},
   { emoji:'🐱', title:'养了一只猫', desc:'终于下定决心养了一只橘猫。取名叫"工资"——因为花了你很多。', weight:1, opts:[
     {text:'认真当铲屎官', money:-5000, happy:15, health:-2},
-    {text:'让室友帮忙养', happy:5},
+    {text:'让室友帮忙养', happy:5,health:-4},
     {text:'拍照发朋友圈收获100个赞', happy:8, network:3}
-  ]},
+  ],health:-2},
   { emoji:'🎸', title:'组了个乐队', desc:'周末跟朋友组了个业余乐队。你是鼓手，因为只有你会敲东西。', weight:1, opts:[
     {text:'认真排练，争取上台表演', skill:5, happy:8, health:-3},
-    {text:'玩玩就好，开心最重要', happy:10},
+    {text:'玩玩就好，开心最重要', happy:10,health:-4},
     {text:'发现自己五音不全，退出了', happy:-3, skill:2}
   ]},
   { emoji:'📺', title:'追剧上头了', desc:'新出了一部剧，你连续三天看到凌晨三点。领导说你最近精神不好。', weight:1, opts:[
     {text:'戒剧！工作重要', skill:3, happy:-8},
     {text:'边追边工作，一心二用', skill:-5, happy:5, health:-3},
     {text:'承认自己是追剧废物', happy:3}
-  ]},
+  ],health:-6},
   { emoji:'💰', title:'接了个私活', desc:'前同事找你做个外包项目，预算2万，工期两周。', weight:1, opts:[
     {text:'接了，加班做', money:20000, skill:5, health:-10},
-    {text:'推了，周末要休息', happy:5, health:3},
+    {text:'推了，周末要休息', happy:5, health:3,health:-5},
     {text:'接了但找了人帮忙分摊', money:8000, network:3, skill:3}
-  ]},
+  ],health:-4},
   { emoji:'🏠', title:'搬家了', desc:'租的房子到期，房东涨价30%。你决定搬到远一点但便宜很多的地方。', weight:2, opts:[
     {text:'搬到郊区，通勤时间翻倍', money:5000, health:-5, happy:-8},
     {text:'咬牙续租，生活质量不能降', money:-8000, happy:3},
@@ -1323,7 +1323,7 @@ var RANDOM_EVENTS = [
   ]},
   { emoji:'🚗', title:'学车噩梦', desc:'你报名学车，教练说"你这方向感，导航都救不了你"。科目二挂了三次。', weight:1, opts:[
     {text:'继续考，迟早能过', money:-3000, happy:-5, skill:2},
-    {text:'放弃，打车也挺好的', happy:3},
+    {text:'放弃，打车也挺好的', happy:3,skill:-6},
     {text:'换个教练试试', money:-1000, happy:-3}
   ]},
   { emoji:'🏠', title:'租房踩坑', desc:'新租的房子漏水了。房东说"小问题，自己修修"。你看了看天花板——水帘洞。', weight:2, opts:[
@@ -1335,32 +1335,32 @@ var RANDOM_EVENTS = [
     {text:'报警，但大概率追不回来', money:-20000, happy:-10},
     {text:'吸取教训，以后只投自己懂的', skill:5, happy:-5},
     {text:'安慰自己"就当交学费"', happy:3}
-  ]},
+  ],health:-6},
   { emoji:'🎭', title:'相亲现场', desc:'相亲对象条件不错，但全程在看手机。你决定主动出击。', weight:1, opts:[
     {text:'也看手机，互相伤害', happy:-3},
-    {text:'找话题聊，展示魅力', network:5, happy:3},
+    {text:'找话题聊，展示魅力', network:5, happy:3,health:-3},
     {text:'直接说"今天就到这吧"', happy:5}
-  ]},
+  ],health:-6},
   { emoji:'🎰', title:'彩票中奖', desc:'你随手买了张彩票，中了500块。你开始计算如果中500万该怎么花。', weight:1, opts:[
     {text:'再去买几张', money:-200, happy:5},
-    {text:'存起来，见好就收', money:500, happy:3},
+    {text:'存起来，见好就收', money:500, happy:3,health:-2},
     {text:'请朋友吃饭庆祝', money:-100, network:5, happy:5}
   ]},
   { emoji:'🏃', title:'健身房办卡', desc:'你办了张年卡，去了三次。健身教练天天给你发消息"什么时候来？"', weight:2, opts:[
     {text:'坚持去，不能浪费钱', health:10, happy:-3},
     {text:'把卡转给朋友', money:-2000, happy:-3},
     {text:'在家跟着视频练', health:5, happy:3}
-  ]},
+  ],health:-6},
   { emoji:'💇', title:'理发翻车', desc:'你跟理发师说"修一点点"。出来后发现——嗯，确实只是一点点。一点点头发。', weight:1, opts:[
     {text:'戴帽子等它长出来', happy:-5},
     {text:'换个理发师试试', happy:-3},
     {text:'干脆剃光，从头开始', happy:5, health:2}
-  ]},
+  ],health:-6},
   { emoji:'🎄', title:'年终聚会', desc:'公司年终聚餐。老板说"今年辛苦了"，然后宣布明年目标翻倍。', weight:2, opts:[
     {text:'鼓掌，新年新气象', happy:-5},
     {text:'偷偷更新简历', happy:-3, skill:2},
     {text:'趁机跟老板谈加薪', network:3, happy:5}
-  ]},
+  ],health:-3},
   { emoji:'📱', title:'手机丢了', desc:'你在出租车上落了手机。打电话过去——关机了。', weight:1, opts:[
     {text:'报警+运营商挂失', money:-5000, happy:-8},
     {text:'买个新手机', money:-6000, happy:-3},
@@ -1377,7 +1377,7 @@ var RANDOM_EVENTS = [
     {text:'在小区群里喊一声', happy:-2}
   ]},
   { emoji:'🎵', title:'KTV翻车', desc:'你在KTV唱了首歌。唱完后全场安静了三秒，然后有人说"嗯...挺有个性的"。', weight:1, opts:[
-    {text:'继续唱，享受舞台', happy:10, network:3},
+    {text:'继续唱，享受舞台', happy:10, network:3,health:-3},
     {text:'把麦让给别人', happy:-3},
     {text:'以后只负责鼓掌', happy:-2}
   ]},
@@ -1385,7 +1385,7 @@ var RANDOM_EVENTS = [
     {text:'原路返回在家办公', happy:5, network:-2},
     {text:'来都来了，上班吧', happy:-5},
     {text:'以后提前看路况再出门', skill:2, happy:3}
-  ]},
+  ],health:-2},
   { emoji:'💤', title:'失眠之夜', desc:'凌晨三点还在数羊。明天早上九点还有重要会议。', weight:2, opts:[
     {text:'起来看会儿书', skill:3, happy:-3},
     {text:'刷手机直到睡着', happy:-5, health:-3},
@@ -1395,40 +1395,40 @@ var RANDOM_EVENTS = [
     {text:'在群里澄清事实', network:-3, happy:-5},
     {text:'私下找同事聊聊', network:3, happy:-3},
     {text:'以后所有沟通都留记录', skill:3, happy:3}
-  ]},
+  ],health:-2},
   { emoji:'✈️', title:'说走就走的旅行', desc:'你突然很想出去走走。打开携程看了眼机票——便宜的都在工作日。', weight:1, opts:[
     {text:'请年假出去浪', money:-5000, happy:10, health:5},
     {text:'周末找个周边游', money:-1000, happy:5},
     {text:'算了，等有空再说', happy:-3}
   ]},
   { emoji:'📚', title:'买了kindle吃灰', desc:'你买了kindle说要多读书。三个月后发现它最大的用途是泡面盖。', weight:1, opts:[
-    {text:'重新开始读书', skill:5, happy:3},
+    {text:'重新开始读书', skill:5, happy:3,health:-2},
     {text:'送人吧，自己不适合', happy:-2},
     {text:'下载小说当睡前读物', happy:5}
-  ]},
+  ],health:-5},
   { emoji:'🍜', title:'外卖吃出头发', desc:'你点的外卖里有一根头发。你看了看厨房监控——算了，不看了。', weight:1, opts:[
-    {text:'给差评+退款', money:30, happy:5},
+    {text:'给差评+退款', money:30, happy:5,health:-6},
     {text:'忍了，下次换一家', happy:-3},
     {text:'开始自己做饭', skill:3, happy:3, health:3}
-  ]},
+  ],health:-2},
   { emoji:'💼', title:'简历被已读不回', desc:'你投了20份简历，只收到3个面试邀请。其中一个还是卖保险的。', weight:2, opts:[
     {text:'优化简历继续投', skill:3, happy:-5},
     {text:'找内推机会', network:5, happy:-3},
     {text:'先提升技能再说', skill:5, happy:3}
-  ]},
+  ],health:-6},
   { emoji:'🎬', title:'追剧到凌晨', desc:'本来只想看一集，结果通宵追完了整部剧。第二天顶着黑眼圈上班。', weight:2, opts:[
     {text:'以后设个闹钟提醒', happy:-2},
-    {text:'向同事安利这部剧', network:3, happy:5},
+    {text:'向同事安利这部剧', network:3, happy:5,health:-2},
     {text:'承认自制力不行，但剧是真的好看', happy:8}
-  ]},
+  ],health:-3},
   { emoji:'🛒', title:'双十一剁手', desc:'你本来只想买件秋衣。购物车里多了二十样东西，总金额四位数。', weight:2, opts:[
     {text:'全部付款，快乐无价', money:-5000, happy:10},
-    {text:'冷静筛选，只留必需品', happy:3, skill:2},
+    {text:'冷静筛选，只留必需品', happy:3, skill:2,health:-3},
     {text:'全部退货，假装什么都没发生', happy:-3}
   ]},
   { emoji:'🏠', title:'家里催买房', desc:'爸妈说"你看隔壁小王都买房了"。你看了看房价——嗯，再等等。', weight:2, opts:[
     {text:'认真考虑攒首付', money:-10000, happy:-5},
-    {text:'租房也挺好的，灵活', happy:3},
+    {text:'租房也挺好的，灵活', happy:3,health:-3},
     {text:'跟爸妈解释一下市场行情', happy:-3}
   ]},
   { emoji:'🎮', title:'游戏上瘾', desc:'你最近沉迷一款新游戏。每天下班回家就开打，打到凌晨。', weight:1, opts:[
@@ -1440,12 +1440,12 @@ var RANDOM_EVENTS = [
     {text:'带回家养着', money:-3000, happy:12, health:-2},
     {text:'送到救助站', money:-200, happy:3},
     {text:'给它找个好主人', happy:5}
-  ]},
+  ],health:-4},
   { emoji:'🎵', title:'街头卖艺', desc:'周末你在地铁口弹吉他。路人给了你五块钱和一个馒头。', weight:1, opts:[
-    {text:'继续，享受被关注', happy:8, network:3},
+    {text:'继续，享受被关注', happy:8, network:3,health:-2},
     {text:'算了，还是回去上班吧', happy:-2},
     {text:'开个直播试试', skill:3, happy:5}
-  ]},
+  ],health:-2},
   { emoji:'🦷', title:'看牙恐惧', desc:'牙医说你需要做根管治疗。你听到"根管"两个字就开始发抖。', weight:1, opts:[
     {text:'咬牙做了', money:-5000, health:5},
     {text:'先吃止痛药扛着', money:-50, health:-5},
@@ -2213,6 +2213,13 @@ function chooseRandom(optIdx) {
 
 // ====== Promotion Challenge ======
 function showPromotionChallenge() {
+  // Save pre-promotion snapshot for undo
+  state._prePromoSnapshot = {
+    skill: state.skill, network: state.network, health: state.health,
+    happy: state.happy, salary: state.salary, rankIdx: state.rankIdx,
+    money: state.money, year: state.year, track: state.track
+  };
+
   var track = CAREER_TRACKS[state.track];
   var currentRank = track.ladder[state.rankIdx];
   var nextRank = track.ladder[state.rankIdx + 1];
@@ -2329,7 +2336,16 @@ function promoChoice(choice) {
     } else {
       state.happy = clamp(state.happy - 10, 0, 100);
       state._promoCooldown = 2;
-      toast('😔 晋升失败... 冷却2年');
+      toast('😔 
+    // Restore from snapshot on failure
+    if (state._prePromoSnapshot) {
+      var snap = state._prePromoSnapshot;
+      state.skill = snap.skill; state.network = snap.network;
+      state.health = snap.health; state.happy = snap.happy;
+      state.money = snap.money;
+      state._prePromoSnapshot = null;
+    }
+晋升失败... 冷却2年');
     }
   } else if (choice === 1) {
     // Stay safe: slight skill bonus, no promotion
