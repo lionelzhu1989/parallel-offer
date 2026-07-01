@@ -441,22 +441,13 @@ function _getTalentEffectSummary(talent) {
 // ====== DATA: Career Tracks ======
 var CAREER_TRACKS = {
   tech: {
-    id: 'tech', emoji: '💻', label: '互联网技术', tag: 'tech',
-    desc: '程序员 · 产品经理 · 设计师',
+    id: 'tech', emoji: '💻', label: '大厂码农/产品', tag: 'tech',
+    desc: '程序员 · 产品经理 · 运营 · 销售',
     salary: 20000, expense: 8000,
     ladder: ['初级工程师','中级工程师','高级工程师','技术专家','技术总监','VP/CTO'],
     ladderShort: ['L1','L2','L3','L4','L5','L6'],
     promoYears: [3,5,7,9],
     companies: ['字节跳动','阿里云','腾讯','百度','美团','快手','拼多多','小红书','B站','米哈游','DeepSeek','月之暗面']
-  },
-  biz: {
-    id: 'biz', emoji: '🤝', label: '互联网商务', tag: 'biz',
-    desc: '销售 · 运营 · 市场',
-    salary: 18000, expense: 7500,
-    ladder: ['销售代表','销售主管','销售经理','商务总监','VP'],
-    ladderShort: ['S1','S2','S3','S4','S5'],
-    promoYears: [3,5,7,9],
-    companies: ['字节跳动','美团','腾讯广告','阿里妈妈','快手商业化','京东','拼多多','SHEIN','TikTok']
   },
   state: {
     id: 'state', emoji: '🏛️', label: '央企/国企', tag: 'state',
@@ -687,7 +678,7 @@ var CAREER_EVENTS = {
       {text:'在现有框架上打补丁续命', skill:3, happy:-5},
       {text:'写个技术债文档，留着下次', happy:3}
     ],health:-4},
-      ,{ year:[4,6], title:'开源贡献', desc:'你给一个知名开源项目提了PR，被合并了。你觉得自己好像也能改变世界。', opts:[
+      { year:[4,6], title:'开源贡献', desc:'你给一个知名开源项目提了PR，被合并了。你觉得自己好像也能改变世界。', opts:[
       {text:'继续深入贡献，成为核心开发者', skill:12, health:-8, happy:5},
       {text:'在公司内部分享开源经验', skill:5, network:8, happy:3},
       {text:'用开源项目包装简历，准备跳槽', skill:3, network:5, happy:-2}
@@ -702,9 +693,8 @@ var CAREER_EVENTS = {
       {text:'不理会，专注写代码', skill:5, happy:3},
       {text:'写一篇深度技术文章回应', skill:8, network:8, health:-5}
     ]}
-],
-  biz: [
-    { year:[1,2], title:'第一个客户', desc:'你终于约到了人生中第一个大客户。但见面时发现——对方是个比你还能聊的销售。', opts:[
+,
+{ year:[1,2], title:'第一个客户', desc:'你终于约到了人生中第一个大客户。但见面时发现——对方是个比你还能聊的销售。', opts:[
       {text:'硬着头皮上，把PPT翻烂了讲', skill:5, network:5, happy:-3},
       {text:'先聊感情再聊业务', network:8, happy:3,health:-4},
       {text:'直接报最低价，用价格说话', skill:-3, happy:-5}
@@ -921,7 +911,7 @@ var CAREER_EVENTS = {
       {text:'总结经验，写本回忆录', skill:8, happy:5,health:-3},
       {text:'申请转岗，换个环境', skill:3, network:5}
     ],health:-5},
-      ,{ year:[4,6], title:'职称评定', desc:'高级职称评审开始了，名额只有2个，竞争者有5个。', opts:[
+      { year:[4,6], title:'职称评定', desc:'高级职称评审开始了，名额只有2个，竞争者有5个。', opts:[
       {text:'全力准备材料', skill:8, health:-5, happy:-5, __buff:{id:'bureaucracy',name:'文山会海',desc:'写材料消耗精力',dur:2,fx:{health:-3,happy:-5}}},
       {text:'找关系打点一下', money:-10000, network:5, happy:-3},
       {text:'这次先不评了，让给年轻人', happy:10, skill:-3}
@@ -1573,7 +1563,7 @@ var ENDINGS = [
   { id:'burnout', emoji:'💀', name:'过劳战士', track:'tech', desc:'你用命换来了升职加薪。现在你有时间花钱治病了。', theme:'red', condition:function(s){ return s.health<30 && s.rankIdx>=3; } },
   { id:'tech_god', emoji:'🌟', name:'技术大牛', track:'tech', desc:'你的代码能跑，你的演讲能打，你是团队的灵魂。', theme:'purple', condition:function(s){ return s.skill>=85 && s.rankIdx>=3; } },
   // Biz endings
-  { id:'sales_king', emoji:'👑', name:'销售封王', track:'biz', desc:'你签过的单子够买一栋楼了。虽然你连首付都凑不齐。', theme:'gold', condition:function(s){ return s.rankIdx>=3 && s.network>=70; } },
+  { id:'sales_king', emoji:'👑', name:'销售封王', track:'tech', desc:'你签过的单子够买一栋楼了。虽然你连首付都凑不齐。', theme:'gold', condition:function(s){ return s.rankIdx>=3 && s.network>=70; } },
   // State endings
   { id:'bureaucrat', emoji:'🏛️', name:'体制之光', track:'state', desc:'你用十年证明了，体制内也能做出一番事业。', theme:'blue', condition:function(s){ return s.rankIdx>=3; } },
   // MNC endings
@@ -1666,12 +1656,11 @@ var ACHIEVEMENTS = [
   { id:'salary_10w', emoji:'💰', name:'月薪十万', desc:'月薪超过10万', check:function(s){ return s.salary>=100000; } },
   { id:'talent_collector', emoji:'🎨', name:'天赋收藏家', desc:'解锁所有天赋', check:function(s){ return s.talents && s.talents.length >= 5; } },
   { id:'all_endings', emoji:'📖', name:'结局大师', desc:'解锁所有结局', check:function(s){ try { var saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}'); return Object.keys(saved).length >= 10; } catch(e) { return false; } } },
-
-  ,{ id:'tech_master', emoji:'🔬', name:'技术大牛', desc:'走技术专家路线通关', check:function(s){ return s._promoBranch === 'tech' && s._playEnded; } }
-  ,{ id:'leader_boss', emoji:'👔', name:'管理精英', desc:'走管理领导路线通关', check:function(s){ return s._promoBranch === 'leader' && s._playEnded; } }
-  ,{ id:'landlord', emoji:'🏠', name:'包租公', desc:'拥有3套以上房产', check:function(s){ return (s._property || 0) >= 3; } }
-  ,{ id:'millionaire', emoji:'💎', name:'百万富翁', desc:'存款超过100万', check:function(s){ return s.money >= 1000000; } }
-  ,{ id:'bankrupt', emoji:'💸', name:'破产专业户', desc:'触发破产结局', check:function(s){ return s.money <= -50000; } }
+  { id:'tech_master', emoji:'🔬', name:'技术大牛', desc:'走技术专家路线通关', check:function(s){ return s._promoBranch === 'tech' && s._playEnded; } },
+  { id:'leader_boss', emoji:'👔', name:'管理精英', desc:'走管理领导路线通关', check:function(s){ return s._promoBranch === 'leader' && s._playEnded; } },
+  { id:'landlord', emoji:'🏠', name:'包租公', desc:'拥有3套以上房产', check:function(s){ return (s._property || 0) >= 3; } },
+  { id:'millionaire', emoji:'💎', name:'百万富翁', desc:'存款超过100万', check:function(s){ return s.money >= 1000000; } },
+  { id:'bankrupt', emoji:'💸', name:'破产专业户', desc:'触发破产结局', check:function(s){ return s.money <= -50000; } }
 ];
 
 // ====== Game State ======
@@ -1788,7 +1777,7 @@ function showIntro() {
     html += '<div class="tc-label">' + t.label + '</div>';
     html += '<div class="tc-desc">' + t.desc + '</div>';
 
-    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',biz:'#fd79a8',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',biz:'商务路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
+    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',biz:'商务路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
     html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
     html += '</div>';
   }
