@@ -592,7 +592,33 @@ body {
   .attr-item { padding:6px 3px; }
   .attr-item .attr-val { font-size:12px; }
   .attr-item .attr-label { font-size:8px; }
-}</style>
+}
+/* ====== Dark Mode ====== */
+body.dark-mode {
+  background: #0f0f1a !important;
+  color: #e0e0e0 !important;
+}
+body.dark-mode .attr-item {
+  background: rgba(255,255,255,0.05) !important;
+}
+body.dark-mode .scenario-card {
+  background: #1a1a2e !important;
+  color: #e0e0e0 !important;
+}
+body.dark-mode .choice-btn {
+  background: #1a1a2e !important;
+  border-color: #333 !important;
+  color: #e0e0e0 !important;
+}
+body.dark-mode .money-card {
+  background: linear-gradient(135deg, #1a2a1a, #0a1a0a) !important;
+}
+body.dark-mode .entry-btn {
+  background: #1a1a2e !important;
+  border-color: #333 !important;
+  color: #e0e0e0 !important;
+}
+</style>
 </head>
 <body>
 <div class="top-bar" id="topBar">
@@ -645,6 +671,14 @@ window.onerror = function(msg, url, line) {
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function randInt(lo, hi) { return Math.floor(Math.random() * (hi - lo + 1)) + lo; }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+// ====== Debounce System ======
+var _lastClickTime = {};
+function debounce(key, ms) {
+  var now = Date.now();
+  if (_lastClickTime[key] && now - _lastClickTime[key] < ms) return false;
+  _lastClickTime[key] = now;
+  return true;
+}
 function shuffle(arr) { var a = arr.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
 
 function toast(msg) {
@@ -2297,7 +2331,13 @@ function showIntro() {
   html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
   html += '</div>';
   html += '</div>';
-  main.innerHTML = html;
+  
+  html += '<div style="text-align:center;margin-top:16px;display:flex;gap:8px;justify-content:center">';
+  html += '<button onclick="exportSave()" style="background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;cursor:pointer">📤 导出存档</button>';
+  html += '<button onclick="importSave()" style="background:linear-gradient(135deg,#3b82f6,#2563eb);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;cursor:pointer">📥 导入存档</button>';
+  html += '<button onclick="resetSave()" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;cursor:pointer">🗑️ 清除</button>';
+  html += '</div>';
+main.innerHTML = html;
 }
 
 function selectTrack(id, el) {
@@ -2660,6 +2700,7 @@ function render() {
 }
 
 function chooseEvent(optIdx) {
+  if (!debounce('event', 400)) return;
   var event = window._currentEvent;
   if (!event) return;
   var opt = event.opts[optIdx];
@@ -2701,6 +2742,15 @@ function chooseEvent(optIdx) {
   if (opt.salary) state.salary = Math.max(0, Math.round(state.salary * (1 + opt.salary * 0.1)));
 
 
+  // Spawn floating numbers for value changes
+  var _floatChanges = {};
+  if (opt.skill) _floatChanges.skill = opt.skill + (state.talents.indexOf('chosen') >= 0 ? 1 : 0);
+  if (opt.network) _floatChanges.network = opt.network;
+  if (opt.health) _floatChanges.health = opt.health + (state.talents.indexOf('runner') >= 0 ? 3 : 0);
+  if (opt.hair) _floatChanges.hair = opt.hair;
+  if (opt.money) _floatChanges.money = opt.money;
+  spawnFloatingNumbers(_floatChanges);
+
   applyYearlyEffects();
   applyBuffs();
   applyYearlyIncome();
@@ -2733,6 +2783,9 @@ function chooseEvent(optIdx) {
   }
   state.health = clamp(state.health, 0, healthMax);
   state.hair = clamp(state.hair, 0, 100);
+  state.skill = clamp(state.skill, 0, 100);
+  state.network = clamp(state.network, 0, 100);
+  state.salary = Math.max(0, state.salary);
 
   // Record year
   if (!state._yearlyRecords.find(function(r){ return r.year === state.year; })) {
@@ -2768,6 +2821,8 @@ function applyYearlyEffects() {
   // Sub-health: health decays faster
   if (state.health <= 50 && state.health > 0) healthDecay += 2;
   state.health -= healthDecay;
+  state.health = clamp(state.health, 0, 100);
+  state.hair = clamp(state.hair, 0, 100);
   state.health = clamp(state.health, 0, state._healthMax || 100);
 
   // === Hair degradation (stress) ===
@@ -2901,6 +2956,7 @@ function showRandomEvent() {
 }
 
 function chooseRandom(optIdx) {
+  if (!debounce('random', 400)) return;
   var event = window._currentRandomEvent;
   if (!event) return;
   var opt = event.opts[optIdx];
@@ -3059,6 +3115,7 @@ function showPromotionChallenge() {
 }
 
 function promoChoice(choice) {
+  if (!debounce('promo', 400)) return;
   // Save snapshot for undo (fix #7)
   state._undoSnapshot = {
     skill: state.skill, network: state.network, health: state.health,
@@ -3211,6 +3268,7 @@ function showEnding() {
   if (!state._endingSaved) {
     state._endingSaved = true;
     saveEnding(ending);
+    toast('\ud83c\udfc6 \u7ed3\u5c40\u89e3\u9501\uff1a' + ending.emoji + ' ' + ending.name);
   }
 
   // Store ending for share
@@ -3295,6 +3353,13 @@ function showEnding() {
   html += '<div class="entry-bar" style="margin-top:8px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴 (' + getUnlockedCount() + '/' + ENDINGS.length + ')</button>';
   html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
+  html += '</div>';
+  html += '<div class="entry-bar" style="margin-top:8px">';
+  html += '<button class="entry-btn" onclick="exportSave()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#10b981">📤 导出存档</button>';
+  html += '<button class="entry-btn" onclick="importSave()" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:#3b82f6">📥 导入存档</button>';
+  html += '</div>';
+  html += '<div class="entry-bar" style="margin-top:8px">';
+  html += '<button class="entry-btn" onclick="toggleDarkMode()">🌙 夜间模式</button>';
   html += '</div>';
 
   main.innerHTML = html;
@@ -3543,6 +3608,7 @@ function closeShopPanel() {
 }
 
 function buyHeal(cost, amount) {
+  if (!debounce('shop', 300)) return;
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
   state.health = clamp(state.health + amount, 0, 100);
@@ -3552,6 +3618,7 @@ function buyHeal(cost, amount) {
 }
 
 function buyTrain(cost, amount) {
+  if (!debounce('shop', 300)) return;
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
   state.skill = clamp(state.skill + amount, 0, 100);
@@ -3561,6 +3628,7 @@ function buyTrain(cost, amount) {
 }
 
 function buySocial(cost, amount) {
+  if (!debounce('shop', 300)) return;
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
   state.network = clamp(state.network + amount, 0, 100);
@@ -3570,6 +3638,7 @@ function buySocial(cost, amount) {
 }
 
 function buyInvest(cost, rate) {
+  if (!debounce('shop', 300)) return;
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
   var rateMap = {0.03:'定期存款', 0.08:'基金定投', 0.15:'股票炒股'};
@@ -3581,6 +3650,7 @@ function buyInvest(cost, rate) {
 }
 
 function sellInvest(idx) {
+  if (!debounce('shop', 300)) return;
   if (!state._investments || idx >= state._investments.length) return;
   var inv = state._investments[idx];
   // Calculate years held
@@ -3600,6 +3670,7 @@ function sellInvest(idx) {
 }
 
 function buyProperty(cost, rent) {
+  if (!debounce('shop', 300)) return;
   if (state.money < cost) { toast('💸 存款不足，需¥' + (cost/10000) + '万'); return; }
   state.money -= cost;
   state._property = (state._property || 0) + 1;
@@ -3669,6 +3740,7 @@ function showPromoBranch() {
 }
 
 function choosePromoBranch(branch) {
+  if (!debounce('promoBranch', 400)) return;
   var salaryBoost = Math.round(state.salary * 0.4);
   
   if (branch === 'tech') {
@@ -4059,6 +4131,7 @@ function renderHospital() {
 }
 
 function hospitalAction(action) {
+  if (!debounce('hospital', 400)) return;
   var days = state.year - state._hospitalYear;
   if (action === 'buy_heal') { state.money -= 30000; state.health = clamp(state.health + 25, 0, 100); toast('💊 进口药效果显著！'); }
   else if (action === 'buy_basic') { state.money -= 10000; state.health = clamp(state.health + 10, 0, 100); toast('💊 基础治疗完成'); }
@@ -4377,6 +4450,111 @@ function showDeathScreen() {
   var ov = document.createElement('div');
   ov.innerHTML = html;
   document.body.appendChild(ov);
+}
+
+
+// ====== Save/Load Export/Import ======
+function exportSave() {
+  var saveData = {
+    version: 1,
+    endings: {},
+    achievements: {},
+    history: [],
+    exportTime: new Date().toISOString()
+  };
+  try { saveData.endings = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}'); } catch(e) {}
+  try { saveData.achievements = JSON.parse(localStorage.getItem('parallel_offer_achievements') || '{}'); } catch(e) {}
+  try { saveData.history = JSON.parse(localStorage.getItem('parallel_offer_history') || '[]'); } catch(e) {}
+  var json = JSON.stringify(saveData, null, 2);
+  var blob = new Blob([json], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'parallel_offer_save_' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('\ud83d\udcbe \u5b58\u6863\u5df2\u5bfc\u51fa\uff01');
+}
+
+function importSave() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        var data = JSON.parse(ev.target.result);
+        if (!data.version) { toast('\u274c \u65e0\u6548\u7684\u5b58\u6863\u6587\u4ef6'); return; }
+        if (data.endings) localStorage.setItem('parallel_offer_endings', JSON.stringify(data.endings));
+        if (data.achievements) localStorage.setItem('parallel_offer_achievements', JSON.stringify(data.achievements));
+        if (data.history) localStorage.setItem('parallel_offer_history', JSON.stringify(data.history));
+        var endCount = data.endings ? Object.keys(data.endings).length : 0;
+        var achCount = data.achievements ? Object.keys(data.achievements).length : 0;
+        toast('\u2705 \u5b58\u6863\u5bfc\u5165\u6210\u529f\uff01\u7ed3\u5c40' + endCount + '\u4e2a\uff0c\u6210\u5c31' + achCount + '\u4e2a');
+      } catch(ex) {
+        toast('\u274c \u5b58\u6863\u6587\u4ef6\u683c\u5f0f\u9519\u8bef');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function resetSave() {
+  if (!confirm('\u786e\u5b9a\u8981\u6e05\u9664\u6240\u6709\u5b58\u6863\u5417\uff1f\u6b64\u64cd\u4f5c\u4e0d\u53ef\u64a4\u9500\uff01')) return;
+  localStorage.removeItem('parallel_offer_endings');
+  localStorage.removeItem('parallel_offer_achievements');
+  localStorage.removeItem('parallel_offer_history');
+  toast('\ud83d\uddd1\ufe0f \u5b58\u6863\u5df2\u6e05\u9664');
+}
+
+
+// ====== First-Time Guide ======
+function showGuide() {
+  var guideShown = localStorage.getItem('parallel_offer_guide');
+  if (guideShown) return;
+  
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  
+  var html = '<div style="background:#fff;border-radius:20px;padding:24px;max-width:340px;width:90%;position:relative">';
+  html += '<div style="text-align:center;margin-bottom:16px">';
+  html += '<div style="font-size:48px;margin-bottom:8px">🎮</div>';
+  html += '<div style="font-size:18px;font-weight:bold;color:#1a1a2e">欢迎来到平行Offer！</div>';
+  html += '<div style="font-size:13px;color:#666;margin-top:8px">这是一款职场人生模拟游戏</div>';
+  html += '</div>';
+  html += '<div style="font-size:13px;color:#333;line-height:1.8;margin-bottom:16px">';
+  html += '<div style="margin-bottom:8px">📌 <strong>选择不同路线</strong>：科技、金融、体制、外企、创业、自由职业</div>';
+  html += '<div style="margin-bottom:8px">📊 <strong>管理属性</strong>：技能、人脉、健康、发量——它们决定你的结局</div>';
+  html += '<div style="margin-bottom:8px">💡 <strong>每个选择都有代价</strong>：升职加薪可能牺牲健康，摸鱼划水可能保住发量</div>';
+  html += '<div style="margin-bottom:8px">🏆 <strong>收集结局</strong>：10+种结局等你解锁，看看你会走到哪一步</div>';
+  html += '</div>';
+  html += '<button onclick="localStorage.setItem(\'parallel_offer_guide\',\'1\');this.parentElement.parentElement.remove()" style="width:100%;background:linear-gradient(135deg,#6366f1,#7c3aed);border:none;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:bold;cursor:pointer">开始游戏 →</button>';
+  html += '</div>';
+  
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay);
+}
+
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  var isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('parallel_offer_darkmode', isDark ? '1' : '0');
+  toast(isDark ? '🌙 夜间模式已开启' : '☀️ 日间模式已开启');
+}
+
+function loadDarkMode() {
+  try {
+    if (localStorage.getItem('parallel_offer_darkmode') === '1') {
+      document.body.classList.add('dark-mode');
+    }
+  } catch(e) {}
 }
 
 </script>
