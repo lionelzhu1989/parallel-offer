@@ -618,6 +618,10 @@ body.dark-mode .entry-btn {
   border-color: #333 !important;
   color: #e0e0e0 !important;
 }
+
+@keyframes slideDown { from{opacity:0;transform:translateY(-100%)} to{opacity:1;transform:translateY(0)} }
+@keyframes modalFadeIn { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+#importModal > div { animation: modalFadeIn 0.3s ease; }
 </style>
 </head>
 <body>
@@ -2282,18 +2286,27 @@ function showIntro() {
   // Parse rival stats from challenge URL
   var _rv = _params.get('rv');
   if (_rv) {
-    var _parts = _rv.split(',');
-    state._rival = {
-      name: _from || '挑战者',
-      skill: parseInt(_parts[0]) || 50,
-      network: parseInt(_parts[1]) || 50,
-      health: parseInt(_parts[2]) || 50,
-      hair: parseInt(_parts[3]) || 50,
-      salary: parseInt(_parts[4]) || 5000,
-      emoji: decodeURIComponent(_parts[5] || ''),
-      endingName: decodeURIComponent(_parts[6] || ''),
-      talents: _parts[7] ? decodeURIComponent(_parts[7]).split('|') : []
-    };
+    try {
+      var _parts = _rv.split(',');
+      if (_parts.length < 5) throw new Error('incomplete');
+      var _clamp = function(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); };
+      state._rival = {
+        name: _from || '挑战者',
+        skill: _clamp(parseInt(_parts[0]) || 50, 0, 99999),
+        network: _clamp(parseInt(_parts[1]) || 50, 0, 99999),
+        health: _clamp(parseInt(_parts[2]) || 50, 0, 100),
+        hair: _clamp(parseInt(_parts[3]) || 50, 0, 100),
+        salary: _clamp(parseInt(_parts[4]) || 5000, 0, 99999),
+        emoji: _parts[5] ? decodeURIComponent(_parts[5]) : '',
+        endingName: _parts[6] ? decodeURIComponent(_parts[6]) : '',
+        talents: _parts[7] ? decodeURIComponent(_parts[7]).split('|') : []
+      };
+      setTimeout(function(){ showImportModal(state._rival); }, 600);
+    } catch(e) {
+      console.warn('rv parse failed:', e);
+      state._rival = null;
+      setTimeout(function(){ toast('分享链接已损坏，已忽略挑战数据'); }, 500);
+    }
   } else {
     state._rival = null;
   }
@@ -4004,25 +4017,34 @@ function showPKCard(rival, me) {
 
 function shareChallenge() {
   var ending = state._ending || {};
-  var name = ending.name || '社畜';
-  var emoji = ending.emoji || '🦥';
-  // Encode stats for PK: skill,network,health,hair,salary,emoji,endingName,talents
-  var rv = state.skill + ',' + state.network + ',' + state.health + ',' + state.hair + ',' + state.salary + ',' + encodeURIComponent(emoji) + ',' + encodeURIComponent(name) + ',' + state.talents.map(function(t){ return t; }).join('|');
+  var name = ending.name || '社畚';
+  var emoji = ending.emoji || '🦗';
+  // Build rv: skill,network,health,hair,salary,emoji,endingName,talents
+  // Inner values URI-encoded; rv itself NOT double-encoded in URL
+  var safeTalents = state.talents.map(function(t){ return (typeof t === 'object' ? t.id : t) || ''; }).join('|');
+  var rv = state.skill + ',' + state.network + ',' + state.health + ',' + state.hair + ',' + state.salary + ',' + encodeURIComponent(emoji) + ',' + encodeURIComponent(name) + ',' + encodeURIComponent(safeTalents);
   var baseUrl = window.location.href.split('?')[0];
-  
-  var challengeUrl = baseUrl + '?from=' + encodeURIComponent(name) + '&rv=' + encodeURIComponent(rv);
+  // Single encoding at URL level
+  var challengeUrl = baseUrl + '?from=' + encodeURIComponent(name) + '&rv=' + rv;
   var text = '📸 我已经是' + emoji + name + '了！\n敢来和我PK吗？\n👉 ' + challengeUrl;
   if (navigator.share) {
     navigator.share({ title: '平行offer · 职场天赋RPG', text: text });
   } else {
-    navigator.clipboard.writeText(text).then(function(){
+    navigator.clipboard.writeText(challengeUrl).then(function() {
       toast('🔗 挑战链接已复制，发给好友PK吧！');
-    }).catch(function(){
-      toast('📋 请手动复制链接分享');
+    }).catch(function() {
+      var ta = document.createElement('textarea');
+      ta.value = challengeUrl;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch(ex) {}
+      document.body.removeChild(ta);
+      toast('🔗 挑战链接已复制，发给好友PK吧！');
     });
   }
 }
-
 
 // ====== INIT ======
 showIntro();
@@ -4515,6 +4537,31 @@ function resetSave() {
 
 
 // ====== First-Time Guide ======
+// ====== Import Confirmation Modal ======
+var _pendingImport = null;
+function showImportModal(rvData) {
+  _pendingImport = rvData;
+  var existing = document.getElementById('importModal');
+  if (existing) existing.remove();
+  var overlay = document.createElement('div');
+  overlay.id = 'importModal';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = '<div style="background:#fff;border-radius:16px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">' +
+    '<div style="font-size:36px;margin-bottom:12px">' + (rvData.emoji || '\u2694\ufe0f') + '</div>' +
+    '<div style="font-size:18px;font-weight:700;color:#1e293b;margin-bottom:8px">\u6536\u5230\u6311\u6218\u9080\u8bf7\uff01</div>' +
+    '<div style="font-size:14px;color:#64748b;margin-bottom:16px">\u6765\u81ea <b>' + (rvData.name || '\u6311\u6218\u8005') + '</b> \u7684\u6311\u6218<br>\u6280\u80fd' + rvData.skill + ' | \u4eba\u8109' + rvData.network + ' | \u6708\u85aa' + rvData.salary + '</div>' +
+    '<button id="importConfirmBtn" style="width:100%;padding:12px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px">\u2694\ufe0f \u63a5\u53d7\u6311\u6218</button>' +
+    '<button onclick="document.getElementById(\'importModal\').remove();_pendingImport=null" style="width:100%;padding:10px;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;font-size:14px;cursor:pointer">\u5ffd\u7565\uff0c\u5f00\u59cb\u81ea\u5df1\u7684\u6e38\u620f</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  document.getElementById('importConfirmBtn').onclick = function() {
+    state._rival = _pendingImport;
+    _pendingImport = null;
+    overlay.remove();
+    toast('\u2694\ufe0f \u6311\u6218\u5df2\u63a5\u53d7\uff01\u5f00\u59cb\u4f60\u7684\u804c\u573a\u4eba\u751f\u5427\uff01');
+  };
+}
+
 function showGuide() {
   var guideShown = localStorage.getItem('parallel_offer_guide');
   if (guideShown) return;
