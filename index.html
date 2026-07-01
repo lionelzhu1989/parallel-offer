@@ -1653,6 +1653,8 @@ function startGame() {
   state._endingSaved = false;
   state._promoCooldown = 0;
   state._undoSnapshot = null;
+  state._undoUsed = 0;
+  state._undoMax = 3;
   state._lastChoiceType = null;
   state._playStartTime = Date.now();
 
@@ -1753,7 +1755,7 @@ function render() {
   html += '<div class="scene-text">' + _makeVariantText(event.desc) + '</div>';
   html += '</div>';
   html += '<div class="choices">' + choicesHtml + '</div>';
-  html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选</button></div>';
+  html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选 (' + (state._undoMax - state._undoUsed) + '/' + state._undoMax + ')</button></div>';
   html += '<div class="restart-link"><button onclick="showIntro()">🔄 重新开始</button></div>';
 
   main.innerHTML = html;
@@ -1865,6 +1867,7 @@ function getModifiedBonus(base, type) {
 // ====== Undo/Regret System ======
 function undoLastChoice() {
   if (!state._undoSnapshot) { toast('没有可以撤回的选择'); return; }
+  if (state._undoUsed >= state._undoMax) { toast('💊 后悔药已用完（本局' + state._undoMax + '次）'); return; }
   var snap = state._undoSnapshot;
   state.skill = snap.skill;
   state.network = snap.network;
@@ -1886,7 +1889,9 @@ function undoLastChoice() {
   } else {
     render();
   }
-  toast('↩️ 已撤回，重新选择');
+  state._undoUsed++;
+  var remain = state._undoMax - state._undoUsed;
+  toast('↩️ 已撤回（剩余' + remain + '次）');
 }
 
 
@@ -1932,7 +1937,7 @@ function showRandomEvent() {
   }
   html += '</div>';
 
-  html += '\u003cdiv class="undo-bar"\u003e\u003cbutton class="undo-btn" onclick="undoLastChoice()"\u003e\u21a9\ufe0f 后悔药 \u00b7 撤回重选\u003c/button\u003e\u003c/div\u003e';
+  html += '\u003cdiv class="undo-bar"\u003e\u003cbutton class="undo-btn" onclick="undoLastChoice()"\u003e\u21a9\ufe0f 后悔药 \u00b7 撤回重选 (' + (state._undoMax - state._undoUsed) + '/' + state._undoMax + ')\u003c/button\u003e\u003c/div\u003e';
   document.getElementById('mainContent').innerHTML = html;
 }
 
@@ -2076,7 +2081,7 @@ function showPromotionChallenge() {
   html += '🎲 晋升概率：<span style="color:#ff6b35;font-size:15px">' + Math.round(chance * 100) + '%</span>';
   html += '</div></div>';
 
-  html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选</button></div>';
+  html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选 (' + (state._undoMax - state._undoUsed) + '/' + state._undoMax + ')</button></div>';
   main.innerHTML = html;
 }
 
