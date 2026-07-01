@@ -1247,9 +1247,11 @@ function _spiceUpResult(base) {
 
 // ====== Talent Effect Display ======
 function _getTalentEffectSummary(talent) {
-  if (!talent || !talent.effect) return '';
+  if (!talent || !talent.talentEffect) return '';
   var parts = [];
-  var e = talent.effect;
+  var e = talent.talentEffect;
+  // Also check top-level promoBonus
+  if (talent.promoBonus) e = Object.assign({}, e, {promoBonus: talent.promoBonus});
   if (e.skillBonus) parts.push('<span class="eff-pos">🧠技能+' + Math.round(e.skillBonus * 100) + '%</span>');
   if (e.skillPenalty) parts.push('<span class="eff-neg">🧠技能' + Math.round(e.skillPenalty * 100) + '%</span>');
   if (e.networkBonus) parts.push('<span class="eff-pos">👥人脉+' + Math.round(e.networkBonus * 100) + '%</span>');
@@ -2895,7 +2897,7 @@ function showTalentDraw() {
   html += '<div class="talent-grid">';
   for (var i = 0; i < pool.length; i++) {
     var t = pool[i];
-    var rarity = t.cat === 'special' ? 'rarity-epic' : (t.effect && t.effect.promoBonus ? 'rarity-rare' : 'rarity-common');
+    var rarity = t.cat === 'special' ? 'rarity-epic' : (t.promoBonus ? 'rarity-rare' : 'rarity-common');
     html += '<div class="talent-card ' + rarity + '" id="talent_' + t.id + '" onclick="toggleTalent(\'' + t.id + '\')">';
     html += '<div class="tc-emoji">' + t.emoji + '</div>';
     html += '<div class="tc-info">';
@@ -2991,8 +2993,8 @@ function startGame() {
   for (var i = 0; i < state.talents.length; i++) {
     var talent = TALENT_POOL.find(function(t){ return t.id === state.talents[i]; });
     if (talent && talent.effect) {
-      if (talent.effect.healthPenalty) state.health += talent.effect.healthPenalty;
-      if (talent.effect.hairBonus) state.hair += talent.effect.hairBonus;
+      if (talent.talentEffect && talent.talentEffect.healthPenalty) state.health += talent.talentEffect.healthPenalty;
+      if (talent.talentEffect && talent.talentEffect.hairBonus) state.hair += talent.talentEffect.hairBonus;
     }
   }
   state.health = clamp(state.health, 0, 100);
@@ -3049,9 +3051,11 @@ function unlockShareTalent() {
   var pick = locked[Math.floor(Math.random() * locked.length)];
   if (!state._unlockedTalents) state._unlockedTalents = [];
   state._unlockedTalents.push(pick.id);
-  if (pick.effect.skillBonus) state._bonusSkill = (state._bonusSkill || 0) + Math.round(pick.effect.skillBonus * 10);
-  if (pick.effect.networkBonus) state._bonusNetwork = (state._bonusNetwork || 0) + Math.round(pick.effect.networkBonus * 10);
-  if (pick.effect.promoBonus) state._bonusPromo = (state._bonusPromo || 0) + pick.effect.promoBonus;
+  var pe = pick.talentEffect || {};
+  if (pe.skillBonus) state._bonusSkill = (state._bonusSkill || 0) + Math.round(pe.skillBonus * 10);
+  if (pe.networkBonus) state._bonusNetwork = (state._bonusNetwork || 0) + Math.round(pe.networkBonus * 10);
+  if (pick.promoBonus) state._bonusPromo = (state._bonusPromo || 0) + pick.promoBonus;
+  state.talents.push(pick.id);
   toast('🎁 分享解锁！获得天赋：' + pick.emoji + ' ' + pick.name);
 }
 
@@ -3279,7 +3283,7 @@ function chooseEvent(optIdx) {
   var healthMax = 100;
   for (var _ti = 0; _ti < state.talents.length; _ti++) {
     var _tp = TALENT_POOL.find(function(t){ return t.id === state.talents[_ti]; });
-    if (_tp && _tp.effect && _tp.effect.healthCap) healthMax += _tp.effect.healthCap;
+    if (_tp && _tp.talentEffect && _tp.talentEffect.healthCap) healthMax += _tp.talentEffect.healthCap;
   }
   state.health = clamp(state.health, 0, healthMax);
   state.hair = clamp(state.hair, 0, 100);
@@ -3366,10 +3370,10 @@ function getModifiedBonus(base, type) {
   for (var i = 0; i < state.talents.length; i++) {
     var talent = TALENT_POOL.find(function(t){ return t.id === state.talents[i]; });
     if (!talent || !talent.effect) continue;
-    if (type === 'skill' && talent.effect.skillBonus) mod += talent.effect.skillBonus;
-    if (type === 'skill' && talent.effect.skillPenalty) mod += talent.effect.skillPenalty;
-    if (type === 'network' && talent.effect.networkBonus) mod += talent.effect.networkBonus;
-    if (type === 'network' && talent.effect.networkPenalty) mod += talent.effect.networkPenalty;
+    if (type === 'skill' && talent.talentEffect && talent.talentEffect.skillBonus) mod += talent.talentEffect.skillBonus;
+    if (type === 'skill' && talent.talentEffect && talent.talentEffect.skillPenalty) mod += talent.talentEffect.skillPenalty;
+    if (type === 'network' && talent.talentEffect && talent.talentEffect.networkBonus) mod += talent.talentEffect.networkBonus;
+    if (type === 'network' && talent.talentEffect && talent.talentEffect.networkPenalty) mod += talent.talentEffect.networkPenalty;
   }
   return Math.round(base * Math.max(0, mod));
 }
@@ -3506,7 +3510,7 @@ function chooseRandom(optIdx) {
   var healthMax = 100;
   for (var _ti = 0; _ti < state.talents.length; _ti++) {
     var _tp = TALENT_POOL.find(function(t){ return t.id === state.talents[_ti]; });
-    if (_tp && _tp.effect && _tp.effect.healthCap) healthMax += _tp.effect.healthCap;
+    if (_tp && _tp.talentEffect && _tp.talentEffect.healthCap) healthMax += _tp.talentEffect.healthCap;
   }
   state.health = clamp(state.health, 0, healthMax);
   state.hair = clamp(state.hair, 0, 100);
@@ -3545,9 +3549,9 @@ function showPromotionChallenge() {
   for (var i = 0; i < state.talents.length; i++) {
     var t = TALENT_POOL.find(function(tal){ return tal.id === state.talents[i]; });
     if (t && t.effect) {
-      if (t.effect.promoBonus) { talentMod += t.effect.promoBonus; talentDetails.push({name:t.emoji+' '+t.name, val:t.effect.promoBonus}); }
-      if (t.effect.promoPenalty) { talentMod += t.effect.promoPenalty; talentDetails.push({name:t.emoji+' '+t.name, val:t.effect.promoPenalty}); }
-      if (t.effect.skillBonus && state.skill >= skillReq) { talentMod += 0.03; talentDetails.push({name:t.emoji+' '+t.name+'(技能加成)', val:0.03}); }
+      if (t.promoBonus) { talentMod += t.promoBonus; talentDetails.push({name:t.emoji+' '+t.name, val:t.promoBonus}); }
+      if (t.promoPenalty) { talentMod += t.promoPenalty; talentDetails.push({name:t.emoji+' '+t.name, val:t.promoPenalty}); }
+      if (t.talentEffect && t.talentEffect.skillBonus && state.skill >= skillReq) { talentMod += 0.03; talentDetails.push({name:t.emoji+' '+t.name+'(技能加成)', val:0.03}); }
     }
   }
 
@@ -3629,8 +3633,8 @@ function promoChoice(choice) {
   var talentMod = 0;
   for (var i = 0; i < state.talents.length; i++) {
     var t = TALENT_POOL.find(function(tal){ return tal.id === state.talents[i]; });
-    if (t && t.effect && t.effect.promoBonus) talentMod += t.effect.promoBonus;
-    if (t && t.effect && t.effect.promoPenalty) talentMod += t.effect.promoPenalty;
+    if (t && t.promoBonus) talentMod += t.promoBonus;
+    if (t && t.promoPenalty) talentMod += t.promoPenalty;
   }
 
   if (choice === 0) {
@@ -3783,7 +3787,24 @@ function showEnding() {
   var main = document.getElementById('mainContent');
   var themeClass = 'theme-' + (ending.theme || 'blue');
 
-  var html = '<div style="text-align:center;margin-bottom:8px"><div style="font-size:13px;color:#b0a590;margin-bottom:12px">🎯 十年过去，这就是你的职场结局——</div></div>';
+  // Calculate totals for summary
+  var cumIncome = Math.round(state._yearlyRecords.reduce(function(a,r){ return a + (r.salary||0) * 12; }, 0));
+  var totalAsset = state.money;
+  if (state._investments) { for (var _ai = 0; _ai < state._investments.length; _ai++) { totalAsset += state._investments[_ai].principal; } }
+  var propCount = state._property || 0;
+  if (propCount > 0) { totalAsset += propCount * 2000000; }
+  var startHealth = state._yearlyRecords.length > 0 ? state._yearlyRecords[0].health : 80;
+
+  // Life Summary section
+  var html = '<div style="background:rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin:0 16px 16px;border:1px solid rgba(255,255,255,0.08)">';
+  html += '<div style="font-size:15px;font-weight:700;color:#fbbf24;margin-bottom:16px;text-align:center;letter-spacing:2px">📖 人生总结</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">💰</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">累计收入</div><div style="font-size:16px;font-weight:700;color:#fbbf24">¥' + (cumIncome >= 10000 ? Math.round(cumIncome/10000) + '万' : cumIncome.toLocaleString()) + '</div></div>';
+  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">💼</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">最终月薪</div><div style="font-size:16px;font-weight:700;color:#fff">¥' + state.salary.toLocaleString() + '</div></div>';
+  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">🏦</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">总资产</div><div style="font-size:16px;font-weight:700;color:#10b981">¥' + (totalAsset >= 10000 ? Math.round(totalAsset/10000) + '万' : totalAsset.toLocaleString()) + '</div></div>';
+  html += '<div style="text-align:center"><div style="font-size:22px;margin-bottom:4px">❤️</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">健康</div><div style="font-size:16px;font-weight:700;color:#ef4444">' + startHealth + '→' + state.health + '</div></div>';
+  html += '</div></div>';
+  html += '<div style="text-align:center;margin-bottom:8px"><div style="font-size:13px;color:#b0a590;margin-bottom:12px">🎯 十年过去，这就是你的职场结局——</div></div>';
   html += '<div class="id-card ' + themeClass + '">';
   html += '<div class="id-card-badge">平行人生 · 职场鉴定报告</div>';
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
@@ -3806,7 +3827,7 @@ function showEnding() {
   html += '</div>';
   html += '<div class="id-dims">';
   html += '<div class="id-dim"><div class="id-dim-icon">📊</div><div class="id-dim-text"><div class="id-dim-label">职级：' + track.ladder[state.rankIdx] + '</div><div class="id-dim-desc">' + track.label + '</div></div></div>';
-  html += '<div class="id-dim"><div class="id-dim-icon">💰</div><div class="id-dim-text"><div class="id-dim-label">月薪：¥' + state.salary.toLocaleString() + '</div><div class="id-dim-desc">累计收入 ¥' + Math.round(state._yearlyRecords.reduce(function(a,r){ return a + (r.salary||0) * 12; }, 0)).toLocaleString() + '</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">💰</div><div class="id-dim-text"><div class="id-dim-label">月薪：¥' + state.salary.toLocaleString() + '</div><div class="id-dim-desc">累计收入 ¥' + cumIncome.toLocaleString() + '</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">🧠</div><div class="id-dim-text"><div class="id-dim-label">技能：' + state.skill + '</div><div class="id-dim-desc">专业能力指数</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">👥</div><div class="id-dim-text"><div class="id-dim-label">人脉：' + state.network + '</div><div class="id-dim-desc">社会关系网络</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">❤️</div><div class="id-dim-text"><div class="id-dim-label">健康：' + state.health + '</div><div class="id-dim-desc">身体是革命的本钱</div></div></div>';
