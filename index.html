@@ -2284,25 +2284,28 @@ function showRandomEvent() {
   window._currentRandomEvent = event;
 
   var html = '<div class="scenario-card" style="border-left:3px solid #ff6b35">';
-  html += '<span class="track-tag" style="background:#ff6b35;color:#fff">🎲 随机事件</span>';
+  html += '<span class="track-tag" style="background:#fff7ed;color:#ea580c;border:1px solid #fed7aa">🎲 随机事件</span>';
   html += '<div class="scene-text">' + _makeVariantText(event.desc) + '</div></div>';
   html += '<div class="choices">';
+  var rStyleMap = ['safe', 'risky', 'dangerous'];
   for (var c = 0; c < event.opts.length; c++) {
     var opt = event.opts[c];
     var parts = [];
-    if (opt.money) parts.push('💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money));
-    if (opt.skill) parts.push('🧠' + (opt.skill > 0 ? '+' : '') + opt.skill);
-    if (opt.network) parts.push('👥' + (opt.network > 0 ? '+' : '') + opt.network);
-    if (opt.health) parts.push('❤️' + (opt.health > 0 ? '+' : '') + opt.health);
-    if (opt.happy) parts.push('😊' + (opt.happy > 0 ? '+' : '') + opt.happy);
-    html += '<button class="choice-btn" onclick="chooseRandom(' + c + ')" id="randOpt' + c + '">';
+    if (opt.money) parts.push('<span class="' + (opt.money > 0 ? 'eff-pos' : 'eff-neg') + '">💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money) + '</span>');
+    if (opt.skill) parts.push('<span class="' + (opt.skill > 0 ? 'eff-pos' : 'eff-neg') + '">🧠' + (opt.skill > 0 ? '+' : '') + opt.skill + '</span>');
+    if (opt.network) parts.push('<span class="' + (opt.network > 0 ? 'eff-pos' : 'eff-neg') + '">👥' + (opt.network > 0 ? '+' : '') + opt.network + '</span>');
+    if (opt.health) parts.push('<span class="' + (opt.health > 0 ? 'eff-pos' : 'eff-neg') + '">❤️' + (opt.health > 0 ? '+' : '') + opt.health + '</span>');
+    if (opt.happy) parts.push('<span class="' + (opt.happy > 0 ? 'eff-pos' : 'eff-neg') + '">😊' + (opt.happy > 0 ? '+' : '') + opt.happy + '</span>');
+    var rBtnStyle = rStyleMap[c] || rStyleMap[0];
+    html += '<button class="choice-btn ' + rBtnStyle + '" onclick="chooseRandom(' + c + ')" id="randOpt' + c + '">';
     html += opt.text;
     if (parts.length > 0) html += '<div class="choice-effect">' + parts.join('  ') + '</div>';
+    if (opt.__buff) html += '<div class="buff-marker">⚡ 持续效果</div>';
     html += '</button>';
   }
   html += '</div>';
 
-  html += '\u003cdiv class="undo-bar"\u003e\u003cbutton class="undo-btn" onclick="undoLastChoice()"\u003e\u21a9\ufe0f 后悔药 \u00b7 撤回重选 (' + (state._undoMax - state._undoUsed) + '/' + state._undoMax + ')\u003c/button\u003e\u003c/div\u003e';
+  html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选</button></div>';
   document.getElementById('mainContent').innerHTML = html;
 }
 
