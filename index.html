@@ -3173,11 +3173,24 @@ function openShop(type) {
     shopHtml += '</div>';
   } else if (type === 'invest') {
     shopHtml = '<div class="modal-title">📈 理财投资</div>';
+  // Show current investments
+  if (state._investments && state._investments.length > 0) {
+    shopHtml += '<div style="padding:8px 12px;background:#f0fdf4;border-radius:10px;margin:8px 12px;border:1px solid #bbf7d0">';
+    shopHtml += '<div style="font-size:12px;font-weight:600;color:#166534;margin-bottom:6px">📈 已投资产品</div>';
+    var totalInvested = 0;
+    for (var ii = 0; ii < state._investments.length; ii++) {
+      var inv = state._investments[ii];
+      totalInvested += inv.principal;
+      shopHtml += '<div style="font-size:11px;color:#15803d;margin:3px 0">• ' + inv.name + ': ¥' + (inv.principal/10000).toFixed(0) + '万 (年化' + (inv.rate*100).toFixed(0) + '%, 年收益¥' + (inv.principal*inv.rate/10000).toFixed(1) + '万)</div>';
+    }
+    shopHtml += '<div style="font-size:11px;color:#166534;font-weight:600;margin-top:4px">总投入: ¥' + (totalInvested/10000).toFixed(0) + '万</div>';
+    shopHtml += '</div>';
+  }
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="shop-card" onclick="buyInvest(10000, 0.03)"><div class="sw-title">🏦 定期存款</div><div class="sw-cost">投入¥1万 → 年收益3%，稳赚不赔</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buyInvest(50000, 0.08)"><div class="sw-title">📊 基金定投</div><div class="sw-cost">投入¥5万 → 年收益8%，有小幅亏损风险</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buyInvest(100000, 0.15)"><div class="sw-title">📉 股票炒</div><div class="sw-cost">投入¥10万 → 年收益15%，亏损概率高</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyInvest(10000, 0.03)"><div class="sw-title">🏦 定期存款</div><div class="sw-cost">投入¥1万 → 年化3%，每年自动复利不赔</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyInvest(50000, 0.08)"><div class="sw-title">📊 基金定投</div><div class="sw-cost">投入¥5万 → 年化8%，每年自动复利幅亏损风险</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyInvest(100000, 0.15)"><div class="sw-title">📉 股票炒</div><div class="sw-cost">投入¥10万 → 年化15%，每年自动复利亏损概率高</div></div>';
     shopHtml += '</div>';
   } else if (type === 'property') {
     var owned = state._property || 0;
@@ -3239,22 +3252,10 @@ function buySocial(cost, amount) {
 function buyInvest(cost, rate) {
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
-  var gain = Math.round(cost * rate);
-  var risk = Math.random();
-  if (rate > 0.1 && risk < 0.3) {
-    // High risk: 30% chance of loss
-    var loss = Math.round(cost * rate * 0.5);
-    state.money -= loss;
-    toast('📉 投资亏损 ¥' + (loss/10000).toFixed(1) + '万！');
-  } else if (rate > 0.05 && risk < 0.15) {
-    // Medium risk: 15% chance of small loss
-    var loss = Math.round(cost * 0.1);
-    state.money -= loss;
-    toast('📊 基金小亏 ¥' + (loss/10000).toFixed(1) + '万');
-  } else {
-    state.money += gain;
-    toast('💰 投资收益 +¥' + (gain/10000).toFixed(1) + '万');
-  }
+  var rateMap = {0.03:'定期存款', 0.08:'基金定投', 0.15:'股票炒股'};
+  var invName = rateMap[rate] || '理财';
+  state._investments.push({principal:cost, rate:rate, name:invName, year:state.year});
+  toast('✅ 已投入 ' + (cost/10000).toFixed(0) + '万，年化' + (rate*100).toFixed(0) + '%，每年自动复利');
   closeAllModals();
   render();
 }
@@ -3276,6 +3277,15 @@ function applyYearlyIncome() {
     toast('🏠 租金收入 +¥' + (state._yearlyRent/10000).toFixed(1) + '万');
   }
   // Apply investment returns (simplified: auto-compound)
+  // Apply investment returns (annual compound)
+  if (state._investments && state._investments.length > 0) {
+    for (var ii = 0; ii < state._investments.length; ii++) {
+      var inv = state._investments[ii];
+      var returns = Math.round(inv.principal * inv.rate);
+      state.money += returns;
+    }
+  }
+
   // Apply debt interest
   if (state.money < 0) {
     var interest = Math.round(state.money * 0.1); // 10% annual interest on debt
