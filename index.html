@@ -4050,7 +4050,7 @@ function showEnding() {
   }
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
   html += '<div class="id-card-ending">' + ending.name + '</div>';
-  html += '<div class="personality-tag">' + (function(){var p=getPersonality(state);return p?p.animal+(p.traits.length?' \xb7 '+p.traits.join(' \xb7 '):''):'';})() + '</div>';
+  html += '<div class="personality-tag">' + (function(){if(state.persona&&state.persona.personality){var _d=window._personaDims||[];var _o=_d[0]?_d[0].options:[];var _s=_o.find(function(x){return x.id===state.persona.personality});if(_s)return _s.label;}var p=getPersonality(state);return p?p.animal+(p.traits.length?' \xb7 '+p.traits.join(' \xb7 '):''):'';})() + '</div>';
   html += '<div class="id-card-desc">' + ending.desc + '</div>';
   if (hiddenEndings.length > 0) {
     html += '<div style="margin-top:8px;padding:6px 12px;background:linear-gradient(135deg,#ffd700,#ff6b35);border-radius:20px;display:inline-block;font-size:12px;color:#fff;font-weight:bold">🏆 隐藏结局解锁！' + hiddenEndings.map(function(e){ return e.emoji + ' ' + e.name; }).join(' · ') + '</div>';
@@ -4718,8 +4718,8 @@ function generatePoster() {
   if (!ending) ending = ENDINGS[ENDINGS.length - 1];
 
   // Big emoji (floating style)
-  ctx.font = '120px -apple-system, sans-serif';
-  ctx.fillText(ending.emoji, w/2, 260);
+  ctx.font = '90px -apple-system, sans-serif';
+  ctx.fillText(ending.emoji, w/2, 230);
 
   // Ending name - gradient effect via multiple draws
   ctx.font = 'bold 52px -apple-system, "PingFang SC", sans-serif';
@@ -4728,15 +4728,24 @@ function generatePoster() {
   nameGrad.addColorStop(0.5, '#f59e0b');
   nameGrad.addColorStop(1, '#f97316');
   ctx.fillStyle = nameGrad;
-  ctx.fillText(ending.name, w/2, 370);
+  ctx.fillText(ending.name, w/2, 340);
 
   // Personality tag
-  var pers = getPersonality(state);
-  if (pers) {
+  var posterPersLabel = '';
+  if (state.persona && state.persona.personality) {
+    var _pDims = window._personaDims || [];
+    var _pOpts = _pDims[0] ? _pDims[0].options : [];
+    var _pSel = _pOpts.find(function(o){ return o.id === state.persona.personality; });
+    if (_pSel) posterPersLabel = _pSel.label;
+  }
+  if (!posterPersLabel) {
+    var pers = getPersonality(state);
+    if (pers) posterPersLabel = pers.animal + (pers.traits.length ? ' \xb7 ' + pers.traits.join(' \xb7 ') : '');
+  }
+  if (posterPersLabel) {
     ctx.font = '22px -apple-system, "PingFang SC", sans-serif';
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    var tagText = pers.animal + (pers.traits.length ? ' \xb7 ' + pers.traits.join(' \xb7 ') : '');
-    ctx.fillText(tagText, w/2, 420);
+    ctx.fillText(posterPersLabel, w/2, 390);
   }
 
   // Description
