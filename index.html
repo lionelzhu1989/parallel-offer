@@ -3262,9 +3262,9 @@ function openShop(type) {
       totalInvested += inv.principal;
       var yearsHeld = Math.max(1, state.year - inv.year);
       var penalty = yearsHeld < 3 ? '手续费10%' : '免手续费';
-      shopHtml += '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#15803d;margin:4px 0;padding:4px 0;border-bottom:1px solid #dcfce7">';
+      shopHtml += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px;color:#15803d;margin:4px 0;padding:6px 8px;border-bottom:1px solid #dcfce7;background:#fff;border-radius:6px">';
       shopHtml += '<div>• ' + inv.name + ': ¥' + (inv.principal/10000).toFixed(0) + '万 (年化' + (inv.rate*100).toFixed(0) + '%, 持有' + yearsHeld + '年)</div>';
-      shopHtml += '<button onclick="sellInvest(' + ii + ')" style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:6px;padding:2px 8px;font-size:10px;cursor:pointer;white-space:nowrap;margin-left:6px">赎回</button>';
+      shopHtml += '<button onclick="sellInvest(' + ii + ')" style="background:#ef4444;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">赎回</button>';
       shopHtml += '</div>';
     }
     shopHtml += '<div style="font-size:11px;color:#166534;font-weight:600;margin-top:4px">总投入: ¥' + (totalInvested/10000).toFixed(0) + '万</div>';
