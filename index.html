@@ -239,6 +239,59 @@ body {
 .persona-dim { margin-bottom:16px; }
 .persona-dim-label { font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:4px; }
 
+.persona-options { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px; }
+.persona-dim-desc { font-size:12px; color:var(--text-muted); margin-bottom:4px; }
+.persona-card {
+  background:var(--bg-card); border:1.5px solid var(--border);
+  border-radius:var(--radius-lg); padding:14px 10px;
+  cursor:pointer; transition:all 0.2s ease;
+  box-shadow:var(--shadow-sm); text-align:center;
+}
+.persona-card:active { transform:scale(0.97); }
+.persona-card.selected {
+  border-color:var(--primary);
+  background:linear-gradient(135deg,#eef2ff,#e0e7ff);
+  box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+}
+.persona-card-label { font-size:14px; font-weight:600; color:var(--text-primary); }
+.persona-card-desc { font-size:11px; color:var(--text-muted); margin-top:3px; }
+
+/* ===== Talent Draw ===== */
+.talent-section { padding:4px 0; }
+.talent-header { text-align:center; margin-bottom:16px; }
+.talent-title { font-size:22px; font-weight:800; color:var(--text-primary); }
+.talent-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; }
+.talent-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+.talent-card {
+  display:flex; align-items:center; gap:12px;
+  background:var(--bg-card); border:1.5px solid var(--border);
+  border-radius:var(--radius-lg); padding:14px 16px;
+  cursor:pointer; transition:all 0.2s ease;
+  box-shadow:var(--shadow-sm);
+}
+.talent-card:active { transform:scale(0.98); }
+.talent-card.selected {
+  border-color:var(--primary);
+  background:linear-gradient(135deg,#eef2ff,#e0e7ff);
+  box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+}
+.talent-card .tc-emoji { font-size:28px; flex-shrink:0; }
+.talent-card .tc-info { flex:1; min-width:0; }
+.talent-card .tc-name { font-size:14px; font-weight:600; color:var(--text-primary); }
+.talent-card .tc-desc { font-size:11px; color:var(--text-muted); margin-top:2px; }
+.talent-card .tc-tag { font-size:10px; margin-top:4px; padding:2px 6px; border-radius:4px; display:inline-block; }
+.talent-card .tc-tag.tech { background:rgba(116,185,255,0.15); color:#74b9ff; }
+.talent-card .tc-tag.social { background:rgba(253,203,110,0.15); color:#f59e0b; }
+.talent-card .tc-tag.zen { background:rgba(0,184,148,0.15); color:#00b894; }
+.talent-card .tc-tag.risk { background:rgba(255,118,117,0.15); color:#ff7675; }
+.talent-card .tc-tag.biz { background:rgba(162,155,254,0.15); color:#a29bfe; }
+.talent-card .tc-tag.neutral { background:rgba(178,190,195,0.15); color:#b2bec3; }
+.talent-debuff { font-size:10px; color:#ef4444; margin-top:2px; }
+.rarity-common { border-color:var(--border); }
+.rarity-rare { border-color:#6366f1; }
+.rarity-epic { border-color:#f59e0b; background:linear-gradient(135deg,#fffbeb,#fef3c7); }
+.talent-hint { text-align:center; font-size:13px; color:var(--text-muted); margin:12px 0; }
+
 /* ===== Gallery & Modals ===== */
 .modal-overlay {
   display:none; position:fixed; top:0; left:0; right:0; bottom:0;
