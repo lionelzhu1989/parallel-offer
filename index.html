@@ -247,6 +247,16 @@
   .promo-threshold .unmet { color:#c62828; font-weight:600; }
 
   .hidden { display: none !important; }
+
+.switch-grid{display:grid;gap:8px;margin:12px 0}
+.switch-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px;cursor:pointer;transition:all 0.2s}
+.switch-card:hover{border-color:#e07a5f;background:rgba(224,122,95,0.1)}
+.switch-card.current{border-color:#e07a5f;background:rgba(224,122,95,0.15);cursor:default}
+.switch-card .sw-title{font-size:14px;font-weight:600;color:#f5f0e8}
+.switch-card .sw-desc{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px}
+.switch-card .sw-cost{font-size:10px;color:#e07a5f;margin-top:4px}
+.switch-warn{background:rgba(255,150,50,0.1);border:1px solid rgba(255,150,50,0.3);border-radius:8px;padding:10px;margin-bottom:12px}
+.switch-warn b{color:#ff9632}
 </style>
 </head>
 <body>
@@ -298,6 +308,16 @@
     <div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8"></div>
   </div>
 </div>
+
+<div class="modal-overlay" id="switchModal">
+  <div class="modal-content">
+    <div class="modal-title">🔄 跳槽转行</div>
+    <div class="switch-warn">⚠️ 跳槽将重置职级和起薪，人脉大幅下降。每局限 <b>2次</b>，跳槽后 <b>3年冷却</b>。</div>
+    <div class="switch-grid" id="switchGrid"></div>
+    <div class="modal-btn" onclick="closeAllModals()">再想想</div>
+  </div>
+</div>
+
 
 <canvas id="posterCanvas" width="750" height="1334" style="display:none"></canvas>
 
@@ -1502,7 +1522,7 @@ function initState() {
     money: 0, persona: null, talents: [],
     _shownEvents: {}, _shownRandom: [], _yearlyRecords: [],
     _playEnded: false, _endingSaved: false,
-    _promoCooldown: 0, _playStartTime: null
+    _promoCooldown: 0, _playStartTime: null, _switchCount: 0, _lastSwitchYear: -5
   };
 }
 
@@ -1864,6 +1884,10 @@ function render() {
   html += '</div>';
   html += '<div class="choices">' + choicesHtml + '</div>';
   html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选 (' + (state._undoMax - state._undoUsed) + '/' + state._undoMax + ')</button></div>';
+  // Career switch button
+  if (state.year >= 2 && state._switchCount < 2 && (state.year - state._lastSwitchYear) >= 3) {
+    html += '<div class="undo-bar"><button class="undo-btn" onclick="showSwitchModal()" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">🔄 跳槽转行 (' + (2 - state._switchCount) + '/2)</button></div>';
+  }
   html += '<div class="restart-link"><button onclick="showIntro()">🔄 重新开始</button></div>';
 
   main.innerHTML = html;
@@ -2508,6 +2532,58 @@ function savePlayedTrack() {
     if (history.length > 20) history = history.slice(-20);
     localStorage.setItem('parallel_offer_history', JSON.stringify(history));
   } catch(e) {}
+}
+
+
+// ====== Career Switch ======
+function showSwitchModal() {
+  var cd = CAREER_TRACKS[state.track];
+  var grid = document.getElementById('switchGrid');
+  if (!grid) return;
+  var html = '';
+  var tracks = ['tech','media','finance','startup','public','gig'];
+  var emojis = {'tech':'💻','media':'🎨','finance':'📊','startup':'🚀','public':'🏛️','gig':'🎵'};
+  for (var i = 0; i < tracks.length; i++) {
+    var t = tracks[i];
+    var tk = CAREER_TRACKS[t];
+    if (t === state.track) {
+      html += '<div class="switch-card current"><div class="sw-title">' + emojis[t] + ' ' + tk.name + ' (当前)</div></div>';
+    } else {
+      var penalty = '技能-10 · 人脉-15 · 健康-5 · 满足-10 · 薪资重置为' + (tk.salary/1000) + 'K';
+      html += '<div class="switch-card" onclick="switchTrack(\'' + t + '\')"><div class="sw-title">' + emojis[t] + ' ' + tk.name + '</div><div class="sw-cost">' + penalty + '</div></div>';
+    }
+  }
+  grid.innerHTML = html;
+  document.getElementById('switchModal').classList.add('show');
+}
+
+function switchTrack(newTrack) {
+  if (newTrack === state.track) return;
+  if (state._switchCount >= 2) { toast('🚫 本局已跳槽' + state._switchCount + '次，已达上限'); return; }
+  if (state.year - state._lastSwitchYear < 3) { toast('🚫 跳槽冷却中，需间隔3年'); return; }
+  
+  var oldName = CAREER_TRACKS[state.track].name;
+  var newName = CAREER_TRACKS[newTrack].name;
+  
+  // Apply penalties
+  state.skill = clamp(state.skill - 10, 0, 100);
+  state.network = clamp(state.network - 15, 0, 100);
+  state.health = clamp(state.health - 5, 0, 100);
+  state.happy = clamp(state.happy - 10, 0, 100);
+  
+  // Reset career position
+  state.track = newTrack;
+  state.salary = CAREER_TRACKS[newTrack].salary;
+  state.rankIdx = 0;
+  
+  // Update switch tracking
+  state._switchCount++;
+  state._lastSwitchYear = state.year;
+  
+  closeAllModals();
+  toast('🔄 从' + oldName + '跳槽到' + newName + '！起薪重置');
+  checkAchievements();
+  render();
 }
 
 function checkAchievements() {
