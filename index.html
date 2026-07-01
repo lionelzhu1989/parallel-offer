@@ -8,13 +8,13 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-    background: linear-gradient(180deg, #e8ecf1 0%, #f0f2f5 30%, #f8f9fb 100%); color: #1e293b; max-width: 420px; margin: 0 auto;
+    background: linear-gradient(180deg, #fef3f2 0%, #fff7ed 25%, #fefce8 50%, #f0fdf4 75%, #eff6ff 100%); color: #1e293b; max-width: 420px; margin: 0 auto;
     min-height: 100vh; display: flex; flex-direction: column;
     -webkit-font-smoothing: antialiased;
   }
-  .top-bar { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid #e2e8f0; padding: 10px 14px 8px; font-size: 13px; color: #64748b; }
+  .top-bar { position: sticky; top: 0; z-index: 100; background: linear-gradient(135deg, rgba(251,146,60,0.95), rgba(244,114,182,0.95), rgba(192,132,252,0.95)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: none; padding: 10px 14px 8px; font-size: 13px; color: #fff; box-shadow: 0 4px 20px rgba(244,114,182,0.3); }
   .top-bar .main-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .top-bar .year-label { background: #3b82f6; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+  .top-bar .year-label { background: rgba(255,255,255,0.25); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 13pxpx; font-weight: 600; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3); }
   .top-bar .track-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
   .track-badge.tech { background: #eff6ff; color: #2563eb; }
   .track-badge.biz { background: #fffbeb; color: #d97706; }
@@ -24,7 +24,7 @@
   .track-badge.gig { background: #eff6ff; color: #2563eb; }
   .year-progress-wrap { margin-top: 6px; }
   .year-progress-bar { width: 100%; height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden; }
-  .year-progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 2px; transition: width 0.5s ease; }
+  .year-progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f472b6, #a78bfa); border-radius: 2px; transition: width 0.5s ease; }
   .year-progress-text { display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8; margin-top: 2px; }
   .attr-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:6px 4px; margin-top:10px; }
   .attr-item { display:flex; flex-direction:column; align-items:center; gap:2px; background:rgba(255,255,255,0.12); border-radius:12px; padding:8px 4px; border:1px solid rgba(255,255,255,0.15); transition:all 0.3s; position:relative; backdrop-filter:blur(8px); }
@@ -35,13 +35,13 @@
   .attr-item .attr-val { font-weight:700; font-size:14px; color:#fff; line-height:1.2; text-shadow:0 1px 3px rgba(0,0,0,0.2); }
   .attr-item .attr-bar-bg { width:85%; height:3px; background:rgba(255,255,255,0.2); border-radius:2px; overflow:hidden; margin-top:2px; }
   .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.5s ease, background 0.3s; }
-  .attr-bar-fill.salary { background:linear-gradient(90deg,#f59e0b,#f97316); }
-  .attr-bar-fill.skill { background:linear-gradient(90deg,#3b82f6,#2563eb); }
-  .attr-bar-fill.network { background:linear-gradient(90deg,#8b5cf6,#7c3aed); }
-  .attr-bar-fill.health { background:linear-gradient(90deg,#22c55e,#16a34a); }
-  .attr-bar-fill.health.danger { background:linear-gradient(90deg,#ef4444,#dc2626); }
-  .attr-bar-fill.satisfaction { background:linear-gradient(90deg,#06b6d4,#0891b2); }
-  .attr-item.money-card { background:linear-gradient(135deg,#fefce8,#fef9c3); border-color:#fde047; }
+  .attr-bar-fill.salary { background:linear-gradient(90deg,#fbbf24,#fb923c); }
+  .attr-bar-fill.skill { background:linear-gradient(90deg,#60a5fa,#3b82f6); }
+  .attr-bar-fill.network { background:linear-gradient(90deg,#a78bfa,#8b5cf6); }
+  .attr-bar-fill.health { background:linear-gradient(90deg,#4ade80,#22c55e); }
+  .attr-bar-fill.health.danger { background:linear-gradient(90deg,#f87171,#ef4444); }
+  .attr-bar-fill.satisfaction { background:linear-gradient(90deg,#f472b6,#ec4899); }
+  .attr-item.money-card { background:linear-gradient(135deg,#fef9c3,#fef08a); border-color:#facc15; }
   .attr-item.money-card .attr-val { color:#a16207; font-size:12px; }
   .attr-tooltip { display:none; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:6px 10px; border-radius:8px; font-size:11px; white-space:nowrap; z-index:200; margin-bottom:4px; box-shadow:0 4px 12px rgba(0,0,0,0.15); }
   .attr-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:#1e293b; }
@@ -52,9 +52,9 @@
   .num-float.up { color:#16a34a; animation-name:numUp; }
   .num-float.down { color:#dc2626; animation-name:numDown; }
   .main-content { flex:1; padding:16px 14px; display:flex; flex-direction:column; gap:14px; }
-  .scenario-card { background:#fff; border-radius:16px; padding:22px 18px; box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04); border:1px solid #e2e8f0; animation:cardSlideIn 0.35s ease-out; }
+  .scenario-card { background:#fff; border-radius:20px; padding:22px 18px; box-shadow:0 2px 8px rgba(244,114,182,0.08),0 8px 32px rgba(168,139,250,0.06); border:1.5px solid #fde68a; animation:cardSlideIn 0.35s ease-out; }
   @keyframes cardSlideIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-  .scenario-card .year-badge { display:inline-block; background:#eff6ff; color:#3b82f6; font-size:12px; padding:3px 10px; border-radius:8px; margin-bottom:10px; font-weight:600; }
+  .scenario-card .year-badge { display:inline-block; background:linear-gradient(135deg,#fef3c7,#fde68a); color:#92400e; font-size:12px; padding:3px 10px; border-radius:10px; margin-bottom:10px; font-weight:600; }
   .scenario-card .scene-text { font-size:14px; line-height:1.8; color:#334155; }
   .scenario-card .track-tag { display:inline-block; margin-bottom:8px; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; }
   .event-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
@@ -64,18 +64,18 @@
   .choices { display:flex; flex-direction:column; gap:10px; }
   .choice-btn { background:#fff; border:1.5px solid #e2e8f0; border-radius:12px; padding:14px 16px; font-size:14px; line-height:1.5; color:#334155; text-align:left; cursor:pointer; transition:all 0.2s; -webkit-tap-highlight-color:transparent; min-height:44px; position:relative; overflow:hidden; }
   .choice-btn:active { transform:scale(0.98); }
-  .choice-btn.safe { background:#f8fafc; border-color:#cbd5e1; }
-  .choice-btn.safe:active { background:#f1f5f9; border-color:#94a3b8; }
-  .choice-btn.risky { background:#eff6ff; border-color:#93c5fd; color:#1e40af; }
-  .choice-btn.risky:active { background:#dbeafe; border-color:#3b82f6; }
-  .choice-btn.dangerous { background:#fff7ed; border-color:#fdba74; color:#9a3412; }
-  .choice-btn.dangerous:active { background:#ffedd5; border-color:#f97316; }
+  .choice-btn.safe { background:#fefce8; border-color:#fde68a; }
+  .choice-btn.safe:active { background:#fef9c3; border-color:#fbbf24; }
+  .choice-btn.risky { background:#fdf2f8; border-color:#f9a8d4; color:#9d174d; }
+  .choice-btn.risky:active { background:#fce7f3; border-color:#ec4899; }
+  .choice-btn.dangerous { background:#fff1f2; border-color:#fda4af; color:#9f1239; }
+  .choice-btn.dangerous:active { background:#ffe4e6; border-color:#f43f5e; }
   .choice-btn.selected { border-width:2px; box-shadow:0 0 0 3px rgba(59,130,246,0.15); }
   .choice-effect { font-size:11px; color:#94a3b8; margin-top:4px; }
   .choice-effect .eff-pos { color:#16a34a; font-weight:600; }
   .choice-effect .eff-neg { color:#dc2626; font-weight:600; }
   .buff-marker { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; background:#fef3c7; color:#92400e; border:1px solid #fde68a; margin-top:4px; }
-  .confirm-btn { width:100%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:600; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 12px rgba(37,99,235,0.25); }
+  .confirm-btn { width:100%; background:linear-gradient(135deg,#f472b6,#a78bfa); color:#fff; border:none; border-radius:16px; padding:14px; font-size:16px; font-weight:600; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(244,114,182,0.3); }
   .confirm-btn:active { transform:scale(0.97); }
   .confirm-btn:disabled { background:linear-gradient(135deg,#cbd5e1,#94a3b8); box-shadow:none; cursor:not-allowed; }
   .restart-link { text-align:center; margin:4px 0; }
@@ -83,12 +83,12 @@
   .restart-link button:active { background:#f1f5f9; color:#64748b; }
   .setup-section { padding:4px 0; }
   .setup-header { text-align:center; margin-bottom:20px; }
-  .setup-title { font-size:28px; font-weight:800; color:#0f172a; }
+  .setup-title { font-size:28px; font-weight:800; background:linear-gradient(135deg,#f472b6,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
   .setup-subtitle { font-size:14px; color:#64748b; margin-top:6px; }
   .track-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .track-card { background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:16px 12px; cursor:pointer; transition:all 0.2s; text-align:center; min-height:80px; display:flex; flex-direction:column; justify-content:center; }
   .track-card:active { transform:scale(0.98); }
-  .track-card.selected { border-color:#3b82f6; background:#eff6ff; box-shadow:0 0 0 3px rgba(59,130,246,0.12); }
+  .track-card.selected { border-color:#f472b6; background:linear-gradient(135deg,#fdf2f8,#fae8ff); box-shadow:0 0 0 3px rgba(244,114,182,0.2); }
   .track-card .tc-emoji { font-size:28px; margin-bottom:4px; }
   .track-card .tc-label { font-size:14px; font-weight:600; color:#1e293b; }
   .track-card .tc-desc { font-size:11px; color:#94a3b8; margin-top:3px; }
@@ -103,7 +103,7 @@
   .persona-options { display:flex; gap:8px; }
   .persona-card { flex:1; padding:12px 8px; border:1.5px solid #e2e8f0; border-radius:12px; background:#fff; cursor:pointer; transition:all 0.2s; text-align:center; }
   .persona-card:active { transform:scale(0.97); }
-  .persona-card.selected { border-color:#3b82f6; background:#eff6ff; box-shadow:0 0 0 3px rgba(59,130,246,0.12); }
+  .persona-card.selected { border-color:#f472b6; background:linear-gradient(135deg,#fdf2f8,#fce7f3); box-shadow:0 0 0 3px rgba(244,114,182,0.15); }
   .persona-card-label { font-size:13px; font-weight:600; color:#1e293b; }
   .persona-card-desc { font-size:11px; color:#94a3b8; margin-top:3px; }
   .talent-section { }
@@ -113,7 +113,7 @@
   .talent-grid { display:flex; flex-direction:column; gap:10px; }
   .talent-card { background:#fff; border:2px solid #e2e8f0; border-radius:14px; padding:14px 16px; cursor:pointer; transition:all 0.25s; display:flex; gap:14px; align-items:center; position:relative; overflow:hidden; }
   .talent-card:active { transform:scale(0.98); }
-  .talent-card.selected { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,0.15); background:#eff6ff; }
+  .talent-card.selected { border-color:#a78bfa; box-shadow:0 0 0 3px rgba(167,139,250,0.2); background:linear-gradient(135deg,#faf5ff,#ede9fe); }
   .talent-card .tc-emoji { font-size:32px; flex-shrink:0; }
   .talent-card .tc-info { flex:1; }
   .talent-card .tc-name { font-size:15px; font-weight:700; color:#1e293b; }
@@ -338,6 +338,31 @@
     color:#fff; font-size:13px; font-weight:700; cursor:pointer;
   }
 
+
+  /* v4: Health tier indicators */
+  .health-tier { display:inline-block; font-size:10px; padding:2px 6px; border-radius:8px; font-weight:600; margin-left:4px; }
+  .health-tier.normal { background:#dcfce7; color:#166534; }
+  .health-tier.subhealth { background:#fef9c3; color:#854d0e; }
+  .health-tier.collapsed { background:#fee2e2; color:#991b1b; }
+  
+  /* v4: Hair emoji display */
+  .hair-emoji { font-size:16px; line-height:1; }
+  
+  /* v4: Sub-health overlay */
+  .subhealth-warning { background:linear-gradient(135deg,#fef9c3,#fef3c7); border:1px solid #fde68a; border-radius:12px; padding:10px 14px; margin-bottom:12px; font-size:13px; color:#92400e; }
+  
+  /* v4: Disabled choice in sub-health */
+  .choice-btn.subhealth-disabled { opacity:0.45; pointer-events:none; position:relative; }
+  .choice-btn.subhealth-disabled::after { content:'⚠️ 亚健康限制'; position:absolute; top:6px; right:8px; font-size:10px; color:#d97706; background:#fef3c7; padding:1px 6px; border-radius:6px; }
+  
+  /* v4: Candy card accent borders */
+  .scenario-card.health-warning { border-left:4px solid #f97316; }
+  .scenario-card.health-critical { border-left:4px solid #ef4444; animation:pulse-danger 2s infinite; }
+  @keyframes pulse-danger { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.2)} 50%{box-shadow:0 0 0 6px rgba(239,68,68,0)} }
+  
+  /* v4: Candy gradient accent line */
+  .candy-divider { height:3px; background:linear-gradient(90deg,#fbbf24,#f472b6,#a78bfa,#60a5fa); border-radius:2px; margin:8px 0; }
+
 </style>
 </head>
 <body>
@@ -355,8 +380,8 @@
     <div class="attr-item"><div class="attr-tooltip" id="tipRank">职级: L1</div><div class="attr-top"><span class="attr-icon">📊</span><span class="attr-label">职级</span></div><span class="attr-val" id="attrRank">L1</span></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipSkill">技能: 30/100</div><div class="attr-top"><span class="attr-icon">🧠</span><span class="attr-label">技能</span></div><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipNetwork">人脉: 20/100</div><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipHair">满足: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">满足</span></div><span class="attr-val" id="attrHair">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><span class="health-tier normal" id="healthTier">正常</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipHair">满足: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">满足</span></div><span class="attr-val" id="attrHair">60</span><span class="hair-emoji" id="hairEmoji"></span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
     <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span></div>
   </div>
 </div>
@@ -1907,6 +1932,25 @@ function initState() {
   };
 }
 
+// ====== v4: Health Tier & Hair Emoji Helpers ======
+function getHealthTier(h) {
+  if (h <= 0) return { cls: 'collapsed', text: '病倒', emoji: '🏥' };
+  if (h <= 20) return { cls: 'collapsed', text: '危险', emoji: '⚠️' };
+  if (h <= 50) return { cls: 'subhealth', text: '亚健康', emoji: '🤒' };
+  return { cls: 'normal', text: '正常', emoji: '💚' };
+}
+
+function getHairEmoji(h) {
+  if (h >= 80) return '🧑\u200d🦱';
+  if (h >= 50) return '👨';
+  if (h >= 20) return '🧑\u200d🦲';
+  if (h >= 10) return '🧑\u200d🦲';
+  return '💀';
+}
+
+function isSubHealth() { return state.health > 0 && state.health <= 50; }
+
+
 // ====== Balance Bar / Top Bar ======
 function updateTopBar() {
   var yl = document.getElementById('yearLabel');
@@ -1933,7 +1977,9 @@ function updateTopBar() {
   document.getElementById('attrSkill').textContent = state.skill;
   document.getElementById('attrNetwork').textContent = state.network;
   document.getElementById('attrHealth').textContent = state.health;
+  var _ht = document.getElementById('healthTier'); if(_ht){var _t=getHealthTier(state.health); _ht.textContent=_t.text; _ht.className='health-tier '+_t.cls;}
   document.getElementById('attrHair').textContent = state.hair;
+  var _he = document.getElementById('hairEmoji'); if(_he) _he.textContent = getHairEmoji(state.hair);
   var moneyEl = document.getElementById('attrMoney');
   if (moneyEl) moneyEl.textContent = state.money >= 10000 ? Math.round(state.money/10000) + '万' : '¥' + state.money.toLocaleString();
   document.getElementById('barSalary').style.width = Math.min(100, state.salary / 100000 * 100) + '%';
@@ -1941,9 +1987,9 @@ function updateTopBar() {
   document.getElementById('barNetwork').style.width = state.network + '%';
   var hb = document.getElementById('barHealth');
   hb.style.width = state.health + '%';
-  hb.className = 'attr-bar-fill health' + (state.health < 30 ? ' danger' : '');
+  hb.className = 'attr-bar-fill health' + (state.health <= 20 ? ' danger' : '');
   document.getElementById('barHappy').style.width = state.hair + '%';
-  var tips = {tipSalary:'月薪: ¥'+state.salary.toLocaleString()+'/月', tipRank:'职级: '+rankLabel, tipSkill:'技能: '+state.skill+'/100', tipNetwork:'人脉: '+state.network+'/100', tipHealth:'健康: '+state.health+'/100'+(state.health<30?' ⚠️低!':''), tipHappy:'满足: '+state.hair+'/100', tipMoney:'存款: ¥'+state.money.toLocaleString()};
+  var tips = {tipSalary:'月薪: ¥'+state.salary.toLocaleString()+'/月', tipRank:'职级: '+rankLabel, tipSkill:'技能: '+state.skill+'/100', tipNetwork:'人脉: '+state.network+'/100', tipHealth:'健康: '+state.health+'/100 '+getHealthTier(state.health).emoji+' '+getHealthTier(state.health).text, tipHappy:'发量: '+state.hair+'/100 '+getHairEmoji(state.hair), tipMoney:'存款: ¥'+state.money.toLocaleString()};
   for(var k in tips){var el=document.getElementById(k);if(el)el.textContent=tips[k];}
   var undoBtn = document.querySelector('.undo-btn');
   if(undoBtn){
@@ -2255,7 +2301,7 @@ function render() {
     // Render chain event
     var trackInfo = CAREER_TRACKS[state.track];
     var rankName = trackInfo.ladder[state.rankIdx] || '新人';
-    var html = '<div class="scenario-card">';
+    var _cardCls = 'scenario-card'; if(state.health<=20) _cardCls+=' health-critical'; else if(state.health<=50) _cardCls+=' health-warning'; var html = '<div class="'+_cardCls+'">';
     html += '<span class="year-badge">第' + state.year + '年</span>';
     html += '<span class="track-tag ' + trackInfo.tag + '">' + trackInfo.emoji + ' ' + rankName + '</span>';
     html += '<div class="scenario-title">⚡ ' + _chainResult.title + '</div>';
@@ -2263,7 +2309,7 @@ function render() {
     html += '<div class="choices">';
     for (var cc = 0; cc < _chainResult.opts.length; cc++) {
       var copt = _chainResult.opts[cc];
-      html += '<button class="choice-btn safe" onclick="chooseEvent(' + cc + ')" id="eventOpt' + cc + '">' + copt.text;
+      var _chCls = 'choice-btn safe'; if(isSubHealth() && cc > 0) _chCls += ' subhealth-disabled'; html += '<button class="' + _chCls + '" onclick="chooseEvent(' + cc + ')" id="eventOpt' + cc + '">' + copt.text;
       var ce = [];
       if (copt.skill) ce.push((copt.skill>0?'+':'') + copt.skill + '🧠');
       if (copt.network) ce.push((copt.network>0?'+':'') + copt.network + '👥');
@@ -2349,7 +2395,7 @@ function render() {
   var trackInfo = CAREER_TRACKS[state.track];
   var rankName = trackInfo.ladder[state.rankIdx] || '新人';
 
-  var html = '<div class="scenario-card">';
+  var _cardCls = 'scenario-card'; if(state.health<=20) _cardCls+=' health-critical'; else if(state.health<=50) _cardCls+=' health-warning'; var html = '<div class="'+_cardCls+'">';
   html += '<span class="year-badge">第' + state.year + '年</span>';
   html += '<span class="track-tag ' + trackInfo.tag + '">' + trackInfo.emoji + ' ' + rankName + '</span>';
   html += '<div class="scene-text">' + _makeVariantText(event.desc) + '</div>';
@@ -2477,10 +2523,41 @@ function chooseEvent(optIdx) {
 
 // ====== Unified yearly health/talent effects ======
 function applyYearlyEffects() {
-  state.health -= (state.year >= 5 ? 4 : 2);
-  if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
-  if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
+  // === Health degradation ===
+  var healthDecay = (state.year >= 5 ? 4 : 2);
+  if (state.talents.indexOf('hardwork') >= 0) healthDecay += 3;
+  if (state.talents.indexOf('nightowl') >= 0) healthDecay += 1;
+  // Sub-health: health decays faster
+  if (state.health <= 50 && state.health > 0) healthDecay += 2;
+  state.health -= healthDecay;
   state.health = clamp(state.health, 0, state._healthMax || 100);
+
+  // === Hair degradation (stress) ===
+  var hairDecay = 2;
+  if (state.health <= 30) hairDecay += 3; // sick = more hair loss
+  if (state.salary > 30000) hairDecay += 1; // high salary = more stress
+  state.hair -= hairDecay;
+  state.hair = clamp(state.hair, 0, 100);
+
+  // === Three-body linkage: Health → Income ===
+  if (state.health <= 20) {
+    // Very sick: salary takes a hit
+    state.salary = Math.max(0, Math.round(state.salary * 0.7));
+  } else if (state.health <= 50) {
+    // Sub-health: mild salary reduction
+    state.salary = Math.max(0, Math.round(state.salary * 0.9));
+  }
+
+  // === Three-body linkage: Hair → Spending ===
+  if (state.hair <= 15 && state.money >= 20000) {
+    // Balding crisis: forced transplant spending
+    state.money -= 5000;
+    state.hair = clamp(state.hair + 8, 0, 100);
+    state.health -= 5; // transplant is tiring
+    toast('💇 被迫植发！花费¥5000，健康-5');
+  }
+
+  // Hospitalization trigger
   if (state.health <= 0 && !state._isHospitalized) { state._isHospitalized = true; state._hospitalYear = state.year; }
 
   // Apply talent debuffs (yearlyEffect)
