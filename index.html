@@ -384,7 +384,7 @@
     <div class="attr-item"><div class="attr-tooltip" id="tipNetwork">人脉: 20/100</div><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><span class="health-tier normal" id="healthTier">正常</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipHair">发量: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">发量</span></div><span class="attr-val" id="attrHair">60</span><span class="hair-emoji" id="hairEmoji"></span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
-    <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span></div>
+    <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span><span class="attr-sub" id="attrTotalAsset" style="font-size:9px;color:#b45309;margin-top:1px"></span></div>
   </div>
 </div>
 <div class="main-content" id="mainContent"></div>
@@ -1984,6 +1984,13 @@ function updateTopBar() {
   var _he = document.getElementById('hairEmoji'); if(_he) _he.textContent = getHairEmoji(state.hair);
   var moneyEl = document.getElementById('attrMoney');
   if (moneyEl) moneyEl.textContent = state.money >= 10000 ? Math.round(state.money/10000) + '万' : '¥' + state.money.toLocaleString();
+  // Calculate total assets: cash + investments + property
+  var totalAsset = state.money;
+  if (state._investments) { for (var ai = 0; ai < state._investments.length; ai++) { totalAsset += state._investments[ai].principal; } }
+  var propCount = state._property || 0;
+  if (propCount > 0) { totalAsset += propCount * 2000000; }
+  var assetEl = document.getElementById('attrTotalAsset');
+  if (assetEl) { assetEl.textContent = totalAsset > state.money ? '总资产 ¥' + (totalAsset >= 10000 ? Math.round(totalAsset/10000) + '万' : '¥' + totalAsset.toLocaleString()) : ''; }
   document.getElementById('barSalary').style.width = Math.min(100, state.salary / 100000 * 100) + '%';
   document.getElementById('barSkill').style.width = state.skill + '%';
   document.getElementById('barNetwork').style.width = state.network + '%';
