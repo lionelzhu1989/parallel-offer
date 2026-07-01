@@ -532,35 +532,90 @@ var CAREER_TRACKS = {
 
 // ====== DATA: Talent Pool (30+) ======
 var TALENT_POOL = [
-  // Work talents (10)
-  { id:'hardwork', emoji:'🔥', name:'卷王之王', desc:'加班收益+50%，但每年-8健康', cat:'work', effect:{skillBonus:0.5, healthPenalty:-8} },
-  { id:'slacker', emoji:'🐟', name:'摸鱼大师', desc:'摸鱼不被发现，但晋升速度-30%', cat:'work', effect:{promoSpeed:-0.3, happyBonus:10} },
-  { id:'geek', emoji:'🧠', name:'技术极客', desc:'技能成长+40%，社交-20%', cat:'work', effect:{skillBonus:0.4, networkPenalty:-0.2} },
-  { id:'social', emoji:'💪', name:'社牛达人', desc:'人脉成功率+50%，独处效率-20%', cat:'work', effect:{networkBonus:0.5, skillPenalty:-0.2} },
-  { id:'eq', emoji:'🎭', name:'情商天花板', desc:'所有人际事件+30%', cat:'work', effect:{networkBonus:0.3, happyBonus:5} },
-  { id:'nerd', emoji:'📚', name:'学霸体质', desc:'学习效果翻倍，实践-20%', cat:'work', effect:{skillBonus:1.0, promoPenalty:-0.2} },
-  { id:'goal', emoji:'🎯', name:'目标感强', desc:'晋升+25%，事件多样性-15%', cat:'work', effect:{promoBonus:0.25} },
-  { id:'zen', emoji:'🌊', name:'佛系心态', desc:'满足度+20/年，职级成长-25%', cat:'work', effect:{happyBonus:20, promoPenalty:-0.25} },
-  { id:'fox', emoji:'🐍', name:'职场狐狸', desc:'背刺成功率+40%，口碑-10', cat:'work', effect:{promoBonus:0.4, networkPenalty:-0.1} },
-  { id:'nice', emoji:'🤝', name:'老好人', desc:'好感度+30%，容易被甩锅', cat:'work', effect:{networkBonus:0.3, skillPenalty:-0.1} },
-  // Life talents (10)
-  { id:'lucky', emoji:'🍀', name:'锦鲤附体', desc:'好运事件概率翻倍', cat:'life', effect:{luckBonus:2} },
-  { id:'health', emoji:'💊', name:'养生达人', desc:'健康恢复+50%，社交-20%', cat:'life', effect:{healthRecovery:0.5, networkPenalty:-0.2} },
-  { id:'catlovers', emoji:'🐱', name:'猫奴体质', desc:'满足度+15/年，独处技能+10%', cat:'life', effect:{happyBonus:15, skillBonus:0.1} },
-  { id:'artsy', emoji:'🎸', name:'文艺青年', desc:'副业事件解锁+40%', cat:'life', effect:{sidejobBonus:0.4} },
-  { id:'runner', emoji:'🏃', name:'马拉松选手', desc:'健康上限+20，加班debuff减半', cat:'life', effect:{healthCap:120, healthRecovery:0.3} },
-  { id:'sleeper', emoji:'😴', name:'睡眠冠军', desc:'精力恢复+30%，早起事件失败', cat:'life', effect:{happyBonus:8, skillPenalty:-0.1} },
-  { id:'nightowl', emoji:'🌙', name:'夜猫子', desc:'晚间事件+50%，早间-30%', cat:'life', effect:{skillBonus:0.2, healthPenalty:-3} },
-  { id:'foodie', emoji:'🍜', name:'干饭人', desc:'吃饭事件满足度+20，健康-5', cat:'life', effect:{happyBonus:20, healthPenalty:-5} },
-  { id:'spend', emoji:'💰', name:'月光族', desc:'消费+30%，但常有意外收获', cat:'life', effect:{luckBonus:1.5, expenseMod:0.3} },
-  { id:'homebody', emoji:'🏠', name:'宅家族', desc:'独处效果+40%，社交-30%', cat:'life', effect:{skillBonus:0.4, networkPenalty:-0.3} },
-  // Special talents (6)
-  { id:'shy', emoji:'👻', name:'社恐体质', desc:'社交50%失败，独处+60%', cat:'special', effect:{networkPenalty:-0.5, skillBonus:0.6} },
-  { id:'gambler', emoji:'🎰', name:'赌徒心态', desc:'所有风险收益翻倍', cat:'special', effect:{riskMod:2} },
-  { id:'indecisive', emoji:'🔄', name:'选择困难症', desc:'被迫选择时结果+20%', cat:'special', effect:{compensation:0.2} },
-  { id:'phone', emoji:'📱', name:'低头族', desc:'每年1-2个手机彩蛋事件', cat:'special', effect:{phoneEvent:1} },
-  { id:'chosen', emoji:'🌟', name:'天选打工人', desc:'被大佬赏识概率+30%', cat:'special', effect:{mentorBonus:0.3} },
-  { id:'drama', emoji:'🎪', name:'戏精本精', desc:'所有事件文案更夸张搞笑', cat:'special', effect:{dramaBonus:true} },
+  // ====== 内卷技术流 ======
+  { id:'hardwork', name:'996战神', emoji:'⌨️', school:'tech',
+    desc:'加班就是我的信仰。技能飙升，但身体在燃烧。',
+    talentEffect:{skillBonus:1.5}, debuff:'每年健康-8，人脉增长-40%',
+    yearlyEffect:function(s){ s.health=clamp(s.health-8,0,100); s.network=Math.max(0,s.network-2); },
+    promoBonus:0.3 },
+  { id:'marathon', name:'铁人马拉松', emoji:'🏃', school:'tech',
+    desc:'连续通宵不在话下。技能拉满，但发际线也拉满了。',
+    talentEffect:{skillBonus:1.3}, debuff:'每年健康-5，满足度-5',
+    yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.happy=clamp(s.happy-5,0,100); },
+    promoBonus:0.2 },
+  { id:'geek', name:'极客之魂', emoji:'🤖', school:'tech',
+    desc:'代码就是浪漫。技术暴涨，社交为零。',
+    talentEffect:{skillBonus:1.4}, debuff:'人脉增长-50%，每年满足度-3',
+    yearlyEffect:function(s){ s.network=Math.max(0,s.network-1); s.happy=clamp(s.happy-3,0,100); },
+    promoBonus:0.25 },
+
+  // ====== 人脉经商流 ======
+  { id:'social', name:'社交蝴蝶', emoji:'🦋', school:'social',
+    desc:'人脉就是钱脉。社交翻倍，但技术停滞。',
+    talentEffect:{networkBonus:1.8}, debuff:'技能增长-50%，晋升基础概率-25%',
+    yearlyEffect:function(s){ s.skill=Math.max(0,s.skill-1); },
+    promoBonus:-0.25 },
+  { id:'artist', name:'文艺青年', emoji:'🎨', school:'social',
+    desc:'靠才华吃饭。副业翻倍，但大厂不认。',
+    talentEffect:{sideIncome:2.0}, debuff:'晋升概率-30%，每年社交开销扣存款¥5000',
+    yearlyEffect:function(s){ s.money-=5000; },
+    promoBonus:-0.3 },
+  { id:'connector', name:'人脉之王', emoji:'🤝', school:'social',
+    desc:'认识所有人。创业门槛降低，但技术为零。',
+    talentEffect:{networkBonus:1.6, startupDiscount:true}, debuff:'技能上限降至60',
+    yearlyEffect:function(s){ s.skill=Math.min(s.skill, 60); },
+    promoBonus:-0.2 },
+
+  // ====== 佛系躺平流 ======
+  { id:'lucky', name:'锦鲤本鲤', emoji:'🐟', school:'zen',
+    desc:'运气就是实力。健康长寿，但薪资涨幅减半。',
+    talentEffect:{lucky:true}, debuff:'薪资涨幅减半，晋升机会-30%',
+    yearlyEffect:function(s){ s.salary=Math.round(s.salary*1.01); },
+    promoBonus:-0.3 },
+  { id:'chill', name:'佛系青年', emoji:'🧘', school:'zen',
+    desc:'一切随缘。健康衰减减半，但很难升职。',
+    talentEffect:{healthDecayHalf:true}, debuff:'晋升概率-40%，薪资涨幅-30%',
+    yearlyEffect:function(s){},
+    promoBonus:-0.4 },
+  { id:'optimist', name:'乐天派', emoji:'☀️', school:'zen',
+    desc:'开心就好。满足度永远高，但没什么野心。',
+    talentEffect:{happyBonus:true}, debuff:'技能增长-30%，不会主动触发贵人事件',
+    yearlyEffect:function(s){ s.happy=Math.min(100, s.happy+2); },
+    promoBonus:-0.2 },
+
+  // ====== 风险投机流 ======
+  { id:'gambler', name:'赌狗附体', emoji:'🎰', school:'risk',
+    desc:'梭哈就完事了。投资最高3倍，亏损也3倍。',
+    talentEffect:{investMultiplier:3.0}, debuff:'亏损同步放大3倍，健康随机暴跌',
+    yearlyEffect:function(s){ if(Math.random()<0.3) s.health=clamp(s.health-Math.floor(Math.random()*20),0,100); },
+    promoBonus:0 },
+  { id:'insider', name:'消息灵通', emoji:'📱', school:'risk',
+    desc:'总有小道消息。投资收益高，但容易踩雷。',
+    talentEffect:{investMultiplier:2.0}, debuff:'20%概率投资暴亏，健康-3',
+    yearlyEffect:function(s){ s.health=clamp(s.health-3,0,100); if(Math.random()<0.2) s.money-=50000; },
+    promoBonus:0 },
+  { id:'hustler', name:'搞钱达人', emoji:'💰', school:'risk',
+    desc:'赚钱不要命。副业翻倍，但健康和满足暴跌。',
+    talentEffect:{sideIncome:2.5}, debuff:'每年健康-5，满足度-8',
+    yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.happy=clamp(s.happy-8,0,100); },
+    promoBonus:0 },
+
+  // ====== 万金油（无流派） ======
+  { id:'fox', name:'职场狐狸', emoji:'🦊', school:'neutral',
+    desc:'精于算计。人脉微增，但大家觉得你油滑。',
+    talentEffect:{}, debuff:'人脉增长-10%（被人看穿）',
+    yearlyEffect:function(s){ s.network=Math.max(0,s.network-1); },
+    promoBonus:0 },
+  { id:'newbie', name:'职场小白', emoji:'🐣', school:'neutral',
+    desc:'什么都不懂。所有属性+2起步，但没有加成。',
+    talentEffect:{startBonus:true}, debuff:'无特殊加成',
+    yearlyEffect:function(s){},
+    promoBonus:0 },
+  { id:'resilient', name:'打不死的小强', emoji:'🪳', school:'neutral',
+    desc:'命硬。健康下限30，但也就这样了。',
+    talentEffect:{healthFloor:30}, debuff:'无特殊加成',
+    yearlyEffect:function(s){ s.health=Math.max(30, s.health); },
+    promoBonus:0 },
 ];
 
 // ====== DATA: Scene Events per Track ======
@@ -1522,7 +1577,7 @@ function initState() {
     money: 0, persona: null, talents: [],
     _shownEvents: {}, _shownRandom: [], _yearlyRecords: [],
     _playEnded: false, _endingSaved: false,
-    _promoCooldown: 0, _playStartTime: null, _switchCount: 0, _lastSwitchYear: -5
+    _promoCooldown: 0, _playStartTime: null, _switchCount: 0, _lastSwitchYear: -5, _buffs: [], _shopOpen: false, _property: 0, _yearlyRent: 0, _debtYears: 0, _investments: []
   };
 }
 
@@ -1583,6 +1638,16 @@ function showIntro() {
   }
   var main = document.getElementById('mainContent');
   var html = '<div class="setup-section"><div class="setup-header"><div class="setup-title">平行offer</div><div class="setup-subtitle">选择你的职业路线，开启一段职场人生</div></div><div class="track-grid">';
+
+  // Active buffs display
+  if (state._buffs && state._buffs.length > 0) {
+    html += '<div style="padding:4px 8px;background:rgba(255,150,50,0.1);border-radius:8px;margin:4px 8px">';
+    for (var bi = 0; bi < state._buffs.length; bi++) {
+      var bf = state._buffs[bi];
+      html += '<div style="font-size:11px;color:rgba(255,255,255,0.7)">⏱ ' + bf.name + ' (' + bf.remaining + '年) - ' + bf.desc + '</div>';
+    }
+    html += '</div>';
+  }
   var keys = Object.keys(CAREER_TRACKS);
   for (var i = 0; i < keys.length; i++) {
     var t = CAREER_TRACKS[keys[i]];
@@ -1590,7 +1655,9 @@ function showIntro() {
     html += '<div class="tc-emoji">' + t.emoji + '</div>';
     html += '<div class="tc-label">' + t.label + '</div>';
     html += '<div class="tc-desc">' + t.desc + '</div>';
-    html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
+
+    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',social:'#fd79a8',zen:'#00b894',risk:'#e17055',neutral:'#dfe6e9'})[t.school] + ';margin-top:2px">🏷️ ' + ({tech:'内卷技术流',social:'人脉经商流',zen:'佛系躺平流',risk:'风险投机流',neutral:'万金油'})[t.school] + '</div>';
+    html += '<div style="font-size:10px;color:rgba(255,100,100,0.8);margin-top:1px">⚡ ' + (t.debuff || '无副作用') + '</div>';    html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
     html += '</div>';
   }
   html += '</div>';
@@ -1922,6 +1989,8 @@ function chooseEvent(optIdx) {
 
 
   applyYearlyEffects();
+  applyBuffs();
+  applyYearlyIncome();
   if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
   // runner: health recovery + cap boost
   if (state.talents.indexOf('runner') >= 0) state.health = clamp(state.health + 3, 0, 120);
@@ -1983,6 +2052,14 @@ function applyYearlyEffects() {
   if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
   if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
   state.health = clamp(state.health, 0, state._healthMax || 100);
+
+  // Apply talent debuffs (yearlyEffect)
+  for (var ti = 0; ti < (state.talents || []).length; ti++) {
+    var talentDef = TALENT_POOL.find(function(t) { return t.id === state.talents[ti]; });
+    if (talentDef && talentDef.yearlyEffect) {
+      try { talentDef.yearlyEffect(state); } catch(e) {}
+    }
+  }
 }
 function getModifiedBonus(base, type) {
   var mod = 1;
@@ -2118,6 +2195,8 @@ function chooseRandom(optIdx) {
   // Talent effects
   if (state.talents.indexOf('zen') >= 0) state.happy += 5;
   applyYearlyEffects();
+  applyBuffs();
+  applyYearlyIncome();
   if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
     // Apply healthCap from talents (runner: +20)
   var healthMax = 100;
@@ -2287,6 +2366,8 @@ function promoChoice(choice) {
   }
 
     applyYearlyEffects();
+  applyBuffs();
+  applyYearlyIncome();
   state.year++;
   render();
 }
@@ -2536,6 +2617,249 @@ function savePlayedTrack() {
 
 
 // ====== Career Switch ======
+
+// ====== Buff/Debuff System ======
+function addBuff(id, name, desc, duration, effects) {
+  // effects: {skill:0, network:0, health:0, happy:0, salary:0, money:0} per year
+  // Remove existing buff with same id
+  state._buffs = state._buffs.filter(function(b) { return b.id !== id; });
+  state._buffs.push({id:id, name:name, desc:desc, remaining:duration, effects:effects});
+}
+
+function applyBuffs() {
+  // Called yearly - apply all active buff effects and decrement duration
+  var expired = [];
+  for (var i = state._buffs.length - 1; i >= 0; i--) {
+    var b = state._buffs[i];
+    var e = b.effects;
+    if (e.skill) state.skill = clamp(state.skill + e.skill, 0, 100);
+    if (e.network) state.network = clamp(state.network + e.network, 0, 100);
+    if (e.health) state.health = clamp(state.health + e.health, 0, 100);
+    if (e.happy) state.happy = clamp(state.happy + e.happy, 0, 100);
+    if (e.salary) state.salary = Math.max(0, state.salary + e.salary);
+    if (e.money) state.money += e.money;
+    b.remaining--;
+    if (b.remaining <= 0) expired.push(b.name);
+  }
+  state._buffs = state._buffs.filter(function(b) { return b.remaining > 0; });
+  if (expired.length > 0) toast('📋 ' + expired.join('、') + ' 效果结束');
+}
+
+function getBuffDesc() {
+  if (state._buffs.length === 0) return '';
+  var html = '';
+  for (var i = 0; i < state._buffs.length; i++) {
+    var b = state._buffs[i];
+    html += '<div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px">⏱ ' + b.name + ' (' + b.remaining + '年)</div>';
+  }
+  return html;
+}
+
+// ====== Economy System ======
+function openShop(type) {
+  var shopHtml = '';
+  if (type === 'heal') {
+    shopHtml = '<div class="modal-title">🏥 养生医疗</div>';
+    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 健康：' + state.health + '</div>';
+    shopHtml += '<div class="switch-grid">';
+    shopHtml += '<div class="switch-card" onclick="buyHeal(3000, 10)"><div class="sw-title">💊 基础体检</div><div class="sw-cost">¥3,000 → 健康+10</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyHeal(15000, 30)"><div class="sw-title">🏥 深度疗养</div><div class="sw-cost">¥15,000 → 健康+30</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyHeal(50000, 60)"><div class="sw-title">✨ 顶级康养</div><div class="sw-cost">¥50,000 → 健康+60</div></div>';
+    shopHtml += '</div>';
+  } else if (type === 'train') {
+    shopHtml = '<div class="modal-title">📚 技能培训</div>';
+    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 技能：' + state.skill + '</div>';
+    shopHtml += '<div class="switch-grid">';
+    shopHtml += '<div class="switch-card" onclick="buyTrain(5000, 8)"><div class="sw-title">📖 在线课程</div><div class="sw-cost">¥5,000 → 技能+8</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyTrain(20000, 20)"><div class="sw-title">🎓 专业认证</div><div class="sw-cost">¥20,000 → 技能+20</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyTrain(60000, 40)"><div class="sw-title">🏫 EMBA进修</div><div class="sw-cost">¥60,000 → 技能+40</div></div>';
+    shopHtml += '</div>';
+  } else if (type === 'social') {
+    shopHtml = '<div class="modal-title">🤝 社交投资</div>';
+    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 人脉：' + state.network + '</div>';
+    shopHtml += '<div class="switch-grid">';
+    shopHtml += '<div class="switch-card" onclick="buySocial(3000, 6)"><div class="sw-title">🍻 同事聚餐</div><div class="sw-cost">¥3,000 → 人脉+6</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buySocial(15000, 18)"><div class="sw-title">🎉 行业酒会</div><div class="sw-cost">¥15,000 → 人脉+18</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buySocial(50000, 40)"><div class="sw-title">🎁 高端人脉局</div><div class="sw-cost">¥50,000 → 人脉+40</div></div>';
+    shopHtml += '</div>';
+  } else if (type === 'invest') {
+    shopHtml = '<div class="modal-title">📈 理财投资</div>';
+    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万</div>';
+    shopHtml += '<div class="switch-grid">';
+    shopHtml += '<div class="switch-card" onclick="buyInvest(10000, 0.03)"><div class="sw-title">🏦 定期存款</div><div class="sw-cost">投入¥1万 → 年收益3%，稳赚不赔</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyInvest(50000, 0.08)"><div class="sw-title">📊 基金定投</div><div class="sw-cost">投入¥5万 → 年收益8%，有小幅亏损风险</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyInvest(100000, 0.15)"><div class="sw-title">📉 股票炒</div><div class="sw-cost">投入¥10万 → 年收益15%，亏损概率高</div></div>';
+    shopHtml += '</div>';
+  } else if (type === 'property') {
+    var owned = state._property || 0;
+    shopHtml = '<div class="modal-title">🏠 房产置业</div>';
+    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">存款：¥' + (state.money/10000).toFixed(1) + '万 | 已购房：' + owned + '套</div>';
+    shopHtml += '<div class="switch-grid">';
+    shopHtml += '<div class="switch-card" onclick="buyProperty(200000, 5000)"><div class="sw-title">🏙️ 老破小</div><div class="sw-cost">¥200万首付 → 每年租金¥5,000</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyProperty(500000, 15000)"><div class="sw-title">🏢 学区房</div><div class="sw-cost">¥500万首付 → 每年租金¥15,000</div></div>';
+    shopHtml += '<div class="switch-card" onclick="buyProperty(1000000, 40000)"><div class="sw-title">🏰 豪宅</div><div class="sw-cost">¥1000万首付 → 每年租金¥40,000</div></div>';
+    shopHtml += '</div>';
+  }
+  shopHtml += '<div class="modal-btn" onclick="closeAllModals()">返回</div>';
+  
+  // Create or update shop modal
+  var modal = document.getElementById('shopModal');
+  if (modal) {
+    modal.querySelector('.modal-content').innerHTML = shopHtml;
+  } else {
+    modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'shopModal';
+    modal.innerHTML = '<div class="modal-content">' + shopHtml + '</div>';
+    document.body.appendChild(modal);
+  }
+  modal.classList.add('show');
+}
+
+function buyHeal(cost, amount) {
+  if (state.money < cost) { toast('💸 存款不足'); return; }
+  state.money -= cost;
+  state.health = clamp(state.health + amount, 0, 100);
+  toast('🏥 健康+' + amount);
+  closeAllModals();
+  render();
+}
+
+function buyTrain(cost, amount) {
+  if (state.money < cost) { toast('💸 存款不足'); return; }
+  state.money -= cost;
+  state.skill = clamp(state.skill + amount, 0, 100);
+  toast('📚 技能+' + amount);
+  closeAllModals();
+  render();
+}
+
+function buySocial(cost, amount) {
+  if (state.money < cost) { toast('💸 存款不足'); return; }
+  state.money -= cost;
+  state.network = clamp(state.network + amount, 0, 100);
+  toast('🤝 人脉+' + amount);
+  closeAllModals();
+  render();
+}
+
+function buyInvest(cost, rate) {
+  if (state.money < cost) { toast('💸 存款不足'); return; }
+  state.money -= cost;
+  var gain = Math.round(cost * rate);
+  var risk = Math.random();
+  if (rate > 0.1 && risk < 0.3) {
+    // High risk: 30% chance of loss
+    var loss = Math.round(cost * rate * 0.5);
+    state.money -= loss;
+    toast('📉 投资亏损 ¥' + (loss/10000).toFixed(1) + '万！');
+  } else if (rate > 0.05 && risk < 0.15) {
+    // Medium risk: 15% chance of small loss
+    var loss = Math.round(cost * 0.1);
+    state.money -= loss;
+    toast('📊 基金小亏 ¥' + (loss/10000).toFixed(1) + '万');
+  } else {
+    state.money += gain;
+    toast('💰 投资收益 +¥' + (gain/10000).toFixed(1) + '万');
+  }
+  closeAllModals();
+  render();
+}
+
+function buyProperty(cost, rent) {
+  if (state.money < cost) { toast('💸 存款不足，需¥' + (cost/10000) + '万'); return; }
+  state.money -= cost;
+  state._property = (state._property || 0) + 1;
+  state._yearlyRent = (state._yearlyRent || 0) + rent;
+  toast('🏠 购房成功！每年租金+¥' + (rent/10000).toFixed(1) + '万');
+  closeAllModals();
+  render();
+}
+
+function applyYearlyIncome() {
+  // Apply rental income
+  if (state._yearlyRent > 0) {
+    state.money += state._yearlyRent;
+    toast('🏠 租金收入 +¥' + (state._yearlyRent/10000).toFixed(1) + '万');
+  }
+  // Apply investment returns (simplified: auto-compound)
+  // Apply debt interest
+  if (state.money < 0) {
+    var interest = Math.round(state.money * 0.1); // 10% annual interest on debt
+    state.money += interest;
+    toast('💳 负债利息扣除 ¥' + (Math.abs(interest)/10000).toFixed(1) + '万');
+    state._debtYears = (state._debtYears || 0) + 1;
+    if (state._debtYears >= 2) {
+      // Force bankruptcy ending
+      state.health = 0;
+      toast('🏦 连续负债2年，强制破产！');
+    }
+  } else {
+    state._debtYears = 0;
+  }
+
+  // Team bonus for management branch
+  if (state._teamBonus > 0) { state.money += state._teamBonus; }
+}
+
+
+// ====== Promotion Dual-Branch ======
+function showPromoBranch() {
+  var html = '<div class="modal-title">🎯 晋升成功！选择发展方向</div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:12px">这个决定不可逆，将影响你接下来的整个职业生涯</div>';
+  html += '<div class="switch-grid">';
+  
+  var tk = CAREER_TRACKS[state.track];
+  var salaryBoost = Math.round(state.salary * 0.4);
+  
+  html += '<div class="switch-card" onclick="choosePromoBranch(\'tech\')">';
+  html += '<div class="sw-title">🔬 技术专家线</div>';
+  html += '<div class="sw-desc">深耕技术，成为领域权威</div>';
+  html += '<div class="sw-cost">技能+20 · 底薪+' + (salaryBoost/1000) + 'K<br>⚡ 代价：人脉-10 · 每年健康额外-3</div>';
+  html += '</div>';
+  
+  html += '<div class="switch-card" onclick="choosePromoBranch(\'leader\')">';
+  html += '<div class="sw-title">👔 管理领导线</div>';
+  html += '<div class="sw-desc">带团队，走仕途</div>';
+  html += '<div class="sw-cost">人脉+20 · 解锁团队分红<br>⚡ 代价：技能增长停滞 · 晋升门槛持续抬高</div>';
+  html += '</div>';
+  
+  html += '</div>';
+  html += '<div class="modal-btn" onclick="closeAllModals()">再想想</div>';
+  
+  var modal = document.getElementById('branchModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'branchModal';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = '<div class="modal-content">' + html + '</div>';
+  modal.classList.add('show');
+}
+
+function choosePromoBranch(branch) {
+  var salaryBoost = Math.round(state.salary * 0.4);
+  
+  if (branch === 'tech') {
+    state.skill = clamp(state.skill + 20, 0, 100);
+    state.salary += salaryBoost;
+    state.network = clamp(state.network - 10, 0, 100);
+    state._promoBranch = 'tech';
+    addBuff('tech_branch', '技术专家路线', '每年健康额外-3', 99, {health:-3});
+    toast('🔬 选择技术专家路线！技能+20，底薪+' + (salaryBoost/1000) + 'K');
+  } else {
+    state.network = clamp(state.network + 20, 0, 100);
+    state._promoBranch = 'leader';
+    state._teamBonus = Math.round(state.salary * 0.15); // Team bonus
+    addBuff('leader_branch', '管理领导路线', '团队分红+¥' + (state._teamBonus/1000) + 'K/年', 99, {skill:-1});
+    toast('👔 选择管理领导路线！人脉+20，解锁团队分红');
+  }
+  
+  closeAllModals();
+  render();
+}
+
 function showSwitchModal() {
   var cd = CAREER_TRACKS[state.track];
   var grid = document.getElementById('switchGrid');
