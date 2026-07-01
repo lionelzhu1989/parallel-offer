@@ -2715,7 +2715,7 @@ function updateTopBar() {
     if (ui) ui.style.display = 'none';
     return;
   }
-  ab.style.display = 'grid';
+  ab.style.display = 'flex';
   yp.style.display = 'block';
   yl.textContent = '第' + state.year + '年 / 10年';
   if (ui) { ui.style.display = 'inline-block'; var uc = document.getElementById('undoCount'); if(uc) uc.textContent = Math.max(0, state._undoMax - state._undoUsed); }
