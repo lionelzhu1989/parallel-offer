@@ -622,7 +622,7 @@ var TALENT_POOL = [
 var CAREER_EVENTS = {
   tech: [
     { year:[1,2], title:'需求又变了', desc:'产品经理第三次改需求。上一版的代码白写了。你开始怀疑"敏捷开发"是不是"赶快重写"的意思。', opts:[
-      {text:'默默重写，毕竟工资照发', skill:5, health:-3, happy:-5}, addBuff('overtime','加班模式','健康小幅下降',2,{health:-3});
+      {text:'默默重写，毕竟工资照发', skill:5, health:-3, happy:-5},
       {text:'跟产品经理battle一下', skill:3, network:5, happy:-2},
       {text:'截图留证，下次甩锅用', skill:2, network:-3, happy:3}
     ]},
@@ -632,12 +632,12 @@ var CAREER_EVENTS = {
       {text:'偷偷去学了设计模式', skill:10, happy:-5}
     ]},
     { year:[2,3], title:'线上事故！', desc:'凌晨3点，你写的代码在生产环境炸了。告警群炸锅，你开始思考人生的意义。', opts:[
-      {text:'爬起来修复，通宵达旦', skill:8, health:-10, happy:-8}, addBuff('overwork','过劳状态','技能+15但健康持续下降',3,{health:-5,skill:2});
+      {text:'爬起来修复，通宵达旦', skill:8, health:-10, happy:-8},
       {text:'假装没看到，等早上再说', health:-3, happy:5, network:-5},
       {text:'发了个"正在排查"的消息，然后继续睡', happy:3, network:-3}
     ]},
     { year:[3,4], title:'技术选型争论', desc:'团队为用React还是Vue吵了三天。你作为唯一一个两个都会的人，被两边拉拢。', opts:[
-      {text:'提出一个全新框架（Svelte）', skill:5, network:-5, happy:-3} addBuff('tech_debt','技术债','新框架需要适应期',2,{skill:2,health:-3});,
+      {text:'提出一个全新框架（Svelte）', skill:5, network:-5, happy:-3},,
       {text:'两边都不得罪，建议用团队熟悉的', network:5, happy:3,health:-4},
       {text:'写了个性能对比报告，用数据说话', skill:8, network:3}
     ],health:-3},
@@ -662,7 +662,7 @@ var CAREER_EVENTS = {
       {text:'推荐TA去做产品（开玩笑）', happy:8}
     ],health:-4},
     { year:[8,9], title:'裁员潮来袭', desc:'HR群里传出了"优化"的消息。隔壁组已经有人开始收拾工位了。你心里咯噔一下。', opts:[
-      {text:'疯狂刷题，准备跳槽', skill:8, happy:-10, network:5}, addBuff('adapt','适应期','新环境需要时间',3,{network:-3});
+      {text:'疯狂刷题，准备跳槽', skill:8, happy:-10, network:5},
       {text:'主动找领导谈，确认自己安全', network:8, happy:-5},
       {text:'摸鱼等赔偿，N+1不香吗？', happy:5, skill:-3}
     ]},
@@ -722,18 +722,18 @@ var CAREER_EVENTS = {
       {text:'写个技术债文档，留着下次', happy:3}
     ],health:-4},
       ,{ year:[4,6], title:'开源贡献', desc:'你给一个知名开源项目提了PR，被合并了。你觉得自己好像也能改变世界。', opts:[
-      {text:'继续深入贡献，成为核心开发者', skill:12, health:-8, happy:5}
-      {text:'在公司内部分享开源经验', skill:5, network:8, happy:3}
+      {text:'继续深入贡献，成为核心开发者', skill:12, health:-8, happy:5},
+      {text:'在公司内部分享开源经验', skill:5, network:8, happy:3},
       {text:'用开源项目包装简历，准备跳槽', skill:3, network:5, happy:-2}
     ]}
     ,{ year:[5,7], title:'技术债危机', desc:'你负责的项目积累了大量技术债，重构需要3个月，但老板要你先出功能。', opts:[
-      {text:'硬着头皮重构，风险自担', skill:10, health:-10, happy:-5}
-      {text:'先出功能，债以后再说', skill:-3, happy:-3, money:5000}
+      {text:'硬着头皮重构，风险自担', skill:10, health:-10, happy:-5},
+      {text:'先出功能，债以后再说', skill:-3, happy:-3, money:5000},
       {text:'申请招人帮忙分担', network:5, happy:-2}
     ]}
     ,{ year:[7,9], title:'技术影响力', desc:'有人在技术社区吐槽你的开源项目，引发了激烈讨论。', opts:[
-      {text:'认真回复每一条评论', network:10, health:-5, happy:-3}
-      {text:'不理会，专注写代码', skill:5, happy:3}
+      {text:'认真回复每一条评论', network:10, health:-5, happy:-3},
+      {text:'不理会，专注写代码', skill:5, happy:3},
       {text:'写一篇深度技术文章回应', skill:8, network:8, health:-5}
     ]}
 ],
@@ -839,18 +839,18 @@ var CAREER_EVENTS = {
       {text:'带着客户资源跳槽', skill:-3, network:8, happy:5}
     ]}
       ,{ year:[4,6], title:'商务谈判', desc:'重要客户要压价30%，你的利润空间被严重挤压。', opts:[
-      {text:'据理力争，保住价格', network:-5, happy:-5, money:20000}
-      {text:'降价但要求长期合作', money:-10000, network:10, happy:-3}
+      {text:'据理力争，保住价格', network:-5, happy:-5, money:20000},
+      {text:'降价但要求长期合作', money:-10000, network:10, happy:-3},
       {text:'直接放弃这个客户', happy:5, money:-5000}
     ]}
     ,{ year:[5,7], title:'团队管理难题', desc:'核心骨干要离职，开出的竞业限制你付不起。', opts:[
-      {text:'加薪挽留，赌他值得', money:-20000, network:5, happy:-3} addBuff('leadership','管理压力','团队管理消耗精力',3,{health:-4,skill:-2});
-      {text:'接受现实，培养新人', skill:5, happy:-5, network:-3}
+      {text:'加薪挽留，赌他值得', money:-20000, network:5, happy:-3},
+      {text:'接受现实，培养新人', skill:5, happy:-5, network:-3},
       {text:'干脆自己接手他的活', health:-10, skill:5, happy:-8}
     ]}
     ,{ year:[7,9], title:'行业峰会演讲', desc:'你被邀请在行业峰会上做主题演讲。', opts:[
-      {text:'精心准备，展示专业实力', skill:10, network:15, health:-5}
-      {text:'轻松上台，讲段子活跃气氛', network:10, happy:10, skill:3}
+      {text:'精心准备，展示专业实力', skill:10, network:15, health:-5},
+      {text:'轻松上台，讲段子活跃气氛', network:10, happy:10, skill:3},
       {text:'婉拒，不擅长公开演讲', happy:5}
     ]}
 ],
@@ -956,18 +956,18 @@ var CAREER_EVENTS = {
       {text:'申请转岗，换个环境', skill:3, network:5}
     ],health:-5},
       ,{ year:[4,6], title:'职称评定', desc:'高级职称评审开始了，名额只有2个，竞争者有5个。', opts:[
-      {text:'全力准备材料', skill:8, health:-5, happy:-5} addBuff('bureaucracy','文山会海','写材料消耗精力',2,{health:-3,happy:-5});
-      {text:'找关系打点一下', money:-10000, network:5, happy:-3}
+      {text:'全力准备材料', skill:8, health:-5, happy:-5},
+      {text:'找关系打点一下', money:-10000, network:5, happy:-3},
       {text:'这次先不评了，让给年轻人', happy:10, skill:-3}
     ]}
     ,{ year:[5,7], title:'借调机会', desc:'上级机关借调你去工作半年，但要离开现在的岗位。', opts:[
-      {text:'抓住机会，拓展人脉', network:15, happy:-5, health:-5}
-      {text:'婉拒，不想离开舒适区', happy:5, health:3}
+      {text:'抓住机会，拓展人脉', network:15, happy:-5, health:-5},
+      {text:'婉拒，不想离开舒适区', happy:5, health:3},
       {text:'要求延期，等手头项目完成', skill:5, happy:-3}
     ]}
     ,{ year:[7,9], title:'政策变化', desc:'单位进行机构改革，你的岗位面临调整。', opts:[
-      {text:'主动申请新岗位', skill:5, network:5, happy:-5}
-      {text:'坚守原岗等风头过去', happy:-3, health:-3}
+      {text:'主动申请新岗位', skill:5, network:5, happy:-5},
+      {text:'坚守原岗等风头过去', happy:-3, health:-3},
       {text:'趁机提前退休', happy:15, money:-10000}
     ]}
 ],
@@ -1073,18 +1073,18 @@ var CAREER_EVENTS = {
       {text:'转型做独立顾问', skill:8, happy:5}
     ]}
       ,{ year:[4,6], title:'海外轮岗', desc:'总部给了你一个海外轮岗的机会，但要离开家人半年。', opts:[
-      {text:'义无反顾去海外', skill:15, network:10, happy:-10, health:-5} addBuff('overseas','海外适应','异国他乡需要适应',3,{network:5,health:-3});
-      {text:'带上家人一起去', money:-30000, happy:5, skill:10}
+      {text:'义无反顾去海外', skill:15, network:10, happy:-10, health:-5},
+      {text:'带上家人一起去', money:-30000, happy:5, skill:10},
       {text:'放弃机会，家人优先', happy:10, health:5, skill:-5}
     ]}
     ,{ year:[5,7], title:'跨文化冲突', desc:'你和海外同事因为工作方式产生了严重分歧。', opts:[
-      {text:'主动沟通，寻找共识', network:8, happy:-3, skill:3}
-      {text:'坚持自己的方式，据理力争', network:-5, happy:-5, skill:5}
+      {text:'主动沟通，寻找共识', network:8, happy:-3, skill:3},
+      {text:'坚持自己的方式，据理力争', network:-5, happy:-5, skill:5},
       {text:'找HR调解', happy:-2, network:3}
     ]}
     ,{ year:[7,9], title:'总部提拔', desc:'总部想提拔你回国任高管，但要降薪20%。', opts:[
-      {text:'接受回国，家庭团聚', money:-15000, happy:15, network:10}
-      {text:'谈条件，争取平薪', money:-5000, network:5, happy:5}
+      {text:'接受回国，家庭团聚', money:-15000, happy:15, network:10},
+      {text:'谈条件，争取平薪', money:-5000, network:5, happy:5},
       {text:'拒绝，继续海外高薪', money:10000, happy:-5, network:-5}
     ]}
 ],
@@ -1190,18 +1190,18 @@ var CAREER_EVENTS = {
       {text:'卖掉公司，开始新的人生', money:100000, happy:10}
     ]}
       ,{ year:[4,6], title:'产品上线', desc:'你们的产品终于上线了！但第一天只有100个用户。', opts:[
-      {text:'疯狂拉新，地推扫楼', network:10, health:-10, money:-5000} addBuff('hustle','疯狂拉新','地推消耗体力',2,{health:-8,skill:2});
-      {text:'专注打磨产品，口碑传播', skill:10, money:-3000, happy:-5}
+      {text:'疯狂拉新，地推扫楼', network:10, health:-10, money:-5000},
+      {text:'专注打磨产品，口碑传播', skill:10, money:-3000, happy:-5},
       {text:'花钱投广告买量', money:-20000, network:5, happy:-3}
     ]}
     ,{ year:[5,7], title:'投资人撤资', desc:'主要投资人要撤资，公司现金流告急。', opts:[
-      {text:'紧急找新投资人', network:10, happy:-10, health:-5}
-      {text:'裁员自救，保住核心团队', network:-10, happy:-5, money:5000}
+      {text:'紧急找新投资人', network:10, happy:-10, health:-5},
+      {text:'裁员自救，保住核心团队', network:-10, happy:-5, money:5000},
       {text:'抵押房产续命', money:-50000, happy:-5, health:-5}
     ]}
     ,{ year:[7,9], title:'收购要约', desc:'大厂出价500万要收购你的公司。', opts:[
-      {text:'卖掉套现，财务自由', money:500000, happy:15, skill:-5}
-      {text:'不卖，继续做自己的事业', money:-10000, happy:-5, skill:10}
+      {text:'卖掉套现，财务自由', money:500000, happy:15, skill:-5},
+      {text:'不卖，继续做自己的事业', money:-10000, happy:-5, skill:10},
       {text:'讨价还价，争取更高价', money:200000, network:5, happy:-3}
     ]}
 ],
@@ -1307,18 +1307,18 @@ var CAREER_EVENTS = {
       {text:'建立自己的品牌，规模化', skill:8, network:8, happy:5}
     ]}
       ,{ year:[4,6], title:'爆款内容', desc:'你做的一条视频突然火了，播放量破百万。', opts:[
-      {text:'趁热打铁日更', money:30000, health:-15, happy:-5, skill:5}
-      {text:'保持节奏，细水长流', money:5000, happy:5, skill:3}
+      {text:'趁热打铁日更', money:30000, health:-15, happy:-5, skill:5},
+      {text:'保持节奏，细水长流', money:5000, happy:5, skill:3},
       {text:'接广告变现', money:20000, happy:-3, network:5}
     ]}
     ,{ year:[5,7], title:'平台规则变化', desc:'你依赖的平台改了算法，流量暴跌80%。', opts:[
-      {text:'全面转型新平台', skill:10, money:-5000, happy:-5}
-      {text:'优化内容质量，等算法回暖', money:-3000, happy:-3}
+      {text:'全面转型新平台', skill:10, money:-5000, happy:-5},
+      {text:'优化内容质量，等算法回暖', money:-3000, happy:-3},
       {text:'趁机休息一段时间', health:10, happy:10, money:-5000}
     ]}
     ,{ year:[7,9], title:'商业合作机会', desc:'品牌方想和你签长期代言合同，但要独家合作。', opts:[
-      {text:'签约，稳定收入', money:50000, happy:-5, skill:-3}
-      {text:'不签，保持创作自由', happy:10, skill:5}
+      {text:'签约，稳定收入', money:50000, happy:-5, skill:-3},
+      {text:'不签，保持创作自由', happy:10, skill:5},
       {text:'谈分成模式，各退一步', money:20000, network:5, happy:3}
     ]}
 ]
@@ -1327,9 +1327,9 @@ var CAREER_EVENTS = {
 // ====== DATA: Random Events (Shared) ======
 var RANDOM_EVENTS = [
   { emoji:'🏥', title:'家人生病', desc:'妈妈打电话说身体不好需要住院。她让你别担心，但你知道手术费不便宜。', weight:2, opts:[
-    {text:'拿出积蓄安排最好的治疗', money:-50000, health:-5, happy:-5} addBuff('family_care','家人陪护','投入精力照顾家人',2,{health:-5,happy:-3});,
-    {text:'转2万让亲戚帮忙照顾', money:-20000, happy:-3} addBuff('worry','牵挂','担心家人健康',2,{happy:-5});,
-    {text:'请假回去陪护一周', money:-8000, health:-3, happy:5} addBuff('family_care','家人陪护',null,1,{health:-3});
+    {text:'拿出积蓄安排最好的治疗', money:-50000, health:-5, happy:-5},,
+    {text:'转2万让亲戚帮忙照顾', money:-20000, happy:-3},,
+    {text:'请假回去陪护一周', money:-8000, health:-3, happy:5},
   ]},
   { emoji:'💸', title:'意外之财', desc:'你随手买的东西居然中奖了。不记得什么时候买的，但奖品是真的。', weight:2, opts:[
     {text:'全部存起来', money:15000, happy:5,health:-5},
@@ -1543,53 +1543,53 @@ var RANDOM_EVENTS = [
   ]}
 
   ,{ emoji:'🎰', title:'股票暴富梦', desc:'同事说他买的股票翻了3倍，你心动了。', weight:2, opts:[
-    {text:'跟风全仓买入', money:-80000, health:-5, happy:-5}, addBuff('stock_fever','炒股上瘾','每天盯盘心惊胆战',2,{happy:-5,health:-3})
-    {text:'忍住不看，继续搬砖', skill:2, happy:-2}
+    {text:'跟风全仓买入', money:-80000, health:-5, happy:-5},
+    {text:'忍住不看，继续搬砖', skill:2, happy:-2},
     {text:'花小钱试水买1000块', money:-1000, happy:-2}
   ]}
   ,{ emoji:'🧘', title:'冥想顿悟', desc:'你在公园长椅上坐了一下午，突然想通了一些事情。', weight:1, opts:[
-    {text:'决定放慢节奏，不再内卷', health:10, happy:15, skill:-5}, addBuff('enlightened','顿悟状态','心态平和但动力下降',3,{health:3,skill:-2})
-    {text:'拍了张照发朋友圈，然后继续卷', happy:3, network:3}
+    {text:'决定放慢节奏，不再内卷', health:10, happy:15, skill:-5},
+    {text:'拍了张照发朋友圈，然后继续卷', happy:3, network:3},
     {text:'写了一篇人生感悟，获得共鸣', happy:8, network:5}
   ]}
   ,{ emoji:'🏋️', title:'健身房冲动', desc:'办了年卡后你去了3次。再不去就过期了。', weight:2, opts:[
-    {text:'开始每周坚持锻炼', health:15, happy:5, skill:-3}, addBuff('fitness','健身达人','坚持锻炼恢复健康',2,{health:5})
-    {text:'找了个私教带练', money:-5000, health:10, happy:-2}
+    {text:'开始每周坚持锻炼', health:15, happy:5, skill:-3},
+    {text:'找了个私教带练', money:-5000, health:10, happy:-2},
     {text:'算了，卡过期就过期吧', happy:-3}
   ]}
   ,{ emoji:'📱', title:'副业灵感', desc:'你发现可以把技能变现，接点私活。', weight:2, opts:[
-    {text:'周末加班接私活', money:15000, health:-10, happy:-5, skill:3}
-    {text:'认真调研市场需求', skill:5, happy:-2, money:-500}
+    {text:'周末加班接私活', money:15000, health:-10, happy:-5, skill:3},
+    {text:'认真调研市场需求', skill:5, happy:-2, money:-500},
     {text:'算了，周末要休息', health:5, happy:5}
   ]}
   ,{ emoji:'🎓', title:'考证机会', desc:'有个行业含金量很高的证书，但要脱产学习3个月。', weight:1, opts:[
-    {text:'辞职全力备考', money:-30000, skill:20, happy:-5, health:-5}, addBuff('studying','备考中','全身心投入学习',3,{skill:5,health:-2})
-    {text:'边工作边考', skill:10, health:-8, happy:-5}
+    {text:'辞职全力备考', money:-30000, skill:20, happy:-5, health:-5},
+    {text:'边工作边考', skill:10, health:-8, happy:-5},
     {text:'放弃，太折腾了', happy:-3}
   ]}
   ,{ emoji:'🏖️', title:'年假选择', desc:'攒了5天年假，怎么用？', weight:3, opts:[
-    {text:'出国旅行放松', money:-8000, health:15, happy:15, skill:-3}, addBuff('vacation','假期愉悦',null,1,{happy:10})
-    {text:'回家陪父母', happy:10, health:5, money:-3000}
+    {text:'出国旅行放松', money:-8000, health:15, happy:15, skill:-3},
+    {text:'回家陪父母', happy:10, health:5, money:-3000},
     {text:'加班冲绩效', money:5000, health:-8, happy:-10}
   ]}
   ,{ emoji:'🚗', title:'通勤噩耗', desc:'公司搬到郊区新园区，通勤时间翻倍。', weight:2, opts:[
-    {text:'咬牙买辆车', money:-80000, happy:5, health:-3}
-    {text:'在公司附近租房', money:-5000, happy:3, health:3}
+    {text:'咬牙买辆车', money:-80000, happy:5, health:-3},
+    {text:'在公司附近租房', money:-5000, happy:3, health:3},
     {text:'继续挤地铁', health:-5, happy:-8}
   ]}
   ,{ emoji:'💰', title:'意外奖金', desc:'老板说你表现不错，给了笔额外奖金。', weight:2, opts:[
-    {text:'存起来买房首付', money:20000, happy:5}
-    {text:'请团队吃饭庆祝', money:-5000, network:10, happy:5}
+    {text:'存起来买房首付', money:20000, happy:5},
+    {text:'请团队吃饭庆祝', money:-5000, network:10, happy:5},
     {text:'买个心仪已久的电子产品', money:7000, happy:10}
   ]}
   ,{ emoji:'🤝', title:'行业聚会', desc:'收到行业峰会邀请，门票不便宜。', weight:2, opts:[
-    {text:'自费参加，拓展人脉', money:-3000, network:15, happy:-2}
-    {text:'线上观看免费版', skill:5, network:3}
+    {text:'自费参加，拓展人脉', money:-3000, network:15, happy:-2},
+    {text:'线上观看免费版', skill:5, network:3},
     {text:'不去，在家躺平', health:5, happy:3}
   ]}
   ,{ emoji:'🏥', title:'体检报告', desc:'年度体检报告出来了，有几个指标异常。', weight:2, opts:[
-    {text:'立刻预约全面复查', money:-5000, health:10, happy:-3}
-    {text:'先观察观察再说', health:-5, happy:-5}
+    {text:'立刻预约全面复查', money:-5000, health:10, happy:-3},
+    {text:'先观察观察再说', health:-5, happy:-5},
     {text:'医生说没事，继续该吃吃该喝喝', happy:5}
   ]}
 ];
@@ -1700,6 +1700,12 @@ var ACHIEVEMENTS = [
   { id:'salary_10w', emoji:'💰', name:'月薪十万', desc:'月薪超过10万', check:function(s){ return s.salary>=100000; } },
   { id:'talent_collector', emoji:'🎨', name:'天赋收藏家', desc:'解锁所有天赋', check:function(s){ return s.talents && s.talents.length >= 5; } },
   { id:'all_endings', emoji:'📖', name:'结局大师', desc:'解锁所有结局', check:function(s){ try { var saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}'); return Object.keys(saved).length >= 10; } catch(e) { return false; } } },
+
+  ,{ id:'tech_master', emoji:'🔬', name:'技术大牛', desc:'走技术专家路线通关', check:function(s){ return s._promoBranch === 'tech' && s._playEnded; } }
+  ,{ id:'leader_boss', emoji:'👔', name:'管理精英', desc:'走管理领导路线通关', check:function(s){ return s._promoBranch === 'leader' && s._playEnded; } }
+  ,{ id:'landlord', emoji:'🏠', name:'包租公', desc:'拥有3套以上房产', check:function(s){ return (s._property || 0) >= 3; } }
+  ,{ id:'millionaire', emoji:'💎', name:'百万富翁', desc:'存款超过100万', check:function(s){ return s.money >= 1000000; } }
+  ,{ id:'bankrupt', emoji:'💸', name:'破产专业户', desc:'触发破产结局', check:function(s){ return s.money <= -50000; } }
 ];
 
 // ====== Game State ======
@@ -2477,7 +2483,7 @@ function promoChoice(choice) {
     } else {
       state.happy = clamp(state.happy - 10, 0, 100);
       state._promoCooldown = 2;
-      toast('😔 
+      toast('😔 晋升失败');
     // Restore from snapshot on failure
     if (state._prePromoSnapshot) {
       var snap = state._prePromoSnapshot;
@@ -2486,7 +2492,6 @@ function promoChoice(choice) {
       state.money = snap.money;
       state._prePromoSnapshot = null;
     }
-晋升失败... 冷却2年');
     }
   } else if (choice === 1) {
     // Stay safe: slight skill bonus, no promotion
@@ -3263,13 +3268,8 @@ function shareChallenge() {
   var emoji = ending.emoji || '🦥';
   // Encode stats for PK: skill,network,health,happy,salary,emoji,endingName,talents
   var rv = state.skill + ',' + state.network + ',' + state.health + ',' + state.happy + ',' + state.salary + ',' + encodeURIComponent(emoji) + ',' + encodeURIComponent(name) + ',' + state.talents.map(function(t){ return t; }).join('|');
-  var baseUrl = window.location.href.split('?')[0
-  { id:'tech_master', emoji:'🔬', name:'技术大牛', desc:'走技术专家路线通关', check:function(s){ return s._promoBranch === 'tech' && s._playEnded; } },
-  { id:'leader_boss', emoji:'👔', name:'管理精英', desc:'走管理领导路线通关', check:function(s){ return s._promoBranch === 'leader' && s._playEnded; } },
-  { id:'landlord', emoji:'🏠', name:'包租公', desc:'拥有3套以上房产', check:function(s){ return (s._property || 0) >= 3; } },
-  { id:'millionaire', emoji:'💎', name:'百万富翁', desc:'存款超过100万', check:function(s){ return s.money >= 1000000; } },
-  { id:'bankrupt', emoji:'💸', name:'破产专业户', desc:'触发破产结局', check:function(s){ return s.money <= -50000; } },
-];
+  var baseUrl = window.location.href.split('?')[0];
+  
   var challengeUrl = baseUrl + '?from=' + encodeURIComponent(name) + '&rv=' + encodeURIComponent(rv);
   var text = '📸 我已经是' + emoji + name + '了！\n敢来和我PK吗？\n👉 ' + challengeUrl;
   if (navigator.share) {
