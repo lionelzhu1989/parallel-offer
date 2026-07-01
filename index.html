@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行offer · 职场天赋RPG v9</title>
+<title>平行offer · 职场天赋RPG v10</title>
 <style>/* ===== Design System ===== */
 :root {
   --primary: #6366f1;
@@ -413,9 +413,36 @@ body {
 /* ===== Timeline ===== */
 .timeline-section {
   background:var(--bg-card); border-radius:var(--radius-md);
-  padding:12px 8px; margin:8px 0;
+  padding:16px 12px; margin:8px 0;
   border:1px solid var(--border); box-shadow:var(--shadow-sm);
 }
+.tl-header { text-align:center; font-size:14px; font-weight:700; color:var(--accent); margin-bottom:12px; }
+.tl-track { position:relative; padding-left:28px; }
+.tl-year { position:relative; margin-bottom:2px; }
+.tl-dot-line { position:absolute; left:0; top:0; width:12px; height:100%; display:flex; flex-direction:column; align-items:center; }
+.tl-dot { width:10px; height:10px; border-radius:50%; border:2px solid var(--accent); background:var(--bg); z-index:2; flex-shrink:0; }
+.tl-dot.promo { background:var(--accent); box-shadow:0 0 6px var(--accent); width:12px; height:12px; }
+.tl-dot.fire { background:#ef4444; border-color:#ef4444; box-shadow:0 0 6px #ef4444; width:12px; height:12px; }
+.tl-dot.gold { background:#f59e0b; border-color:#f59e0b; box-shadow:0 0 6px #f59e0b; width:12px; height:12px; }
+.tl-line { flex:1; width:2px; background:var(--border); min-height:4px; }
+.tl-content { padding:4px 0 12px 0; }
+.tl-year-label { font-size:10px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px; }
+.tl-event { font-size:12px; font-weight:600; color:var(--text); margin:2px 0; line-height:1.3; }
+.tl-rank { font-size:10px; color:var(--text-muted); }
+.tl-stats { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+.tl-stat { font-size:9px; color:var(--text-muted); display:flex; align-items:center; gap:2px; }
+.tl-stat .pos { color:var(--green); }
+.tl-stat .neg { color:var(--danger); }
+.tl-money-bar { margin-top:6px; height:6px; background:var(--bg-secondary); border-radius:3px; overflow:hidden; position:relative; }
+.tl-money-fill { height:100%; border-radius:3px; transition:width 0.3s; }
+.tl-money-label { font-size:9px; color:var(--text-muted); margin-top:2px; text-align:right; }
+.tl-chart { margin-top:12px; padding:8px; background:var(--bg-secondary); border-radius:var(--radius-sm); }
+.tl-chart-title { font-size:10px; color:var(--text-muted); margin-bottom:6px; text-align:center; }
+.tl-bars { display:flex; align-items:flex-end; gap:2px; height:48px; padding:0 2px; }
+.tl-bar { flex:1; border-radius:2px 2px 0 0; min-height:2px; position:relative; transition:height 0.3s; }
+.tl-bar:hover::after { content:attr(data-tip); position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--bg-card); color:var(--text); padding:2px 6px; border-radius:4px; font-size:9px; white-space:nowrap; box-shadow:var(--shadow-sm); z-index:10; }
+.tl-bar-labels { display:flex; gap:2px; padding:2px; }
+.tl-bar-label { flex:1; text-align:center; font-size:8px; color:var(--text-muted); }
 
 /* ===== Narrative Box ===== */
 .narrative-box {
@@ -2776,7 +2803,7 @@ function showIntro() {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v9 · 2026.07.01</div>';
+  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v10 · 2026.07.01</div>';
   html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
@@ -3789,8 +3816,7 @@ function showEnding() {
   html += '</div></div>';
 
   // Timeline
-  html += '<div class="timeline-section"><div style="font-size:13px;color:#b0a590;margin-bottom:8px;text-align:center">📍 十年生命线</div>';
-  html += '<div style="display:flex;gap:0;overflow-x:auto;padding:8px 4px;-webkit-overflow-scrolling:touch" id="timelineContainer"></div></div>';
+  html += '<div class="timeline-section"><div class="tl-header">📍 十年生命线</div><div class="tl-track" id="tlTrack"></div></div>';
 
   // Action buttons
   // Copy moment button
@@ -3843,22 +3869,78 @@ function showEnding() {
 }
 
 function renderTimeline() {
-  var c = document.getElementById('timelineContainer');
+  var c = document.getElementById('tlTrack');
   if (!c || !state._yearlyRecords || state._yearlyRecords.length === 0) return;
   var records = state._yearlyRecords;
+  var maxMoney = 0;
+  for (var i = 0; i < records.length; i++) { if (records[i].money > maxMoney) maxMoney = records[i].money; }
+  if (maxMoney <= 0) maxMoney = 100000;
+
   var html = '';
   for (var i = 0; i < records.length; i++) {
     var r = records[i];
     var isLast = i === records.length - 1;
-    html += '<div style="display:flex;flex-direction:column;align-items:center;min-width:60px;position:relative">';
-    html += '<div style="width:12px;height:12px;border-radius:50%;background:' + (isLast ? '#b8913c' : '#c9ba9e') + ';border:2px solid #f5f0e8;z-index:2"></div>';
-    html += '<div style="font-size:10px;color:#8c7b64;margin-top:4px">第' + r.year + '年</div>';
-    html += '<div style="font-size:10px;color:#8c7b64">' + r.rank + '</div>';
-    if (isLast) {
-      html += '<div style="font-size:9px;color:#b0a590;margin-top:2px">💰' + (r.salary >= 10000 ? Math.round(r.salary/10000) + 'W' : r.salary) + '</div>';
-    }
+    var prev = i > 0 ? records[i-1] : null;
+
+    // Determine dot style
+    var dotCls = 'tl-dot';
+    if (r.event && (r.event.indexOf('晋升') >= 0 || r.event.indexOf('升职') >= 0 || r.event.indexOf('主管') >= 0 || r.event.indexOf('总监') >= 0 || r.event.indexOf('VP') >= 0)) dotCls += ' promo';
+    else if (r.event && (r.event.indexOf('裁员') >= 0 || r.event.indexOf('辞职') >= 0 || r.event.indexOf('离职') >= 0 || r.event.indexOf('创业') >= 0)) dotCls += ' fire';
+    else if (r.event && (r.event.indexOf('结婚') >= 0 || r.event.indexOf('买房') >= 0 || r.event.indexOf('财务') >= 0 || r.event.indexOf('百万') >= 0)) dotCls += ' gold';
+
+    html += '<div class="tl-year">';
+    html += '<div class="tl-dot-line"><div class="' + dotCls + '"></div>';
+    html += (i < records.length - 1) ? '<div class="tl-line"></div>' : '';
     html += '</div>';
+    html += '<div class="tl-content">';
+    html += '<div class="tl-year-label">第' + r.year + '年</div>';
+    html += '<div class="tl-event">' + (r.event || '平稳度过') + '</div>';
+    html += '<div class="tl-rank">' + r.rank + '</div>';
+
+    // Stat changes
+    html += '<div class="tl-stats">';
+    if (prev) {
+      var diffs = [
+        ['🧠', r.skill - prev.skill], ['👥', r.network - prev.network],
+        ['❤️', r.health - prev.health], ['😊', r.hair - prev.hair]
+      ];
+      for (var d = 0; d < diffs.length; d++) {
+        if (diffs[d][1] !== 0) {
+          var cls = diffs[d][1] > 0 ? 'pos' : 'neg';
+          var sign = diffs[d][1] > 0 ? '+' : '';
+          html += '<span class="tl-stat"><span class="' + cls + '">' + diffs[d][0] + sign + diffs[d][1] + '</span></span>';
+        }
+      }
+    }
+    html += '<span class="tl-stat">💰' + (r.money >= 10000 ? (r.money/10000).toFixed(1) + '万' : r.money.toLocaleString()) + '</span>';
+    html += '</div>';
+
+    // Money bar
+    var pct = Math.max(2, Math.round((r.money / maxMoney) * 100));
+    var barColor = r.money < 0 ? '#ef4444' : r.money >= 200000 ? '#10b981' : r.money >= 50000 ? '#f59e0b' : '#8b7355';
+    html += '<div class="tl-money-bar"><div class="tl-money-fill" style="width:' + pct + '%;background:' + barColor + '"></div></div>';
+    html += '<div class="tl-money-label">¥' + (r.money >= 10000 ? Math.round(r.money/10000) + '万' : r.money.toLocaleString()) + '</div>';
+
+    html += '</div></div>';
   }
+
+  // Money chart at bottom
+  if (records.length > 1) {
+    html += '<div class="tl-chart"><div class="tl-chart-title">💰 存款变化趋势</div><div class="tl-bars">';
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      var h = Math.max(3, Math.round(Math.abs(r.money) / maxMoney * 44));
+      var color = r.money < 0 ? '#ef4444' : r.money >= 200000 ? '#10b981' : r.money >= 50000 ? '#f59e0b' : '#8b7355';
+      var tip = 'Y' + r.year + ' ¥' + (r.money >= 10000 ? Math.round(r.money/10000) + '万' : r.money);
+      html += '<div class="tl-bar" style="height:' + h + 'px;background:' + color + '" data-tip="' + tip + '"></div>';
+    }
+    html += '</div><div class="tl-bar-labels">';
+    for (var i = 0; i < records.length; i++) {
+      html += '<div class="tl-bar-label">Y' + records[i].year + '</div>';
+    }
+    html += '</div></div>';
+  }
+
   c.innerHTML = html;
 }
 
