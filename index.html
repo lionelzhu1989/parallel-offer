@@ -17,6 +17,7 @@
   .top-bar .year-label { background: #3b82f6; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
   .top-bar .track-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
   .track-badge.tech { background: #eff6ff; color: #2563eb; }
+  .track-badge.biz { background: #fffbeb; color: #d97706; }
     .track-badge.state { background: #fef2f2; color: #dc2626; }
   .track-badge.mnc { background: #f0fdf4; color: #16a34a; }
   .track-badge.startup { background: #faf5ff; color: #9333ea; }
@@ -441,12 +442,21 @@ function _getTalentEffectSummary(talent) {
 var CAREER_TRACKS = {
   tech: {
     id: 'tech', emoji: '💻', label: '大厂码农/产品', tag: 'tech',
-    desc: '程序员 · 产品经理 · 运营 · 销售',
+    desc: '程序员 · 产品经理 · 运营',
     salary: 20000, expense: 8000,
     ladder: ['初级工程师','中级工程师','高级工程师','技术专家','技术总监','VP/CTO'],
     ladderShort: ['L1','L2','L3','L4','L5','L6'],
     promoYears: [3,5,7,9],
     companies: ['字节跳动','阿里云','腾讯','百度','美团','快手','拼多多','小红书','B站','米哈游','DeepSeek','月之暗面']
+  },
+  biz: {
+    id: 'biz', emoji: '📊', label: '市场销售', tag: 'biz',
+    desc: '销售 · 市场运营 · 销售管理',
+    salary: 15000, expense: 6000,
+    ladder: ['销售代表','销售主管','区域经理','销售总监','VP/CMO'],
+    ladderShort: ['销售代表','销售主管','区域经理','销售总监','VP/CMO'],
+    promoYears: [2,4,6,8],
+    companies: ['华为','小米','OPPO','美团','京东','拼多多','得物','快手']
   },
   state: {
     id: 'state', emoji: '🏛️', label: '央企/国企', tag: 'state',
@@ -1276,7 +1286,135 @@ var CAREER_EVENTS = {
       {text:'不签，保持创作自由', happy:10, skill:5},
       {text:'谈分成模式，各退一步', money:20000, network:5, happy:3}
     ]}
-]
+],
+  biz: [
+    { year:[1,2], title:'第一单', desc:'入职第一周就被安排出去跑客户。背着电脑挤地铁在客户门口等了两小时才见到人。', opts:[
+      {text:'硬着头皮上去聊被拒了三次还是加了微信', network:8, happy:-3},
+      {text:'先研究客户背景找到痛点再约', skill:5, network:5},
+      {text:'请老同事帮忙引荐搭上关系', network:10, money:-500}
+    ]},
+    { year:[1,2], title:'KPI压力', desc:'月底还差30%的业绩。你开始在朋友圈发广告了。前任给你点了个赞。', opts:[
+      {text:'疯狂call客打了200个电话', skill:3, health:-8, happy:-5},
+      {text:'拉了个群做线上活动搞裂变', skill:5, network:8},
+      {text:'找同事合作分成给他', network:5, money:-3000}
+    ]},
+    { year:[1,2], title:'客户应酬', desc:'大客户说吃饭聊。你去了才发现是喝酒局对方连干三杯白酒要你也干。', opts:[
+      {text:'舍命陪君子喝到吐', network:10, health:-10, happy:-5},
+      {text:'以茶代酒讲了个段子化解', network:5, happy:3},
+      {text:'提前走了第二天发诚恳跟进邮件', skill:3, network:-3}
+    ]},
+    { year:[1,2], title:'竞品围剿', desc:'客户同时在看竞品方案。对方报价低20%还送一年运维。', opts:[
+      {text:'降价抢客户向公司申请特批', money:-5000, network:5},
+      {text:'做差异化方案突出服务优势', skill:8, network:3},
+      {text:'联合技术团队做POC用实力说话', skill:10, health:-5}
+    ]},
+    { year:[2,3], title:'带新人', desc:'公司给你配了个实习生。他第一天就把客户资料发错群了。', opts:[
+      {text:'帮他擦屁股亲自道歉补救', network:3, health:-5, happy:-3},
+      {text:'手把手教他SOP建立标准流程', skill:5},
+      {text:'向领导反映换人别耽误我业绩', happy:-5, network:-3}
+    ]},
+    { year:[2,3], title:'市场调研', desc:'公司让你做竞品分析。你发现竞品正在裁员市场在萎缩。', opts:[
+      {text:'如实汇报建议调整产品策略', skill:8, network:3},
+      {text:'夸大竞品威胁争取更多预算', money:8000, happy:-3},
+      {text:'利用信息差悄悄更新简历', skill:3}
+    ]},
+    { year:[2,3], title:'大客户危机', desc:'最大客户要续约但新换的采购负责人对你公司印象不好。', opts:[
+      {text:'约新负责人吃饭从零建立关系', network:10, money:-3000, health:-3},
+      {text:'准备详细续约价值报告用数据说话', skill:8, money:-500},
+      {text:'让客户成功团队出面展示案例', network:5, happy:3}
+    ]},
+    { year:[3,4], title:'跳槽机会', desc:'猎头找到你对手公司开1.5倍薪资。但要从头积累客户。', opts:[
+      {text:'跳槽拿高薪重新开始', salary:10, money:20000, network:-15},
+      {text:'用offer跟现公司谈加薪', salary:5, network:-5},
+      {text:'不走在这里还有晋升空间', skill:3, happy:5}
+    ]},
+    { year:[3,4], title:'直播带货', desc:'公司要做直播电商。领导让你试试你对着镜头紧张到说不出话。', opts:[
+      {text:'苦练话术每天对着镜子练', skill:8, health:-5},
+      {text:'找MCN合作外包给专业团队', money:-10000, happy:5},
+      {text:'建议先做短视频种草不搞直播', skill:5, network:3}
+    ]},
+    { year:[3,4], title:'价格战', desc:'市场打价格战竞品疯狂降价。你手里的客户开始动摇了。', opts:[
+      {text:'死守价格强调品牌和服务价值', skill:5, network:-5},
+      {text:'跟进降价保客户利润薄但量上去了', money:-8000, network:5},
+      {text:'转向高端客户群做差异化竞争', skill:8, happy:3}
+    ]},
+    { year:[4,5], title:'团队管理', desc:'你升了主管开始带5人团队。有人摸鱼有人跟你对着干。', opts:[
+      {text:'一对一谈话了解每个人想法', network:8, skill:3, health:-3},
+      {text:'定KPI末位淘汰用制度管人', skill:5, happy:-5},
+      {text:'搞团建拉关系先建立信任', network:10, money:-2000}
+    ]},
+    { year:[4,5], title:'市场活动', desc:'行业展会你负责布展。展会前一天展台物料还没到。', opts:[
+      {text:'通宵盯物料确保万无一失', health:-10, happy:-5},
+      {text:'准备Plan B手写海报也能用', skill:5, network:3},
+      {text:'找供应商施压同时准备替代方案', skill:3, network:5}
+    ]},
+    { year:[4,5], title:'客户投诉', desc:'大客户投诉产品质量在行业群里公开吐槽。老板让你去灭火。', opts:[
+      {text:'第一时间上门道歉承诺解决方案', network:8, health:-5, money:-5000},
+      {text:'先安抚情绪再内部推动产品改进', skill:8, network:3},
+      {text:'请客户吃饭私下沟通', network:5, money:-3000, happy:-3}
+    ]},
+    { year:[5,6], title:'区域拓展', desc:'公司让你开拓新区域市场。你一个人背着包去了陌生城市。', opts:[
+      {text:'先拜访当地行业协会建立人脉', network:12, health:-5, money:-5000},
+      {text:'在线上做精准投放低成本获客', skill:8, money:-3000},
+      {text:'挖竞品客户经理快速打开局面', network:8, money:-8000}
+    ]},
+    { year:[5,6], title:'数据驱动', desc:'老板要求用数据说话。你发现团队60%时间花在不赚钱的客户上。', opts:[
+      {text:'果断砍掉低效客户聚焦大客户', skill:10, network:-8, happy:-3},
+      {text:'优化客户分级体系提高整体效率', skill:8, network:3},
+      {text:'如实汇报让老板自己决定', happy:-3, skill:3}
+    ]},
+    { year:[5,6], title:'团队离职', desc:'核心骨干突然提离职说受不了加班。还带走了两个意向客户。', opts:[
+      {text:'挽留加薪承诺改善工作环境', money:-15000, happy:3},
+      {text:'放他走快速招人补位', network:-5, skill:5},
+      {text:'复盘管理方式写了一份团队改进计划', skill:8}
+    ]},
+    { year:[6,7], title:'品牌合作', desc:'一个知名品牌想找你做联名。对方要求苛刻但曝光量巨大。', opts:[
+      {text:'答应对方条件搏一把大的', money:-20000, network:15, happy:5},
+      {text:'谈判争取更好的条款', skill:5, network:8, money:-5000},
+      {text:'拒绝不想被品牌绑架', happy:3, skill:3}
+    ]},
+    { year:[6,7], title:'行业峰会', desc:'你受邀在行业峰会做分享。台下500人其中一半是竞品。', opts:[
+      {text:'精心准备PPT分享干货方法论', skill:12, network:8, health:-5},
+      {text:'讲段子讲故事做最有趣的演讲', happy:10, network:5},
+      {text:'趁机交换名片会后跟进潜在客户', network:12, money:-2000}
+    ]},
+    { year:[6,7], title:'渠道冲突', desc:'线上和线下渠道打起来了。经销商投诉电商抢了他们的客户。', opts:[
+      {text:'制定渠道分区策略明确边界', skill:8, network:-5},
+      {text:'提高线上价格保护线下利益', money:-5000, network:5},
+      {text:'搞O2O融合线上线下联动', skill:10, health:-5}
+    ]},
+    { year:[7,8], title:'销售总监', desc:'你升了销售总监。以前是自己打仗现在是指挥别人打仗。', opts:[
+      {text:'建立销售方法论打造铁军', skill:12, health:-5, happy:5},
+      {text:'挖几个大厂的销售牛人来', money:-30000, network:10},
+      {text:'优化CRM系统用工具提效', skill:8, money:-10000}
+    ]},
+    { year:[7,8], title:'大单博弈', desc:'年度最大项目进入最后博弈。客户要求降价30%否则选竞品。', opts:[
+      {text:'咬死价格用增值服务打动客户', skill:10, network:5, health:-5},
+      {text:'降价20%附加三年服务承诺', money:-50000, network:8},
+      {text:'找高层关系突破走CEO路线', network:15, happy:-5}
+    ]},
+    { year:[7,8], title:'市场寒冬', desc:'经济下行客户预算砍半。你带着团队艰难完成年度目标的60%。', opts:[
+      {text:'带领团队转型做中小企业市场', skill:8, network:5, happy:-3},
+      {text:'裁员优化保住核心团队', happy:-10, network:-5},
+      {text:'all in直播和线上获客赌一把', money:-20000, skill:5}
+    ]},
+    { year:[8,9], title:'创业邀约', desc:'前同事创业做SaaS想拉你当合伙人。给股份不给工资。', opts:[
+      {text:'辞职创业all in', money:-50000, skill:10, happy:5},
+      {text:'兼职顾问保留本职工作', network:5, skill:3, health:-5},
+      {text:'投资他做天使轮', money:-30000, happy:-5}
+    ]},
+    { year:[8,9], title:'VP竞聘', desc:'VP/CMO位置空出来了。你是候选人之一另一个是从阿里来的。', opts:[
+      {text:'用业绩数据和团队战功说话', skill:10, network:5, health:-5},
+      {text:'拉拢关键部门负责人站台', network:15, happy:-5},
+      {text:'做一份面向未来的市场战略规划', skill:12, health:-3}
+    ]},
+    { year:[9,10], title:'功成名就', desc:'你站在公司年会舞台上年度销售冠军团队的旗帜在你身后飘扬。', opts:[
+      {text:'发表感言感谢团队支持', happy:15, network:10},
+      {text:'趁热打铁宣布明年挑战目标', skill:5, health:-5},
+      {text:'低调离场回去继续工作', skill:3, health:-3}
+    ]}
+  ]
+
 };
 
 // ====== DATA: Random Events (Shared) ======
@@ -1776,7 +1914,7 @@ function showIntro() {
     html += '<div class="tc-label">' + t.label + '</div>';
     html += '<div class="tc-desc">' + t.desc + '</div>';
 
-    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
+    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',biz:'#f59e0b',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',biz:'市场路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
     html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
     html += '</div>';
   }
@@ -1859,7 +1997,7 @@ function showTalentDraw() {
   var pool = shuffle(TALENT_POOL).slice(0, 5);
   window._drawnTalents = pool;
   _talentSelections = [];
-  var schoolNames = {tech:'内卷技术流',social:'人脉经商流',zen:'佛系躺平流',risk:'风险投机流',neutral:'万金油'};
+  var schoolNames = {tech:'内卷技术流',social:'人脉经商流',zen:'佛系躺平流',risk:'风险投机流',biz:'销售实战流',neutral:'万金油'};
   var html = '<div class="talent-section"><div class="talent-header"><div class="talent-title">✨ 天赋抽卡</div><div class="talent-subtitle">从5张天赋卡中选择3张，它们将影响你的职场人生</div></div>';
   html += '<div class="talent-grid">';
   for (var i = 0; i < pool.length; i++) {
@@ -2050,12 +2188,24 @@ function render() {
   var styleMap = ['safe', 'risky', 'dangerous'];
   for (var c = 0; c < event.opts.length; c++) {
     var opt = event.opts[c];
-    var effectParts = [];
-    if (opt.skill) effectParts.push('<span class="' + (opt.skill > 0 ? 'eff-pos' : 'eff-neg') + '">🧠' + (opt.skill > 0 ? '+' : '') + opt.skill + '</span>');
-    if (opt.network) effectParts.push('<span class="' + (opt.network > 0 ? 'eff-pos' : 'eff-neg') + '">👥' + (opt.network > 0 ? '+' : '') + opt.network + '</span>');
-    if (opt.health) effectParts.push('<span class="' + (opt.health > 0 ? 'eff-pos' : 'eff-neg') + '">❤️' + (opt.health > 0 ? '+' : '') + opt.health + '</span>');
-    if (opt.happy) effectParts.push('<span class="' + (opt.happy > 0 ? 'eff-pos' : 'eff-neg') + '">😊' + (opt.happy > 0 ? '+' : '') + opt.happy + '</span>');
-    if (opt.money) effectParts.push('<span class="' + (opt.money > 0 ? 'eff-pos' : 'eff-neg') + '">💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money) + '</span>');
+        var effectParts = [];
+    var _dims = [['skill','🧠','技能'],['network','👥','人脉'],['health','❤️','健康'],['happy','😊','满足']];
+    for (var d = 0; d < _dims.length; d++) {
+      var dk = _dims[d][0], emoji = _dims[d][1], label = _dims[d][2];
+      if (opt[dk]) {
+        var before = state[dk], after = clamp(before + getModifiedBonus(opt[dk], dk), 0, 100);
+        var cls = opt[dk] > 0 ? 'eff-pos' : 'eff-neg';
+        var sign = opt[dk] > 0 ? '+' : '';
+        effectParts.push('<span class="' + cls + '">' + emoji + ' ' + before + '→' + after + '(' + sign + opt[dk] + ')</span>');
+      }
+    }
+    if (opt.money) {
+      var mBefore = state.money, mAfter = mBefore + opt.money;
+      var mCls = opt.money > 0 ? 'eff-pos' : 'eff-neg';
+      var mSign = opt.money > 0 ? '+' : '';
+      var mLabel = Math.abs(opt.money) >= 10000 ? (Math.abs(opt.money)/10000).toFixed(1) + '万' : Math.abs(opt.money);
+      effectParts.push('<span class="' + mCls + '">💰 ' + (mBefore >= 10000 ? Math.round(mBefore/10000) + '万' : '¥' + mBefore) + '→' + (mAfter >= 10000 ? Math.round(mAfter/10000) + '万' : '¥' + mAfter) + '(' + mSign + mLabel + ')</span>');
+    }
     var btnStyle = styleMap[c] || styleMap[0];
     choicesHtml += '<button class="choice-btn ' + btnStyle + '" onclick="chooseEvent(' + c + ')" id="eventOpt' + c + '">';
     choicesHtml += opt.text;
