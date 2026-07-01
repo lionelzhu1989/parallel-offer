@@ -2724,6 +2724,10 @@ function updateTopBar() {
   if (state._investments) { for (var ai = 0; ai < state._investments.length; ai++) { totalAsset += state._investments[ai].principal; } }
   var propCount = state._property || 0;
   if (propCount > 0) { totalAsset += propCount * 2000000; }
+  var propItem = document.getElementById('propItem');
+  if (propItem) { propItem.style.display = propCount > 0 ? '' : 'none'; }
+  var propEl = document.getElementById('attrProp');
+  if (propEl) { propEl.textContent = propCount + '套'; }
   var assetEl = document.getElementById('attrTotalAsset');
   if (assetEl) { assetEl.textContent = totalAsset > state.money ? '总资产 ¥' + (totalAsset >= 10000 ? Math.round(totalAsset/10000) + '万' : '¥' + totalAsset.toLocaleString()) : ''; }
   document.getElementById('barSalary').style.width = Math.min(100, state.salary / 100000 * 100) + '%';
@@ -4328,7 +4332,6 @@ function showSwitchModal() {
   if (!grid) return;
   var html = '';
   var tracks = ['tech','biz','state','mnc','startup','gig'];
-  var emojis = {'tech':'💻','media':'🎨','finance':'📊','startup':'🚀','public':'🏛️','gig':'🎵'};
   for (var i = 0; i < tracks.length; i++) {
     var t = tracks[i];
     var tk = CAREER_TRACKS[t];
@@ -4348,8 +4351,8 @@ function switchTrack(newTrack) {
   if (state._switchCount >= 2) { toast('🚫 本局已跳槽' + state._switchCount + '次，已达上限'); return; }
   if (state.year - state._lastSwitchYear < 3) { toast('🚫 跳槽冷却中，需间隔3年'); return; }
   
-  var oldName = CAREER_TRACKS[state.track].name;
-  var newName = CAREER_TRACKS[newTrack].name;
+  var oldName = CAREER_TRACKS[state.track].label;
+  var newName = CAREER_TRACKS[newTrack].label;
   
   // Apply penalties
   state.skill = clamp(state.skill - 10, 0, 100);
