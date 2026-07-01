@@ -3072,26 +3072,25 @@ var _playerMotto = '';
 
 function showCharacterCreator() {
   var chars = [
-    {emoji:'\ud83d\ude02', name:'\u641e\u7b11\u738b', desc:'\u5feb\u4e50\u5c31\u5b8c\u4e8b\u4e86'},
-    {emoji:'\ud83e\udd23', name:'\u7b28\u86cb\u738b', desc:'\u8111\u5b50\u4e0d\u591f\u7528\u4f46\u5feb\u4e50'},
-    {emoji:'\ud83d\ude0e', name:'\u6492\u91ce\u738b', desc:'\u81ea\u7531\u6563\u6f6e\u662f\u7b2c\u4e00\u751f\u4ea1\u53f7'},
-    {emoji:'\ud83d\udc7b', name:'\u6478\u9c7c\u738b', desc:'\u6478\u9c7c\u624d\u662f\u771f\u6b63\u7684\u827a\u672f'},
-    {emoji:'\ud83e\udd71', name:'\u5403\u8d27\u738b', desc:'\u5e72\u996d\u4e0d\u597d\u5e72\u996d\u597d'},
-    {emoji:'\ud83e\udd7a', name:'\u5357\u74dc', desc:'\u6eda\u5e73\u4e5f\u662f\u4e00\u79cd\u827a\u672f'},
-    {emoji:'\ud83d\ude34', name:'\u7761\u795e', desc:'\u7761\u89c9\u662f\u7b2c\u4e00\u751f\u4ea7\u529b'},
-    {emoji:'\ud83e\udd2f', name:'\u535a\u5b66\u58eb', desc:'\u4ec0\u4e48\u90fd\u61c2\u4e00\u70b9\u70b9'},
-    {emoji:'\ud83d\ude0f', name:'\u8001\u6cb3\u53f7', desc:'\u4eba\u751f\u7ecf\u9a8c\u5e08'},
-    {emoji:'\ud83d\ude1c', name:'\u5c0f\u670b\u53cb', desc:'\u53ef\u7231\u662f\u771f\u7684\u53ef\u7231'},
-    {emoji:'\ud83e\udd73', name:'\u5feb\u4e50\u6c38\u52a8\u673a', desc:'\u5168\u80fd\u5730\u6c34\u679c\u673a'},
-    {emoji:'\ud83d\udcaa', name:'\u52a0\u73ed\u72fc', desc:'\u52a0\u73ed\u4f46\u4e0d\u52a0\u85aa'},
-    {emoji:'\ud83e\udd14', name:'\u95ee\u53f7\u4eba\u751f', desc:'\u4e3a\u4ec0\u4e48\u4e16\u754c\u662f\u8fd9\u6837'},
-    {emoji:'\ud83d\udca4', name:'\u54c0\u4f24\u961f\u957f', desc:'\u4eba\u751f\u592a\u96be\u4e86'},
-    {emoji:'\ud83d\udc4d', name:'\u884c\u52a8\u6d3b\u7ad9', desc:'\u505a\u5c31\u5b8c\u4e86\u522b\u8bf4'},
-    {emoji:'\ud83c\udf1f', name:'\u5e7d\u9ed8\u8fbe\u4eba', desc:'\u5e7d\u9ed8\u4e2d\u5e26\u70ab\u9177'},
-    {emoji:'\ud83c\udf55', name:'\u5fe0\u5b9e\u5200\u7c89', desc:'\u5bf9\u7f8e\u98df\u4e0d\u53ef\u80fd\u80cc\u53db'},
-    {emoji:'\ud83d\ude4c', name:'\u795e\u5947\u5c0f\u5b69', desc:'\u4e0d\u662f\u5728\u505a\u68a6\u5c31\u662f\u5728\u505a\u68a6\u7684\u8def\u4e0a'},
-    {emoji:'\ud83e\ude77', name:'\u6458\u661f\u4eba', desc:'\u4e0d\u662f\u5728\u6458\u661f\u5c31\u662f\u5728\u53bb\u6458\u661f\u7684\u8def\u4e0a'},
-    {emoji:'\ud83e\udd78', name:'\u5c0f\u53ef\u7231', desc:'\u88ab\u4e16\u754c\u6e29\u67d4\u4ee3\u5f80'}
+    {emoji:'😂', name:'搞笑王', desc:'快乐就完事了'},
+    {emoji:'🤡', name:'笨蛋王', desc:'脑子不够用但快乐'},
+    {emoji:'🤘', name:'撒野王', desc:'自由散漫是第一生产力'},
+    {emoji:'👻', name:'摸鱼王', desc:'摸鱼才是真正的艺术'},
+    {emoji:'🥺', name:'南瓜', desc:'躺平也是一种艺术'},
+    {emoji:'😴', name:'睡神', desc:'睡觉是第一生产力'},
+    {emoji:'🧐', name:'博学士', desc:'什么都懂一点点'},
+    {emoji:'😈', name:'老河号', desc:'人生经验师'},
+    {emoji:'💕', name:'小朋友', desc:'可爱是真的可爱'},
+    {emoji:'🥳', name:'快乐永动机', desc:'快乐到飞起'},
+    {emoji:'💪', name:'加班狼', desc:'加班但不加薪'},
+    {emoji:'🤷', name:'问号人生', desc:'为什么世界是这样'},
+    {emoji:'😢', name:'哀伤队长', desc:'人生太难了'},
+    {emoji:'👍', name:'行动派', desc:'做就完了别说'},
+    {emoji:'🌟', name:'幽默达人', desc:'幽默中带炫酷'},
+    {emoji:'🍕', name:'忠实刀粉', desc:'对美食不可能背叛'},
+    {emoji:'🙏', name:'神奇小孩', desc:'不是在做梦就是在做梦的路上'},
+    {emoji:'🪐', name:'摘星人', desc:'不是在摘星就是在去摘星的路上'},
+    {emoji:'🫧', name:'小可爱', desc:'被世界温柔以待'}
   ];
   var randIdx = Math.floor(Math.random() * chars.length);
   _selectedAvatar = chars[randIdx].emoji;
@@ -3101,8 +3100,8 @@ function showCharacterCreator() {
   var main = document.getElementById('mainContent');
   var html = '<div class="char-creator-overlay" onclick="if(event.target===this)this.remove()">';
   html += '<div class="char-creator-box">';
-  html += '<div class="char-creator-title">\ud83c\udfad \u521b\u5efa\u4f60\u7684\u89d2\u8272</div>';
-  html += '<div class="char-creator-sub">\u9009\u4e00\u4e2a\u4ee3\u8868\u5f62\u8c61\uff0c\u5f00\u542f\u5e73\u884c\u4eba\u751f</div>';
+  html += '<div class="char-creator-title">🎭 创建你的角色</div>';
+  html += '<div class="char-creator-sub">选一个代表形象，开启平行人生</div>';
   html += '<div class="char-cards-wrap" id="charCardsWrap">';
   for (var i = 0; i < chars.length; i++) {
     var c = chars[i];
@@ -3115,12 +3114,12 @@ function showCharacterCreator() {
   }
   html += '</div>';
   html += '<div class="char-input-group">';
-  html += '<label class="char-input-label">\u89d2\u8272\u6635\u79f0</label>';
-  html += '<input class="char-input" id="charNameInput" placeholder="\u7ed9\u81ea\u5df1\u8d77\u4e2a\u540d\u5b57\u5427" maxlength="8" oninput="onCharInputChange()">';
+  html += '<label class="char-input-label">角色昵称</label>';
+  html += '<input class="char-input" id="charNameInput" placeholder="给自己起个名字吧" maxlength="8" oninput="onCharInputChange()">';
   html += '</div>';
   html += '<div class="char-input-group">';
-  html += '<label class="char-input-label">\u4eba\u751f\u5ba3\u8a00 <span style="font-weight:400;color:var(--text-muted)">(\u9009\u586b)</span></label>';
-  html += '<input class="char-input" id="charMottoInput" placeholder="\u6bd4\u5982\uff1a\u6211\u8981\u6539\u53d8\u4e16\u754c" maxlength="20" oninput="onCharInputChange()">';
+  html += '<label class="char-input-label">人生宣言 <span style="font-weight:400;color:var(--text-muted)">(选填)</span></label>';
+  html += '<input class="char-input" id="charMottoInput" placeholder="比如：我要改变世界" maxlength="20" oninput="onCharInputChange()">';
   html += '</div>';
   html += '<div class="char-preview" id="charPreview">';
   html += '<div class="char-preview-avatar" id="charPreviewAvatar">' + _selectedAvatar + '</div>';
@@ -3128,7 +3127,7 @@ function showCharacterCreator() {
   html += '<div class="char-preview-name" id="charPreviewName">' + chars[randIdx].name + '</div>';
   html += '<div class="char-preview-motto" id="charPreviewMotto">' + chars[randIdx].desc + '</div>';
   html += '</div></div>';
-  html += '<button class="char-start-btn" id="charStartBtn" disabled onclick="confirmCharacter()">\ud83c\udfae \u5f00\u59cb\u5e73\u884c\u4eba\u751f</button>';
+  html += '<button class="char-start-btn" id="charStartBtn" disabled onclick="confirmCharacter()">🎮 开始平行人生</button>';
   html += '</div></div>';
   main.innerHTML = html;
   setTimeout(function() { var inp = document.getElementById('charNameInput'); if (inp) inp.focus(); }, 300);
@@ -3150,26 +3149,25 @@ function selectCharType(idx, el) {
 
 // Store chars globally for selectCharType
 var chars_global = [
-  {emoji:'\ud83d\ude02', name:'\u641e\u7b11\u738b', desc:'\u5feb\u4e50\u5c31\u5b8c\u4e8b\u4e86'},
-  {emoji:'\ud83e\udd23', name:'\u7b28\u86cb\u738b', desc:'\u8111\u5b50\u4e0d\u591f\u7528\u4f46\u5feb\u4e50'},
-  {emoji:'\ud83d\ude0e', name:'\u6492\u91ce\u738b', desc:'\u81ea\u7531\u6563\u6f6e\u662f\u7b2c\u4e00\u751f\u4ea1\u53f7'},
-  {emoji:'\ud83d\udc7b', name:'\u6478\u9c7c\u738b', desc:'\u6478\u9c7c\u624d\u662f\u771f\u6b63\u7684\u827a\u672f'},
-  {emoji:'\ud83e\udd71', name:'\u5403\u8d27\u738b', desc:'\u5e72\u996d\u4e0d\u597d\u5e72\u996d\u597d'},
-  {emoji:'\ud83e\udd7a', name:'\u5357\u74dc', desc:'\u6eda\u5e73\u4e5f\u662f\u4e00\u79cd\u827a\u672f'},
-  {emoji:'\ud83d\ude34', name:'\u7761\u795e', desc:'\u7761\u89c9\u662f\u7b2c\u4e00\u751f\u4ea7\u529b'},
-  {emoji:'\ud83e\udd2f', name:'\u535a\u5b66\u58eb', desc:'\u4ec0\u4e48\u90fd\u61c2\u4e00\u70b9\u70b9'},
-  {emoji:'\ud83d\ude0f', name:'\u8001\u6cb3\u53f7', desc:'\u4eba\u751f\u7ecf\u9a8c\u5e08'},
-  {emoji:'\ud83d\ude1c', name:'\u5c0f\u670b\u53cb', desc:'\u53ef\u7231\u662f\u771f\u7684\u53ef\u7231'},
-  {emoji:'\ud83e\udd73', name:'\u5feb\u4e50\u6c38\u52a8\u673a', desc:'\u5168\u80fd\u5730\u6c34\u679c\u673a'},
-  {emoji:'\ud83d\udcaa', name:'\u52a0\u73ed\u72fc', desc:'\u52a0\u73ed\u4f46\u4e0d\u52a0\u85aa'},
-  {emoji:'\ud83e\udd14', name:'\u95ee\u53f7\u4eba\u751f', desc:'\u4e3a\u4ec0\u4e48\u4e16\u754c\u662f\u8fd9\u6837'},
-  {emoji:'\ud83d\udca4', name:'\u54c0\u4f24\u961f\u957f', desc:'\u4eba\u751f\u592a\u96be\u4e86'},
-  {emoji:'\ud83d\udc4d', name:'\u884c\u52a8\u6d3b\u7ad9', desc:'\u505a\u5c31\u5b8c\u4e86\u522b\u8bf4'},
-  {emoji:'\ud83c\udf1f', name:'\u5e7d\u9ed8\u8fbe\u4eba', desc:'\u5e7d\u9ed8\u4e2d\u5e26\u70ab\u9177'},
-  {emoji:'\ud83c\udf55', name:'\u5fe0\u5b9e\u5200\u7c89', desc:'\u5bf9\u7f8e\u98df\u4e0d\u53ef\u80fd\u80cc\u53db'},
-  {emoji:'\ud83d\ude4c', name:'\u795e\u5947\u5c0f\u5b69', desc:'\u4e0d\u662f\u5728\u505a\u68a6\u5c31\u662f\u5728\u505a\u68a6\u7684\u8def\u4e0a'},
-  {emoji:'\ud83e\ude77', name:'\u6458\u661f\u4eba', desc:'\u4e0d\u662f\u5728\u6458\u661f\u5c31\u662f\u5728\u53bb\u6458\u661f\u7684\u8def\u4e0a'},
-  {emoji:'\ud83e\udd78', name:'\u5c0f\u53ef\u7231', desc:'\u88ab\u4e16\u754c\u6e29\u67d4\u4ee3\u5f80'}
+  {emoji:'😂', name:'搞笑王', desc:'快乐就完事了'},
+  {emoji:'🤡', name:'笨蛋王', desc:'脑子不够用但快乐'},
+  {emoji:'🤘', name:'撒野王', desc:'自由散漫是第一生产力'},
+  {emoji:'👻', name:'摸鱼王', desc:'摸鱼才是真正的艺术'},
+  {emoji:'🥺', name:'南瓜', desc:'躺平也是一种艺术'},
+  {emoji:'😴', name:'睡神', desc:'睡觉是第一生产力'},
+  {emoji:'🧐', name:'博学士', desc:'什么都懂一点点'},
+  {emoji:'😈', name:'老河号', desc:'人生经验师'},
+  {emoji:'💕', name:'小朋友', desc:'可爱是真的可爱'},
+  {emoji:'🥳', name:'快乐永动机', desc:'快乐到飞起'},
+  {emoji:'💪', name:'加班狼', desc:'加班但不加薪'},
+  {emoji:'🤷', name:'问号人生', desc:'为什么世界是这样'},
+  {emoji:'😢', name:'哀伤队长', desc:'人生太难了'},
+  {emoji:'👍', name:'行动派', desc:'做就完了别说'},
+  {emoji:'🌟', name:'幽默达人', desc:'幽默中带炫酷'},
+  {emoji:'🍕', name:'忠实刀粉', desc:'对美食不可能背叛'},
+  {emoji:'🙏', name:'神奇小孩', desc:'不是在做梦就是在做梦的路上'},
+  {emoji:'🪐', name:'摘星人', desc:'不是在摘星就是在去摘星的路上'},
+  {emoji:'🫧', name:'小可爱', desc:'被世界温柔以待'}
 ];
 
 function onCharInputChange() {
@@ -4681,7 +4679,7 @@ function generatePoster() {
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(255,255,255,0.4)';
   ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
-  ctx.fillText('\u2018 \u5e73\u884c\u4eba\u751f \u00b7 \u804c\u573a\u9274\u5b9a\u62a5\u544a \u2019', w/2, 80);
+  ctx.fillText('‘ 平行人生 · 职场鉴定报告 ’', w/2, 80);
 
   // Divider line
   ctx.strokeStyle = 'rgba(255,255,255,0.08)';
@@ -4764,10 +4762,10 @@ function generatePoster() {
   ctx.fill();
 
   var bars = [
-    { icon:'\ud83d\udcb0', label:'\u8d22\u5bcc', value: Math.min(100, Math.round(state.money / 5000)), color1:'#f59e0b', color2:'#f97316' },
-    { icon:'\u2764\ufe0f', label:'\u5065\u5eb7', value: state.health, color1:'#10b981', color2:'#34d399' },
-    { icon:'\ud83d\udcca', label:'\u804c\u573a', value: Math.min(100, Math.round(state.skill * 0.4 + state.rankIdx * 20 + state.salary / 1000)), color1:'#6366f1', color2:'#818cf8' },
-    { icon:'\ud83d\ude0a', label:'\u5e78\u798f', value: state.hair, color1:'#ec4899', color2:'#f472b6' }
+    { icon:'💰', label:'财富', value: Math.min(100, Math.round(state.money / 5000)), color1:'#f59e0b', color2:'#f97316' },
+    { icon:'❤️', label:'健康', value: state.health, color1:'#10b981', color2:'#34d399' },
+    { icon:'📊', label:'职场', value: Math.min(100, Math.round(state.skill * 0.4 + state.rankIdx * 20 + state.salary / 1000)), color1:'#6366f1', color2:'#818cf8' },
+    { icon:'😊', label:'幸福', value: state.hair, color1:'#ec4899', color2:'#f472b6' }
   ];
 
   for (var i = 0; i < bars.length; i++) {
@@ -4806,7 +4804,7 @@ function generatePoster() {
   ctx.fillText(track.emoji + ' ' + track.label + ' \xb7 ' + track.ladder[state.rankIdx], w/2, infoY);
   ctx.font = '20px -apple-system, "PingFang SC", sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.fillText('\u6708\u85aa \u00a5' + state.salary.toLocaleString() + '  \xb7  \u6280\u80fd ' + state.skill + '  \xb7  \u4eba\u8109 ' + state.network, w/2, infoY + 36);
+  ctx.fillText('月薪 ¥' + state.salary.toLocaleString() + '  \xb7  技能 ' + state.skill + '  \xb7  人脉 ' + state.network, w/2, infoY + 36);
 
   // Talents
   var talentY = infoY + 80;
@@ -4830,7 +4828,7 @@ function generatePoster() {
   }
   if (_hEndings.length > 0) {
     var hy = talentY + (state.talents && state.talents.length > 0 ? 30 : 0);
-    var hText = '\ud83c\udfc6 \u9690\u85cf\u7ed3\u5c40\u89e3\u9501 \xb7 ' + _hEndings.map(function(e){ return e.emoji + ' ' + e.name; }).join(' \xb7 ');
+    var hText = '🏆 隐藏结局解锁 \xb7 ' + _hEndings.map(function(e){ return e.emoji + ' ' + e.name; }).join(' \xb7 ');
     ctx.font = 'bold 22px -apple-system, "PingFang SC", sans-serif';
     var tw = ctx.measureText(hText).width;
     // Gold badge background
@@ -4854,7 +4852,7 @@ function generatePoster() {
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(255,255,255,0.3)';
   ctx.font = '20px -apple-system, "PingFang SC", sans-serif';
-  ctx.fillText('\u6d4b\u6d4b\u4f60\u662f\u4ec0\u4e48\u804c\u573a\u52a8\u7269\uff1f', w/2, h - 80);
+  ctx.fillText('测测你是什么职场动物？', w/2, h - 80);
   ctx.font = '18px -apple-system, "PingFang SC", sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.2)';
   ctx.fillText('parallel-offer.com', w/2, h - 50);
@@ -4863,7 +4861,7 @@ function generatePoster() {
   var img = document.getElementById('posterImage');
   img.src = canvas.toDataURL('image/png');
   document.getElementById('posterModal').style.display = 'flex';
-  var _pc = document.getElementById('posterCaption'); if (_pc) { _pc.textContent = '\ud83d\udcf8 \u6d4b\u6d4b\u4f60\u662f\u4ec0\u4e48\u804c\u573a\u52a8\u7269\uff1f\u6211\u5df2\u7ecf' + (ending.emoji||'') + (ending.name||'') + '\u4e86'; }
+  var _pc = document.getElementById('posterCaption'); if (_pc) { _pc.textContent = '📸 测测你是什么职场动物？我已经' + (ending.emoji||'') + (ending.name||'') + '了'; }
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -5309,6 +5307,11 @@ function showFinale() {
     html += '<div style="margin:12px 0;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px;max-height:160px;overflow-y:auto">';
     html += '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px">📖 十年回顾</div>';
     html += summaryLines;
+    html += '</div>';
+  } else {
+    html += '<div style="margin:12px 0;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px">';
+    html += '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px">📖 十年回顾</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center;padding:8px 0">这十年，你一路走来，每一步都算数。</div>';
     html += '</div>';
   }
 
