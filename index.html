@@ -1780,6 +1780,20 @@ function fallbackCopy(text) {
   toast('✅ 已复制到剪贴板！');
 }
 
+function unlockShareTalent() {
+  if (state._shareUnlockDone) { toast('🎁 本局已解锁过隐藏天赋'); return; }
+  state._shareUnlockDone = true;
+  var locked = TALENT_POOL.filter(function(t) { return state.talents.indexOf(t.id) < 0; });
+  if (locked.length === 0) { toast('🎉 你已集齐所有天赋！'); return; }
+  var pick = locked[Math.floor(Math.random() * locked.length)];
+  if (!state._unlockedTalents) state._unlockedTalents = [];
+  state._unlockedTalents.push(pick.id);
+  if (pick.effect.skillBonus) state._bonusSkill = (state._bonusSkill || 0) + Math.round(pick.effect.skillBonus * 10);
+  if (pick.effect.networkBonus) state._bonusNetwork = (state._bonusNetwork || 0) + Math.round(pick.effect.networkBonus * 10);
+  if (pick.effect.promoBonus) state._bonusPromo = (state._bonusPromo || 0) + pick.effect.promoBonus;
+  toast('🎁 分享解锁！获得天赋：' + pick.emoji + ' ' + pick.name);
+}
+
 function render() {
   if (state.year > 10) {
     showEnding();
@@ -2339,6 +2353,7 @@ function showEnding() {
   html += '<div class="id-card-badge">平行人生 · 职场鉴定报告</div>';
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
   html += '<div class="id-card-ending">' + ending.name + '</div>';
+  html += '<div style="font-size:12px;color:#8b7355;margin:2px 0 6px">' + (function(){var p=getPersonality(state);return p?p.animal+(p.traits.length?' \xb7 '+p.traits.join(' \xb7 '):''):'';})() + '</div>';
   html += '<div class="id-card-desc">' + ending.desc + '</div>';
   if (hiddenEndings.length > 0) {
     html += '<div style="margin-top:8px;padding:6px 12px;background:linear-gradient(135deg,#ffd700,#ff6b35);border-radius:20px;display:inline-block;font-size:12px;color:#fff;font-weight:bold">🏆 隐藏结局解锁！' + hiddenEndings.map(function(e){ return e.emoji + ' ' + e.name; }).join(' · ') + '</div>';
@@ -2382,6 +2397,7 @@ function showEnding() {
   html += '<button class="entry-btn" onclick="location.href=location.pathname">🔄 重新开始</button>';
   html += '<button class="entry-btn" onclick="shareChallenge()" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff;border-color:#ff6b6b">🔥 挑战好友</button>';
   html += '</div>';
+  html += '<button class="entry-btn" onclick="unlockShareTalent()" style="background:linear-gradient(135deg,#00b894,#55efc4);color:#fff;border-color:#00b894">🎁 分享解锁天赋</button>';
   html += '<div class="entry-bar" style="margin-top:8px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴 (' + getUnlockedCount() + '/' + ENDINGS.length + ')</button>';
   html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
