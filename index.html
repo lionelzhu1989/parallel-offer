@@ -3797,10 +3797,7 @@ function showEnding() {
   // Store ending for share
   state._ending = ending;
 
-  // PK card check
-  if (state._rival && showPKCard(state._rival, {skill:state.skill, network:state.network, health:state.health, hair:state.hair, salary:state.salary, emoji:(ending?ending.emoji:''), endingName:(ending?ending.name:''), talents:state.talents})) {
-    return;
-  }
+  // PK card will be shown after ending card renders (see below)
 
   // Render ending card
   var main = document.getElementById('mainContent');
@@ -3903,6 +3900,16 @@ function showEnding() {
 
   // Render timeline
   renderTimeline();
+
+  // Show PK card ABOVE ending card if there's a rival
+  if (state._rival) {
+    var pkData = {skill:state.skill, network:state.network, health:state.health, hair:state.hair, salary:state.salary, emoji:(ending?ending.emoji:''), endingName:(ending?ending.name:''), talents:state.talents};
+    var pkHtml = buildPKCardHtml(state._rival, pkData);
+    if (pkHtml) {
+      var main = document.getElementById('mainContent');
+      main.innerHTML = pkHtml + main.innerHTML;
+    }
+  }
 }
 
 function renderTimeline() {
@@ -4608,14 +4615,12 @@ function closePosterModal() {
 }
 
 
-function showPKCard(rival, me) {
+function buildPKCardHtml(rival, me) {
   var myScore = me.skill + me.network + me.health + me.hair;
   var rvScore = rival.skill + rival.network + rival.health + rival.hair;
   var myWin = myScore > rvScore;
   var tie = myScore === rvScore;
 
-  var track = CAREER_TRACKS[state.track] || {};
-  var meName = track.ladder ? (track.ladder[state.rankIdx] || '职场人') : '职场人';
   var rivalName = rival.name || '挑战者';
 
   function row(emoji, label, rv, me) {
@@ -4643,14 +4648,9 @@ function showPKCard(rival, me) {
   html += row('❤️', '健康', rival.health, me.health);
   html += row('😊', '发量', rival.hair, me.hair);
   html += '<div class="pk-result"><div class="pk-result-text">' + resultText + '</div></div>';
-  html += '</div>';
   html += '<div class="pk-subtitle">你和 ' + rivalName + ' 的十年对比 ↑</div>';
-
-  var main = document.getElementById('mainContent');
-  main.innerHTML = html + main.innerHTML;
-  updateTopBar();
-  window.scrollTo(0, 0);
-  return true;
+  html += '</div>';
+  return html;
 }
 
 
