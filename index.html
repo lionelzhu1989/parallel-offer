@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行offer · 职场天赋RPG v7</title>
+<title>平行offer · 职场天赋RPG v8</title>
 <style>/* ===== Design System ===== */
 :root {
   --primary: #6366f1;
@@ -843,6 +843,187 @@ body {
 .theme-red .id-card-ending { background: linear-gradient(135deg,#f87171,#ef4444,#dc2626); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 .theme-gold .id-card-ending { background: linear-gradient(135deg,#fbbf24,#f59e0b,#d97706); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 .theme-dark .id-card { background: linear-gradient(145deg,#0f0f1a,#1a1a2e,#2d1b69); }
+
+
+/* ===== Gallery Modal ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 8px 0;
+}
+.gallery-item {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s;
+}
+.gallery-item.locked {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+.gallery-item.unlocked {
+  border-color: var(--primary);
+  box-shadow: 0 2px 12px rgba(99,102,241,0.15);
+}
+.gallery-item .g-emoji { font-size: 28px; margin-bottom: 4px; }
+.gallery-item .g-name { font-size: 11px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.gallery-item .g-track { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+.gallery-count {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== Achievement List ===== */
+.achieve-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.achieve-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  border: 1px solid var(--border);
+}
+.achieve-item.unlocked {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+}
+.achieve-item .a-emoji { font-size: 24px; flex-shrink: 0; }
+.achieve-item .a-text { flex: 1; text-align: left; }
+.achieve-item .a-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.achieve-item .a-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.achieve-progress {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== PK Card ===== */
+.pk-card {
+  background: linear-gradient(145deg, #1a1a2e, #16213e, #0f3460);
+  border-radius: 20px;
+  padding: 24px 20px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(15,52,96,0.35);
+  margin: 0 0 16px;
+}
+.pk-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.pk-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.pk-row:last-child { border-bottom: none; }
+.pk-side {
+  flex: 1;
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+}
+.pk-side:first-child { text-align: right; padding-right: 12px; }
+.pk-side:last-child { text-align: left; padding-left: 12px; }
+.pk-val {
+  font-weight: 700;
+  color: #fff;
+}
+.pk-val.pk-win {
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251,191,36,0.4);
+}
+.pk-vs {
+  font-size: 28px;
+  width: 50px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.pk-result {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+}
+.pk-result-text {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.pk-subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 12px;
+}
+
+/* ===== Promo Card ===== */
+.promo-card {
+  border-left: 4px solid #6366f1;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+}
+.promo-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6366f1;
+  background: rgba(99,102,241,0.12);
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+/* ===== Scenario Title (chain events) ===== */
+.scenario-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary);
+}
+
+/* ===== Setup Back Button ===== */
+.setup-back {
+  text-align: center;
+  margin: 12px 0 0;
+}
+.setup-back button {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.setup-back button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
 
 /* ===== Responsive ===== */
 @media (max-width: 360px) {
@@ -2595,7 +2776,7 @@ function showIntro() {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v7 · 2026.07.01</div>';
+  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v8 · 2026.07.01</div>';
   html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
@@ -4105,84 +4286,43 @@ function generatePoster() {
   var ctx = canvas.getContext('2d');
   var w = 750, h = 1334;
 
-  // Background
-  var grad = ctx.createLinearGradient(0, 0, w, h);
+  // Background - matching ending card style
+  var grad = ctx.createLinearGradient(0, 0, w * 0.3, h);
   grad.addColorStop(0, '#1a1a2e');
   grad.addColorStop(0.5, '#16213e');
   grad.addColorStop(1, '#0f3460');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
-  // Title
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.font = '600 28px -apple-system, sans-serif';
+  // Decorative circles (matching id-card ::before/::after)
+  ctx.globalAlpha = 0.12;
+  var rg1 = ctx.createRadialGradient(w - 80, 80, 10, w - 80, 80, 200);
+  rg1.addColorStop(0, '#6366f1');
+  rg1.addColorStop(1, 'transparent');
+  ctx.fillStyle = rg1;
+  ctx.fillRect(0, 0, w, h);
+  var rg2 = ctx.createRadialGradient(80, h - 200, 10, 80, h - 200, 180);
+  rg2.addColorStop(0, '#f59e0b');
+  rg2.addColorStop(1, 'transparent');
+  ctx.fillStyle = rg2;
+  ctx.fillRect(0, 0, w, h);
+  ctx.globalAlpha = 1;
+
+  // Badge
   ctx.textAlign = 'center';
-  
-  // School/flow label
-  var schoolMap = {tech:'🔬 内卷技术流', social:'🤝 人脉经商流', zen:'🧘 佛系躺平流', risk:'🎰 风险投机流'};
-  var dominantSchool = '';
-  if (state.talents && state.talents.length > 0) {
-    var schoolCount = {};
-    for (var si = 0; si < state.talents.length; si++) {
-      var td = TALENT_POOL.find(function(t){return t.id===state.talents[si]});
-      if (td && td.school) schoolCount[td.school] = (schoolCount[td.school]||0)+1;
-    }
-    var maxCount = 0;
-    for (var sk in schoolCount) { if (schoolCount[sk] > maxCount) { maxCount = schoolCount[sk]; dominantSchool = sk; } }
-  }
-  if (dominantSchool && schoolMap[dominantSchool]) {
-    ctx.fillStyle = '#e07a5f';
-    ctx.font = '600 24px -apple-system, sans-serif';
-    ctx.fillText(schoolMap[dominantSchool], 80, 200);
-  }
-ctx.fillText('平行offer · 职场鉴定报告', w/2, 80);
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
+  ctx.fillText('\u2018 \u5e73\u884c\u4eba\u751f \u00b7 \u804c\u573a\u9274\u5b9a\u62a5\u544a \u2019', w/2, 80);
 
-  // Track
-  var track = CAREER_TRACKS[state.track];
-  ctx.font = '24px -apple-system, sans-serif';
-  ctx.fillText(track.emoji + ' ' + track.label + ' · ' + track.ladder[state.rankIdx], w/2, 130);
+  // Divider line
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(120, 100);
+  ctx.lineTo(w - 120, 100);
+  ctx.stroke();
 
-  // Talents
-  ctx.font = '20px -apple-system, sans-serif';
-  var talentStr = state.talents.map(function(id) {
-    var t = TALENT_POOL.find(function(tal){ return tal.id === id; });
-    return t ? t.emoji + t.name : '';
-  }).join('  ');
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillText(talentStr, w/2, 175);
-
-  // Attrs
-  var attrs = [
-    { icon:'💰', label:'月薪', value:'¥' + state.salary.toLocaleString() },
-    { icon:'📊', label:'职级', value: track.ladder[state.rankIdx] },
-    { icon:'🧠', label:'技能', value: state.skill },
-    { icon:'👥', label:'人脉', value: state.network },
-    { icon:'❤️', label:'健康', value: state.health },
-    { icon:'😊', label:'发量', value: state.hair }
-  ];
-  ctx.textAlign = 'left';
-  ctx.fillStyle = 'rgba(255,255,255,0.12)';
-  ctx.fillRect(60, 220, w - 120, attrs.length * 60 + 20);
-
-  for (var i = 0; i < attrs.length; i++) {
-    var a = attrs[i];
-    var y = 260 + i * 60;
-    ctx.fillStyle = '#fff';
-    ctx.font = '22px -apple-system, sans-serif';
-    ctx.fillText(a.icon + ' ' + a.label, 90, y);
-    ctx.font = 'bold 22px -apple-system, sans-serif';
-    ctx.fillText('' + a.value, 500, y);
-    // Bar
-    var barVal = typeof a.value === 'number' ? a.value : 50;
-    if (a.label === '月薪') barVal = Math.min(100, state.salary / 25000 * 100);
-    if (a.label === '职级') barVal = (state.rankIdx + 1) / track.ladder.length * 100;
-    ctx.fillStyle = 'rgba(255,255,255,0.1)';
-    ctx.fillRect(90, y + 8, w - 180, 6);
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillRect(90, y + 8, (w - 180) * barVal / 100, 6);
-  }
-
-  // Ending
+  // Get ending
   var ending = null;
   for (var j = 0; j < ENDINGS.length; j++) {
     if (ENDINGS[j].track && ENDINGS[j].track !== state.track) continue;
@@ -4190,36 +4330,135 @@ ctx.fillText('平行offer · 职场鉴定报告', w/2, 80);
   }
   if (!ending) ending = ENDINGS[ENDINGS.length - 1];
 
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 36px -apple-system, sans-serif';
-  ctx.fillText(ending.emoji + ' ' + ending.name, w/2, 700);
-  ctx.font = '20px -apple-system, sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  // Big emoji (floating style)
+  ctx.font = '120px -apple-system, sans-serif';
+  ctx.fillText(ending.emoji, w/2, 260);
 
-  // Word wrap description
-  var words = ending.desc.split('');
+  // Ending name - gradient effect via multiple draws
+  ctx.font = 'bold 52px -apple-system, "PingFang SC", sans-serif';
+  var nameGrad = ctx.createLinearGradient(w/2 - 120, 300, w/2 + 120, 360);
+  nameGrad.addColorStop(0, '#fbbf24');
+  nameGrad.addColorStop(0.5, '#f59e0b');
+  nameGrad.addColorStop(1, '#f97316');
+  ctx.fillStyle = nameGrad;
+  ctx.fillText(ending.name, w/2, 370);
+
+  // Personality tag
+  var pers = getPersonality(state);
+  if (pers) {
+    ctx.font = '22px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    var tagText = pers.animal + (pers.traits.length ? ' \xb7 ' + pers.traits.join(' \xb7 ') : '');
+    ctx.fillText(tagText, w/2, 420);
+  }
+
+  // Description
+  ctx.font = '24px -apple-system, "PingFang SC", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  var desc = ending.desc;
   var line = '';
-  var lineY = 740;
-  for (var k = 0; k < words.length; k++) {
-    line += words[k];
-    if (ctx.measureText(line).width > 580 || k === words.length - 1) {
+  var lineY = 480;
+  for (var k = 0; k < desc.length; k++) {
+    line += desc[k];
+    if (ctx.measureText(line).width > 560 || k === desc.length - 1) {
       ctx.fillText(line, w/2, lineY);
       line = '';
-      lineY += 30;
+      lineY += 36;
     }
   }
 
-  // CTA
+  // Score bars section
+  var barY = lineY + 30;
+  // Semi-transparent background
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  roundRect(ctx, 60, barY, w - 120, 280, 16);
+  ctx.fill();
+
+  var bars = [
+    { icon:'\ud83d\udcb0', label:'\u8d22\u5bcc', value: Math.min(100, Math.round(state.money / 5000)), color1:'#f59e0b', color2:'#f97316' },
+    { icon:'\u2764\ufe0f', label:'\u5065\u5eb7', value: state.health, color1:'#10b981', color2:'#34d399' },
+    { icon:'\ud83d\udcca', label:'\u804c\u573a', value: Math.min(100, Math.round(state.skill * 0.4 + state.rankIdx * 20 + state.salary / 1000)), color1:'#6366f1', color2:'#818cf8' },
+    { icon:'\ud83d\ude0a', label:'\u5e78\u798f', value: state.hair, color1:'#ec4899', color2:'#f472b6' }
+  ];
+
+  for (var i = 0; i < bars.length; i++) {
+    var b = bars[i];
+    var by = barY + 30 + i * 62;
+    // Label
+    ctx.textAlign = 'left';
+    ctx.font = '22px -apple-system, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText(b.icon + ' ' + b.label, 90, by);
+    // Value
+    ctx.textAlign = 'right';
+    ctx.font = 'bold 22px -apple-system, sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText('' + b.value, w - 90, by);
+    // Bar background
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    roundRect(ctx, 90, by + 10, w - 180, 10, 5);
+    ctx.fill();
+    // Bar fill
+    var barGrad = ctx.createLinearGradient(90, 0, 90 + (w - 180) * b.value / 100, 0);
+    barGrad.addColorStop(0, b.color1);
+    barGrad.addColorStop(1, b.color2);
+    ctx.fillStyle = barGrad;
+    roundRect(ctx, 90, by + 10, (w - 180) * b.value / 100, 10, 5);
+    ctx.fill();
+  }
+
+  // Track & rank info
+  var track = CAREER_TRACKS[state.track];
+  var infoY = barY + 310;
+  ctx.textAlign = 'center';
+  ctx.font = '22px -apple-system, "PingFang SC", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText(track.emoji + ' ' + track.label + ' \xb7 ' + track.ladder[state.rankIdx], w/2, infoY);
+  ctx.font = '20px -apple-system, "PingFang SC", sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.font = '16px -apple-system, sans-serif';
-  ctx.fillText('测测你是什么动物？我已经是' + ending.emoji + ending.name + '了', w/2, h - 60);
+  ctx.fillText('\u6708\u85aa \u00a5' + state.salary.toLocaleString() + '  \xb7  \u6280\u80fd ' + state.skill + '  \xb7  \u4eba\u8109 ' + state.network, w/2, infoY + 36);
+
+  // Talents
+  var talentY = infoY + 80;
+  if (state.talents && state.talents.length > 0) {
+    ctx.font = '20px -apple-system, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    var talentStr = state.talents.map(function(id) {
+      var t = TALENT_POOL.find(function(tal){ return tal.id === id; });
+      return t ? t.emoji + t.name : '';
+    }).join('  ');
+    ctx.fillText(talentStr, w/2, talentY);
+  }
+
+  // CTA at bottom
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '20px -apple-system, "PingFang SC", sans-serif';
+  ctx.fillText('\u6d4b\u6d4b\u4f60\u662f\u4ec0\u4e48\u804c\u573a\u52a8\u7269\uff1f', w/2, h - 80);
+  ctx.font = '18px -apple-system, "PingFang SC", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillText('parallel-offer.com', w/2, h - 50);
 
   // Show poster
   var img = document.getElementById('posterImage');
   img.src = canvas.toDataURL('image/png');
   document.getElementById('posterModal').style.display = 'flex';
-  var _pc = document.getElementById('posterCaption'); if (_pc) { _pc.textContent = '📸 测测你是什么职场动物？我已经是' + (ending.emoji||'') + (ending.name||'') + '了'; }
+  var _pc = document.getElementById('posterCaption'); if (_pc) { _pc.textContent = '\ud83d\udcf8 \u6d4b\u6d4b\u4f60\u662f\u4ec0\u4e48\u804c\u573a\u52a8\u7269\uff1f\u6211\u5df2\u7ecf' + (ending.emoji||'') + (ending.name||'') + '\u4e86'; }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
 }
 
 function closePosterModal() {
