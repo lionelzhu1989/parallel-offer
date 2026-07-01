@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>平行offer · 职场天赋RPG</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #faf6f0; color: #2c2416; max-width: 420px; margin: 0 auto;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+
+  /* ====== Top Bar ====== */
+  .top-bar {
+    position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e8e0d5; padding: 10px 16px;
+    font-size: 13px; color: #8c7b64;
+  }
+  .top-bar .main-row { display: flex; justify-content: space-between; align-items: center; }
+  .top-bar .year-label { background: #f0e9db; padding: 4px 12px; border-radius: 12px; font-size: 13px; color: #8c7b64; }
+  .top-bar .track-badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; }
+  .track-badge.tech { background: #e8f0fe; color: #1a56db; }
+  .track-badge.biz { background: #fff3e0; color: #e65100; }
+  .track-badge.state { background: #fce4ec; color: #c62828; }
+  .track-badge.mnc { background: #e8f5e9; color: #2e7d32; }
+  .track-badge.startup { background: #f3e5f5; color: #6a1b9a; }
+  .track-badge.gig { background: #e3f2fd; color: #0d47a1; }
+
+  /* ====== Attribute Bars ====== */
+  .attr-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:4px 8px; margin-top:8px; }
+  .attr-item { display:flex; flex-direction:column; align-items:center; gap:1px; }
+  .attr-item .attr-top { display:flex; align-items:center; gap:3px; }
+  .attr-item .attr-icon { font-size:14px; }
+  .attr-item .attr-label { font-size:10px; color:#8c7b64; letter-spacing:0.5px; }
+  .attr-item .attr-val { font-weight:700; font-size:14px; color:#3d3226; line-height:1.2; }
+  .attr-item .attr-bar-bg { width:100%; height:4px; background:#e8e0d5; border-radius:2px; overflow:hidden; margin-top:2px; }
+  .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.4s; }
+  .attr-bar-fill.salary { background:#e65100; }
+  .attr-bar-fill.skill { background:#1a56db; }
+  .attr-bar-fill.network { background:#6a1b9a; }
+  .attr-bar-fill.health { background:#c62828; }
+  .attr-bar-fill.satisfaction { background:#2e7d32; }
+
+  /* ====== Main Content ====== */
+  .main-content { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+  .scenario-card { background: linear-gradient(180deg,#fff 0%,#fdfaf6 100%); border-radius: 16px; padding: 22px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .scenario-card .year-badge { display: inline-block; background: #f5efe3; color: #8c7b64; font-size: 12px; padding: 3px 10px; border-radius: 8px; margin-bottom: 10px; }
+  .scenario-card .scene-text { font-size: 15px; line-height: 1.75; color: #3d3226; }
+  .scenario-card .track-tag { display:inline-block; margin-bottom:8px; padding:4px 12px; border-radius:12px; font-size:11px; font-weight:600; }
+
+  /* ====== Choices ====== */
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    background: linear-gradient(135deg,#fff 0%,#fdfaf5 100%); border: 1.5px solid #e0d6c4; border-radius: 12px;
+    padding: 14px 16px; font-size: 14px; line-height: 1.5; color: #3d3226;
+    text-align: left; cursor: pointer; transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent; min-height: 44px;
+  }
+  .choice-btn:active { background: #f5efe3; border-color: #c9b896; transform: scale(0.98); }
+  .choice-btn.selected { background: linear-gradient(135deg,#faf3e8,#f5e8d0); border-color: #b8913c; border-width: 2px; }
+  .choice-effect { font-size:11px; color:#b0a590; margin-top:4px; }
+
+  .confirm-btn {
+    width: 100%; background: linear-gradient(135deg,#c9a55a,#b8860b); color: #fff; border: none; border-radius: 12px;
+    padding: 14px; font-size: 16px; font-weight: 600; cursor: pointer;
+    transition: all 0.15s; box-shadow: 0 3px 12px rgba(184,134,11,0.25);
+  }
+  .confirm-btn:active { transform: scale(0.97); }
+  .confirm-btn:disabled { background: linear-gradient(135deg,#d8d0c4,#c9ba9e); box-shadow: none; cursor: not-allowed; }
+
+  .restart-link { text-align: center; margin: 4px 0; }
+  .restart-link button { background: none; border: none; color: #b0a590; font-size: 13px; cursor: pointer; padding: 6px 12px; border-radius: 8px; }
+  .restart-link button:active { background: #f5efe3; color: #8c7b64; }
+
+  /* ====== Setup Screens ====== */
+  .setup-section { padding: 4px 0; }
+  .setup-header { text-align: center; margin-bottom: 20px; }
+  .setup-title { font-size: 26px; font-weight: 800; color: #2c2416; }
+  .setup-subtitle { font-size: 14px; color: #8c7b64; margin-top: 6px; }
+
+  /* Career track selection */
+  .track-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .track-card {
+    background: #fff; border: 1.5px solid #e0d6c4; border-radius: 14px;
+    padding: 16px 12px; cursor: pointer; transition: all 0.2s;
+    text-align: center; min-height: 80px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .track-card:active { background: #f5efe3; transform: scale(0.98); }
+  .track-card.selected { border-color: #b8913c; background: #faf3e3; box-shadow: 0 0 0 2px rgba(184,145,60,0.15); }
+  .track-card .tc-emoji { font-size: 28px; margin-bottom: 4px; }
+  .track-card .tc-label { font-size: 14px; font-weight: 600; color: #3d3226; }
+  .track-card .tc-desc { font-size: 11px; color: #b0a392; margin-top: 3px; }
+  .track-card .tc-ladder { font-size: 10px; color: #c9ba9e; margin-top: 6px; line-height: 1.4; }
+
+  /* Persona selection */
+  .persona-section { }
+  .persona-header { text-align: center; margin-bottom: 16px; }
+  .persona-title { font-size: 20px; font-weight: 800; color: #2c2416; }
+  .persona-subtitle { font-size: 13px; color: #8c7b64; margin-top: 4px; }
+  .persona-dim { margin-bottom: 16px; }
+  .persona-dim-label { font-size: 15px; font-weight: 700; color: #3d3226; margin-bottom: 4px; }
+  .persona-dim-desc { font-size: 12px; color: #b0a590; margin-bottom: 8px; }
+  .persona-options { display: flex; gap: 8px; }
+  .persona-card {
+    flex: 1; padding: 12px 8px; border: 1.5px solid #e0d6c4; border-radius: 12px;
+    background: #fff; cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .persona-card:active { background: #f5efe3; transform: scale(0.97); }
+  .persona-card.selected { border-color: #b8913c; background: #faf3e3; box-shadow: 0 0 0 2px rgba(184,145,60,0.15); }
+  .persona-card-label { font-size: 13px; font-weight: 600; color: #3d3226; }
+  .persona-card-desc { font-size: 11px; color: #b0a392; margin-top: 3px; }
+
+  /* ====== Talent Draw ====== */
+  .talent-section { }
+  .talent-header { text-align: center; margin-bottom: 16px; }
+  .talent-title { font-size: 20px; font-weight: 800; color: #2c2416; }
+  .talent-subtitle { font-size: 13px; color: #8c7b64; margin-top: 4px; }
+  .talent-grid { display: flex; flex-direction: column; gap: 10px; }
+  .talent-card {
+    background: linear-gradient(135deg,#fffdf8 0%,#faf3e3 100%); border: 2px solid #e4dbcd; border-radius: 14px;
+    padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; gap: 14px; align-items: center;
+  }
+  .talent-card:active { transform: scale(0.98); }
+  .talent-card.selected { border-color: #b8913c; box-shadow: 0 0 0 3px rgba(184,145,60,0.15); background: linear-gradient(135deg,#faf3e3,#f5e8d0); }
+  .talent-card .tc-emoji { font-size: 32px; flex-shrink: 0; }
+  .talent-card .tc-info { flex: 1; }
+  .talent-card .tc-name { font-size: 15px; font-weight: 700; color: #3d3226; }
+  .talent-card .tc-desc { font-size: 12px; color: #8c7b64; margin-top: 3px; line-height: 1.4; }
+  .talent-card .tc-tag { display:inline-block; font-size:10px; padding:2px 8px; border-radius:8px; margin-top:4px; }
+  .talent-card .tc-tag.work { background:#e8f0fe; color:#1a56db; }
+  .talent-card .tc-tag.life { background:#e8f5e9; color:#2e7d32; }
+  .talent-card .tc-tag.special { background:#f3e5f5; color:#6a1b9a; }
+  .talent-hint { text-align:center; font-size:12px; color:#b0a590; margin-top:8px; }
+
+  .setup-back { display: block; text-align: center; margin-top: 12px; }
+  .setup-back button { background: none; border: none; color: #b0a590; font-size: 13px; cursor: pointer; padding: 6px 12px; border-radius: 8px; }
+
+  /* ====== Promotion Challenge ====== */
+  .promo-card { border-left: 3px solid #ff6b35; }
+  .promo-badge { display:inline-block; background:linear-gradient(135deg,#ff6b35,#ff8a50); color:#fff; padding:4px 14px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:10px; }
+
+  /* ====== Identity Card (Ending) ====== */
+  .id-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%); border-radius: 20px; padding: 28px 20px 20px; text-align: center; color: #fff; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(15,52,96,0.35); animation: cardAppear 0.5s ease-out 0.3s both; }
+  .id-card::before { content: ''; position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: rgba(255,255,255,0.04); border-radius: 50%; }
+  .id-card-badge { display: inline-block; background: rgba(255,255,255,0.15); padding: 4px 14px; border-radius: 20px; font-size: 12px; color: rgba(255,255,255,0.85); margin-bottom: 16px; letter-spacing: 1px; }
+  .id-card-emoji { font-size: 64px; margin-bottom: 6px; }
+  .id-card-ending { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .id-card-desc { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 16px; line-height: 1.5; }
+  .id-dims { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .id-dim { display: flex; align-items: center; gap: 10px; }
+  .id-dim-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .id-dim-text { text-align: left; flex: 1; }
+  .id-dim-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .id-dim-desc { font-size: 11px; color: rgba(255,255,255,0.5); }
+  .id-talents { margin-top: 12px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .id-talent { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 10px; font-size: 12px; }
+  .id-share-hint { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 12px; }
+
+  @keyframes cardAppear { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ====== Ending Color Themes ====== */
+  .id-card.theme-gold { background: linear-gradient(135deg, #5b2c0f 0%, #7b3f1c 40%, #c6a45a 100%); }
+  .id-card.theme-blue { background: linear-gradient(135deg, #1b3a4b 0%, #14486b 40%, #2c7da0 100%); }
+  .id-card.theme-green { background: linear-gradient(135deg, #2d4a22 0%, #3d6b2e 40%, #8bb84e 100%); }
+  .id-card.theme-purple { background: linear-gradient(135deg, #2a1a3d 0%, #4a2e6b 40%, #8b5fc4 100%); }
+  .id-card.theme-red { background: linear-gradient(135deg, #4a1a1a 0%, #6b2e2e 40%, #c45050 100%); }
+  .id-card.theme-gray { background: linear-gradient(135deg, #2d2d2d 0%, #4a4a4a 40%, #7a8a6a 100%); }
+
+  /* ====== Modals ====== */
+  .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:350; justify-content:center; align-items:center; padding:16px; }
+  .modal-overlay.show { display:flex; }
+  .modal-inner { background:#fff; border-radius:20px; width:100%; max-width:400px; max-height:85vh; overflow-y:auto; padding:24px 16px; position:relative; animation:modalIn 0.25s ease-out; }
+  /* ====== PK Card ====== */
+  .pk-card { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-radius:20px; padding:24px 16px; color:#fff; margin-bottom:12px; animation:cardAppear 0.5s ease-out; }
+  .pk-title { text-align:center; font-size:15px; font-weight:800; margin-bottom:16px; letter-spacing:2px; }
+  .pk-row { display:flex; align-items:center; margin-bottom:10px; }
+  .pk-label { width:52px; text-align:center; font-size:18px; flex-shrink:0; }
+  .pk-side { flex:1; text-align:center; }
+  .pk-val { font-size:22px; font-weight:800; }
+  .pk-vs { width:36px; text-align:center; font-size:11px; color:rgba(255,255,255,0.5); font-weight:700; flex-shrink:0; }
+  .pk-win { color:#ffd700; }
+  .pk-lose { color:rgba(255,255,255,0.4); }
+  .pk-result { text-align:center; margin-top:12px; padding:10px; background:rgba(255,255,255,0.08); border-radius:12px; }
+  .pk-result-text { font-size:14px; font-weight:700; }
+  .pk-subtitle { text-align:center; font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px; }
+  @keyframes modalIn { from { opacity:0; transform:scale(0.92); } to { opacity:1; transform:scale(1); } }
+  .modal-title { font-size:20px; font-weight:800; color:#2c2416; text-align:center; margin-bottom:4px; }
+  .modal-sub { font-size:13px; color:#8c7b64; text-align:center; margin-bottom:16px; }
+  .modal-close { position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; cursor:pointer; color:#8c7b64; padding:4px 8px; border-radius:8px; }
+  .modal-close:active { background:#f5efe3; }
+
+  /* Gallery */
+  .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .gallery-item { background:#faf8f4; border:1.5px solid #e4dbcd; border-radius:14px; padding:14px 8px; text-align:center; min-height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .gallery-item.unlocked { border-color:#c9a96e; background:linear-gradient(135deg,#fffdf8,#faf3e3); }
+  .gallery-item.locked { opacity:0.5; filter:grayscale(0.6); }
+  .gallery-item .g-emoji { font-size:32px; margin-bottom:4px; }
+  .gallery-item .g-name { font-size:13px; font-weight:700; color:#3d3226; }
+  .gallery-item .g-track { font-size:10px; color:#b0a590; margin-top:2px; }
+  .gallery-count { text-align:center; margin-top:12px; font-size:12px; color:#8c7b64; }
+
+  /* Achievements */
+  .achieve-list { display:flex; flex-direction:column; gap:8px; }
+  .achieve-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; border:1.5px solid #e4dbcd; background:#faf8f4; }
+  .achieve-item.unlocked { border-color:#c9a96e; background:linear-gradient(135deg,#fffdf8,#faf3e3); }
+  .achieve-item.locked { opacity:0.5; }
+  .achieve-item .a-emoji { font-size:24px; flex-shrink:0; }
+  .achieve-item.locked .a-emoji { filter:grayscale(1); opacity:0.4; }
+  .achieve-item .a-text { flex:1; }
+  .achieve-item .a-name { font-size:14px; font-weight:700; color:#3d3226; }
+  .achieve-item .a-desc { font-size:11px; color:#8c7b64; margin-top:2px; }
+  .achieve-item.locked .a-name { color:#b0a590; }
+  .achieve-progress { text-align:center; margin-top:12px; font-size:12px; color:#8c7b64; }
+
+  /* ====== Bottom Entry Buttons ====== */
+  .entry-bar { display:flex; gap:8px; }
+  .entry-btn { flex:1; padding:12px 8px; border:1.5px solid #e0d6c4; border-radius:12px; background:linear-gradient(135deg,#faf8f4,#f5efe3); font-size:13px; font-weight:600; color:#5c4b2c; cursor:pointer; transition:all 0.15s; text-align:center; }
+  .entry-btn:active { background:#f5efe3; border-color:#c9b896; transform:scale(0.97); }
+
+  /* ====== Toast ====== */
+  .toast { position:fixed!important; top:24px!important; left:50%!important; transform:translateX(-50%)!important; background:linear-gradient(135deg,#2c2416,#4a3c28)!important; color:#fff!important; padding:12px 24px!important; border-radius:14px!important; font-size:14px!important; z-index:400!important; box-shadow:0 6px 24px rgba(0,0,0,0.18)!important; animation:toastSlide 0.35s ease,toastOut 0.3s ease 2.2s forwards!important; white-space:pre-wrap!important; max-width:90vw!important; text-align:left!important; line-height:1.5!important; }
+  @keyframes toastSlide { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+  @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
+
+  /* ====== Timeline ====== */
+  .timeline-section { background: rgba(255,255,255,0.5); border-radius: 12px; padding: 12px 8px; margin: 8px 0; }
+
+  /* ====== Narrative Summary ====== */
+  .narrative-box { background:#fff; border-radius:16px; padding:20px 18px; margin:8px 0; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+
+  
+  /* ====== Regret/Undo Button ====== */
+  .undo-bar { text-align:center; margin-top:8px; }
+  .undo-btn { background:linear-gradient(135deg,#fff8f0 0%,#fff3e6 100%); border:1.5px solid #d4a574; border-radius:14px; padding:12px 28px; font-size:14px; color:#8b5e3c; cursor:pointer; transition:all 0.15s; font-weight:500; box-shadow:0 2px 8px rgba(180,130,70,0.15); }
+  .undo-btn:active { background:#f5efe3; transform:scale(0.97); }
+  .undo-btn:hover { background:#fff3e6; box-shadow:0 2px 12px rgba(180,130,70,0.25); }
+  /* ====== Talent Effect Label ====== */
+  .talent-effect-label { display:inline-block; font-size:11px; padding:3px 10px; border-radius:8px; margin-top:6px; background:#fff8e8; color:#b8860b; border:1px solid #e8dbb8; line-height:1.4; }
+  .talent-effect-label .eff-pos { color:#2e7d32; font-weight:600; }
+  .talent-effect-label .eff-neg { color:#c62828; font-weight:600; }
+  /* ====== Promo Threshold Display ====== */
+  .promo-threshold { background:#f5f0e8; border-radius:10px; padding:10px 14px; margin:8px 0; font-size:13px; color:#5c4b2c; }
+  .promo-threshold .met { color:#2e7d32; font-weight:600; }
+  .promo-threshold .unmet { color:#c62828; font-weight:600; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="top-bar" id="topBar">
+  <div class="main-row">
+    <span class="year-label" id="yearLabel">准备开始</span>
+  </div>
+  <div class="attr-bar" id="attrBar" style="display:none">
+    <div class="attr-item"><div class="attr-top"><span class="attr-icon">💰</span><span class="attr-label">月薪</span></div><span class="attr-val" id="attrSalary">5K</span><div class="attr-bar-bg"><div class="attr-bar-fill salary" id="barSalary" style="width:20%"></div></div></div>
+    <div class="attr-item"><div class="attr-top"><span class="attr-icon">📊</span><span class="attr-label">职级</span></div><span class="attr-val" id="attrRank">L1</span></div>
+    <div class="attr-item"><div class="attr-top"><span class="attr-icon">🧠</span><span class="attr-label">技能</span></div><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
+    <div class="attr-item"><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
+    <div class="attr-item"><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
+    <div class="attr-item"><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">满足</span></div><span class="attr-val" id="attrHappy">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+  </div>
+</div>
+
+<div class="main-content" id="mainContent"></div>
+
+<!-- Gallery Modal -->
+<div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeGallery()">✕</button>
+    <div class="modal-title">📖 结局图鉴</div>
+    <div class="modal-sub">收集所有平行宇宙的结局</div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="gallery-count" id="galleryCount"></div>
+  </div>
+</div>
+
+<!-- Achievement Modal -->
+<div class="modal-overlay" id="achieveModal" onclick="if(event.target===this)closeAchievements()">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeAchievements()">✕</button>
+    <div class="modal-title">🏆 成就殿堂</div>
+    <div class="modal-sub" id="achieveSub"></div>
+    <div class="achieve-list" id="achieveList"></div>
+    <div class="achieve-progress" id="achieveProgress"></div>
+  </div>
+</div>
+
+<!-- Poster Modal -->
+<div id="posterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:500;justify-content:center;align-items:center;flex-direction:column" onclick="closePosterModal()">
+  <div style="position:relative;max-width:380px;width:90%">
+    <img id="posterImage" style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5)" />
+    <div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8">📸 测测你是什么职场动物？我已经是' + ending.emoji + ending.name + '了</div>
+  <div class="attr-bar" id="attrBar" style="display:none">
+    <div class="attr-item"><span class="attr-icon">💰</span><span class="attr-val" id="attrSalary">5K</span><div class="attr-bar-bg"><div class="attr-bar-fill salary" id="barSalary" style="width:20%"></div></div></div>
+    <div class="attr-item"><span class="attr-icon">📊</span><span class="attr-val" id="attrRank">L1</span></div>
+    <div class="attr-item"><span class="attr-icon">🧠</span><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
+    <div class="attr-item"><span class="attr-icon">👥</span><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
+    <div class="attr-item"><span class="attr-icon">❤️</span><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
+    <div class="attr-item"><span class="attr-icon">😊</span><span class="attr-val" id="attrHappy">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+  </div>
+</div>
+
+<div class="main-content" id="mainContent"></div>
+
+<!-- Gallery Modal -->
+<div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeGallery()">✕</button>
+    <div class="modal-title">📖 结局图鉴</div>
+    <div class="modal-sub">收集所有平行宇宙的结局</div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="gallery-count" id="galleryCount"></div>
+  </div>
+</div>
+
+</div>
+
+<canvas id="posterCanvas" width="750" height="1334" style="display:none"></canvas>
+
+<script>
+// ================================================================
+//  平行offer v2 · 职场天赋RPG
+//  删除投资/资产/贷款系统 → 天赋抽卡+独立职业路线+6维属性+搞笑事件+多结局
+// ================================================================
+
+window.__lastError = null;
+window.onerror = function(msg, url, line) {
+  window.__lastError = msg + ' (line ' + line + ')';
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:8px;z-index:99999;font-size:12px;text-align:center;';
+  d.textContent = 'ERROR: ' + msg + ' (line ' + line + ')';
+  document.body.appendChild(d);
+  setTimeout(function(){ d.remove(); }, 5000);
+  return false;
+};
+
+// ====== Utility ======
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randInt(lo, hi) { return Math.floor(Math.random() * (hi - lo + 1)) + lo; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function shuffle(arr) { var a = arr.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+function toast(msg) {
+  var existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { if(t.parentNode) t.remove(); }, 2600);
+}
+
+function closeAllModals() {
+  document.querySelectorAll('.modal-overlay').forEach(function(m) { m.classList.remove('show'); });
+}
+
+
+// ====== Humor/Variant Engine (ported from v12) ======
+// Makes every playthrough text feel fresh
+function _makeVariantText(base) {
+  var r = Math.random();
+  if (r < 0.25) return _altOutcome(base);
+  if (r < 0.70) return _addHumorSuffix(base);
+  return _spiceUpResult(base);
+}
+
+function _altOutcome(base) {
+  var alts = [
+    base + ' 过程比想象中艰难，但你挺过来了。朋友圈发了一条仅自己可见的动态。',
+    base + ' 夜里想了很久这是不是最好的选择。第二天醒来，发现也没有那么糟。',
+    base + ' 后来你在日记里写道：这是今年最正确的决定。当然也可能是在自我说服。',
+    base + ' 唯一的问题是：你的猫对此表示无所谓。',
+    base + ' 三年后回头看，这个决定改变了你的轨迹。但当时的你并不知道。',
+    base + ' 别人以为你深思熟虑，其实你只是靠直觉赌了一把。赌对了。',
+    '你做了一个连自己都没想到的选择。' + base + ' 后来这成了你在酒局上最爱讲的故事。',
+    base + ' 同学群里有人酸你"运气好"。你没有解释，因为你知道自己付出了什么。',
+    base + ' 代价是熬了' + (2 + Math.floor(Math.random() * 4)) + '个月的夜。黑眼圈是你努力的勋章。',
+    base + ' 有人问你怎么做到的。你说"就那样吧"——这比任何长篇大论都让人信服。',
+    base + ' 父母在电话里说"早该这样了"。你翻了个白眼但心里暖暖的。',
+    base + ' 晚上你躺在床上盯着天花板。不是迷茫，是终于有底气发呆了。',
+    base + ' 你在备忘录里记下了这一天。标题是"转折点"，后面跟了三个感叹号。',
+    base + ' 打开朋友圈，高中同学在马尔代夫。你默默把手机翻了个面。',
+    base + ' 你已经学会了在好消息和坏消息之间保持一种中年人特有的模糊表情。',
+  ];
+  return alts[Math.floor(Math.random() * alts.length)];
+}
+
+function _addHumorSuffix(base) {
+  var suffixes = [
+    ' 你安慰自己：至少头发还在（大概还有）。',
+    ' 打开朋友圈，高中同学在马尔代夫。你默默把手机翻了个面。',
+    ' 今天也是元气满满的一天——指元気大伤。',
+    ' 你骄傲地在群里发了句"还行吧"。群沉默了。',
+    ' 虽然累，但比上个月好一点。比去年好不少。这就是人生。',
+    ' 晚上多吃了两碗米饭庆祝。碳水是最诚实的快乐。',
+    ' 你意识到：成年人的快乐就是发工资那天余额多了几位数。',
+    ' 你把这段经历写进了日记。以后写自传的时候用得上。',
+    ' 你给妈妈打了个电话。她说"注意身体"——老妈永远是对的。',
+    ' 生活给你的柠檬，你榨成了柠檬汁。虽然有点酸，但解渴。',
+    ' 如果这是一部电影，此刻应该有BGM响起。但现实中只有空调的嗡嗡声。',
+    ' 你在知乎上搜了一下"如何低调地炫耀"。然后什么都没发。',
+    ' 这一年的KPI超额完成。你的KPI是活下来。',
+    ' 地铁上你看见一个很像自己的人。他没你混得好——你猜的。',
+    ' 你想起刚毕业时的自己。如果那时看到现在的你，应该会觉得"还行"。',
+  ];
+  return base + suffixes[Math.floor(Math.random() * suffixes.length)];
+}
+
+function _spiceUpResult(base) {
+  if (Math.random() < 0.5) {
+    var prefixes = ['说真的，', '老实讲，', '后来你才明白，', '回头想想，', '不吹不黑，', '你后来跟人说起时总是轻描淡写：', '如果非要总结的话：', '简单说就是，'];
+    var pfx = prefixes[Math.floor(Math.random() * prefixes.length)];
+    return pfx + base;
+  }
+  var insertions = [
+    '——虽然过程一言难尽——',
+    '（此处省略三千字内心戏）',
+    '，但你活下来了',
+    '。说实话你自己都没想到',
+    '。后来你把这个故事讲给新人听，他们觉得你在凡尔赛',
+    '。不过这不重要',
+    '，当然这是后话',
+    '。你发现自己已经对这种事麻木了',
+  ];
+  var parts = base.split('。');
+  if (parts.length >= 2) {
+    var insertAt = Math.floor(Math.random() * (parts.length - 1));
+    parts[insertAt] += insertions[Math.floor(Math.random() * insertions.length)];
+    return parts.join('。');
+  }
+  return base + insertions[Math.floor(Math.random() * insertions.length)];
+}
+
+
+// ====== Talent Effect Display ======
+function _getTalentEffectSummary(talent) {
+  if (!talent || !talent.effect) return '';
+  var parts = [];
+  var e = talent.effect;
+  if (e.skillBonus) parts.push('<span class="eff-pos">🧠技能+' + Math.round(e.skillBonus * 100) + '%</span>');
+  if (e.skillPenalty) parts.push('<span class="eff-neg">🧠技能' + Math.round(e.skillPenalty * 100) + '%</span>');
+  if (e.networkBonus) parts.push('<span class="eff-pos">👥人脉+' + Math.round(e.networkBonus * 100) + '%</span>');
+  if (e.networkPenalty) {
+    if (typeof e.networkPenalty === 'number' && e.networkPenalty > 1) {
+      parts.push('<span class="eff-neg">👥人脉' + e.networkPenalty + '</span>');
+    } else {
+      parts.push('<span class="eff-neg">👥人脉' + Math.round(e.networkPenalty * 100) + '%</span>');
+    }
+  }
+  if (e.healthPenalty) parts.push('<span class="eff-neg">❤️健康' + e.healthPenalty + '</span>');
+  if (e.healthRecovery) parts.push('<span class="eff-pos">❤️恢复+' + Math.round(e.healthRecovery * 100) + '%</span>');
+  if (e.healthCap) parts.push('<span class="eff-pos">❤️上限+' + (e.healthCap - 100) + '</span>');
+  if (e.happyBonus) parts.push('<span class="eff-pos">😊满足+' + e.happyBonus + '</span>');
+  if (e.promoBonus) parts.push('<span class="eff-pos">📈晋升+' + Math.round(e.promoBonus * 100) + '%</span>');
+  if (e.promoPenalty) parts.push('<span class="eff-neg">📈晋升' + Math.round(e.promoPenalty * 100) + '%</span>');
+  if (e.promoSpeed) {
+    if (e.promoSpeed < 0) parts.push('<span class="eff-neg">📈晋升' + Math.round(e.promoSpeed * 100) + '%</span>');
+    else parts.push('<span class="eff-pos">📈晋升+' + Math.round(e.promoSpeed * 100) + '%</span>');
+  }
+  if (e.luckBonus) parts.push('<span class="eff-pos">🍀运气+' + e.luckBonus + '</span>');
+  if (e.riskMod) parts.push('<span class="eff-pos">⚡风险收益x' + e.riskMod + '</span>');
+  if (e.dramaBonus) parts.push('<span class="eff-pos">🎪文案更搞笑</span>');
+  if (e.phoneEvent) parts.push('<span class="eff-pos">📱彩蛋事件+' + e.phoneEvent + '</span>');
+  if (e.mentorBonus) parts.push('<span class="eff-pos">🌟贵人+' + Math.round(e.mentorBonus * 100) + '%</span>');
+  if (e.compensation) parts.push('<span class="eff-pos">🔄被迫时+' + Math.round(e.compensation * 100) + '%</span>');
+  if (e.sidejobBonus) parts.push('<span class="eff-pos">🎨副业+' + Math.round(e.sidejobBonus * 100) + '%</span>');
+  if (e.expenseMod) parts.push('<span class="eff-neg">💰消费+' + Math.round(e.expenseMod * 100) + '%</span>');
+  return parts.join('  ');
+}
+
+// ====== DATA: Career Tracks ======
+var CAREER_TRACKS = {
+  tech: {
+    id: 'tech', emoji: '💻', label: '互联网技术', tag: 'tech',
+    desc: '程序员 · 产品经理 · 设计师',
+    salary: 20000, expense: 8000,
+    ladder: ['初级工程师','中级工程师','高级工程师','技术专家','技术总监','VP/CTO'],
+    ladderShort: ['L1','L2','L3','L4','L5','L6'],
+    promoYears: [3,5,7,9],
+    companies: ['字节跳动','阿里云','腾讯','百度','美团','快手','拼多多','小红书','B站','米哈游','DeepSeek','月之暗面']
+  },
+  biz: {
+    id: 'biz', emoji: '🤝', label: '互联网商务', tag: 'biz',
+    desc: '销售 · 运营 · 市场',
+    salary: 18000, expense: 7500,
+    ladder: ['销售代表','销售主管','销售经理','商务总监','VP'],
+    ladderShort: ['S1','S2','S3','S4','S5'],
+    promoYears: [3,5,7,9],
+    companies: ['字节跳动','美团','腾讯广告','阿里妈妈','快手商业化','京东','拼多多','SHEIN','TikTok']
+  },
+  state: {
+    id: 'state', emoji: '🏛️', label: '央企/国企', tag: 'state',
+    desc: '稳定 · 体制内 · 铁饭碗',
+    salary: 12000, expense: 5000,
+    ladder: ['科员','副科','正科','副处','正处'],
+    ladderShort: ['科员','副科','正科','副处','正处'],
+    promoYears: [3,5,7,9],
+    companies: ['中核集团','中国移动','国家电网','中国石化','中建集团','华润集团','中国电信','中铁建']
+  },
+  mnc: {
+    id: 'mnc', emoji: '🌐', label: '外企/咨询', tag: 'mnc',
+    desc: '精英 · 国际化 · PPT治国',
+    salary: 22000, expense: 9000,
+    ladder: ['Analyst','Consultant','Senior','Manager','Partner'],
+    ladderShort: ['A','C','S','M','P'],
+    promoYears: [2,4,6,8],
+    companies: ['谷歌','微软','苹果','亚马逊','麦肯锡','BCG','贝恩','德勤','普华永道','IBM','SAP']
+  },
+  startup: {
+    id: 'startup', emoji: '🚀', label: '创业', tag: 'startup',
+    desc: '高风险高回报 · 燃烧吧青春',
+    salary: 0, expense: 6000,
+    ladder: ['想法阶段','联合创始人','天使轮','A轮','B轮','IPO/收购'],
+    ladderShort: ['想法','合伙','天使','A轮','B轮','IPO'],
+    promoYears: [2,4,6,8],
+    companies: []
+  },
+  gig: {
+    id: 'gig', emoji: '🎨', label: '自由职业/零工', tag: 'gig',
+    desc: '灵活 · 不稳定 · 自己说了算',
+    salary: 10000, expense: 4500,
+    ladder: ['兼职接单','自由职业者','小团队','工作室主理人'],
+    ladderShort: ['兼职','自由','团队','主理人'],
+    promoYears: [3,6,9],
+    companies: []
+  }
+};
+
+// ====== DATA: Talent Pool (30+) ======
+var TALENT_POOL = [
+  // Work talents (10)
+  { id:'hardwork', emoji:'🔥', name:'卷王之王', desc:'加班收益+50%，但每年-8健康', cat:'work', effect:{skillBonus:0.5, healthPenalty:-8} },
+  { id:'slacker', emoji:'🐟', name:'摸鱼大师', desc:'摸鱼不被发现，但晋升速度-30%', cat:'work', effect:{promoSpeed:-0.3, happyBonus:10} },
+  { id:'geek', emoji:'🧠', name:'技术极客', desc:'技能成长+40%，社交-20%', cat:'work', effect:{skillBonus:0.4, networkPenalty:-0.2} },
+  { id:'social', emoji:'💪', name:'社牛达人', desc:'人脉成功率+50%，独处效率-20%', cat:'work', effect:{networkBonus:0.5, skillPenalty:-0.2} },
+  { id:'eq', emoji:'🎭', name:'情商天花板', desc:'所有人际事件+30%', cat:'work', effect:{networkBonus:0.3, happyBonus:5} },
+  { id:'nerd', emoji:'📚', name:'学霸体质', desc:'学习效果翻倍，实践-20%', cat:'work', effect:{skillBonus:1.0, promoPenalty:-0.2} },
+  { id:'goal', emoji:'🎯', name:'目标感强', desc:'晋升+25%，事件多样性-15%', cat:'work', effect:{promoBonus:0.25} },
+  { id:'zen', emoji:'🌊', name:'佛系心态', desc:'满足度+20/年，职级成长-25%', cat:'work', effect:{happyBonus:20, promoPenalty:-0.25} },
+  { id:'fox', emoji:'🐍', name:'职场狐狸', desc:'背刺成功率+40%，口碑-10', cat:'work', effect:{promoBonus:0.4, networkPenalty:-10} },
+  { id:'nice', emoji:'🤝', name:'老好人', desc:'好感度+30%，容易被甩锅', cat:'work', effect:{networkBonus:0.3, skillPenalty:-0.1} },
+  // Life talents (10)
+  { id:'lucky', emoji:'🍀', name:'锦鲤附体', desc:'好运事件概率翻倍', cat:'life', effect:{luckBonus:2} },
+  { id:'health', emoji:'💊', name:'养生达人', desc:'健康恢复+50%，社交-20%', cat:'life', effect:{healthRecovery:0.5, networkPenalty:-0.2} },
+  { id:'catlovers', emoji:'🐱', name:'猫奴体质', desc:'满足度+15/年，独处技能+10%', cat:'life', effect:{happyBonus:15, skillBonus:0.1} },
+  { id:'artsy', emoji:'🎸', name:'文艺青年', desc:'副业事件解锁+40%', cat:'life', effect:{sidejobBonus:0.4} },
+  { id:'runner', emoji:'🏃', name:'马拉松选手', desc:'健康上限+20，加班debuff减半', cat:'life', effect:{healthCap:120, healthRecovery:0.3} },
+  { id:'sleeper', emoji:'😴', name:'睡眠冠军', desc:'精力恢复+30%，早起事件失败', cat:'life', effect:{happyBonus:8, skillPenalty:-0.1} },
+  { id:'nightowl', emoji:'🌙', name:'夜猫子', desc:'晚间事件+50%，早间-30%', cat:'life', effect:{skillBonus:0.2, healthPenalty:-3} },
+  { id:'foodie', emoji:'🍜', name:'干饭人', desc:'吃饭事件满足度+20，健康-5', cat:'life', effect:{happyBonus:20, healthPenalty:-5} },
+  { id:'spend', emoji:'💰', name:'月光族', desc:'消费+30%，但常有意外收获', cat:'life', effect:{luckBonus:1.5, expenseMod:0.3} },
+  { id:'homebody', emoji:'🏠', name:'宅家族', desc:'独处效果+40%，社交-30%', cat:'life', effect:{skillBonus:0.4, networkPenalty:-0.3} },
+  // Special talents (6)
+  { id:'shy', emoji:'👻', name:'社恐体质', desc:'社交50%失败，独处+60%', cat:'special', effect:{networkPenalty:-0.5, skillBonus:0.6} },
+  { id:'gambler', emoji:'🎰', name:'赌徒心态', desc:'所有风险收益翻倍', cat:'special', effect:{riskMod:2} },
+  { id:'indecisive', emoji:'🔄', name:'选择困难症', desc:'被迫选择时结果+20%', cat:'special', effect:{compensation:0.2} },
+  { id:'phone', emoji:'📱', name:'低头族', desc:'每年1-2个手机彩蛋事件', cat:'special', effect:{phoneEvent:1} },
+  { id:'chosen', emoji:'🌟', name:'天选打工人', desc:'被大佬赏识概率+30%', cat:'special', effect:{mentorBonus:0.3} },
+  { id:'drama', emoji:'🎪', name:'戏精本精', desc:'所有事件文案更夸张搞笑', cat:'special', effect:{dramaBonus:true} },
+];
+
+// ====== DATA: Scene Events per Track ======
+var CAREER_EVENTS = {
+  tech: [
+    { year:[1,2], title:'需求又变了', desc:'产品经理第三次改需求。上一版的代码白写了。你开始怀疑"敏捷开发"是不是"赶快重写"的意思。', opts:[
+      {text:'默默重写，毕竟工资照发', skill:5, health:-3, happy:-5},
+      {text:'跟产品经理battle一下', skill:3, network:5, happy:-2},
+      {text:'截图留证，下次甩锅用', skill:2, network:-3, happy:3}
+    ]},
+    { year:[1,2], title:'第一次Code Review', desc:'你的代码被高级工程师批得体无完肤。"这个命名是什么鬼？这个if嵌套是在写俄罗斯套娃吗？"', opts:[
+      {text:'虚心接受，逐行修改', skill:8, happy:-3},
+      {text:'嘴上说好，心里不服', skill:3, happy:2},
+      {text:'偷偷去学了设计模式', skill:10, happy:-5}
+    ]},
+    { year:[2,3], title:'线上事故！', desc:'凌晨3点，你写的代码在生产环境炸了。告警群炸锅，你开始思考人生的意义。', opts:[
+      {text:'爬起来修复，通宵达旦', skill:8, health:-10, happy:-8},
+      {text:'假装没看到，等早上再说', health:-3, happy:5, network:-5},
+      {text:'发了个"正在排查"的消息，然后继续睡', happy:3, network:-3}
+    ]},
+    { year:[3,4], title:'技术选型争论', desc:'团队为用React还是Vue吵了三天。你作为唯一一个两个都会的人，被两边拉拢。', opts:[
+      {text:'提出一个全新框架（Svelte）', skill:5, network:-5, happy:-3},
+      {text:'两边都不得罪，建议用团队熟悉的', network:5, happy:3},
+      {text:'写了个性能对比报告，用数据说话', skill:8, network:3}
+    ]},
+    { year:[4,5], title:'AI替代焦虑', desc:'公司开始用AI写代码了。你发现自己日常写的80%的CRUD，AI 30秒就写完了。', opts:[
+      {text:'转型学AI，拥抱变化', skill:12, health:-5, happy:-3},
+      {text:'专注架构和系统设计，AI写不了这个', skill:8, happy:5},
+      {text:'开始在简历里加新技能点', skill:3, network:3, happy:-5}
+    ]},
+    { year:[5,6], title:'带新人', desc:'领导让你带一个实习生。第一天他问你"git push -f 会怎样"，你沉默了。', opts:[
+      {text:'耐心教学，写了份新人指南', skill:5, network:8, happy:3},
+      {text:'让TA先看文档，有问题再问', skill:2, happy:-2},
+      {text:'教了一些"职场生存技巧"而非技术', network:5, happy:5}
+    ]},
+    { year:[6,7], title:'架构师的噩梦', desc:'你负责设计的新系统上线后，QPS从100飙到10万。数据库开始尖叫。', opts:[
+      {text:'紧急扩容+重构，连续加班一周', skill:12, health:-15, happy:-10},
+      {text:'限流降级先扛住，后面慢慢优化', skill:8, happy:-3},
+      {text:'写了个事后复盘报告，甩给了运维', network:-3, happy:5}
+    ]},
+    { year:[7,8], title:'面试官的烦恼', desc:'你开始面试别人了。遇到一个候选人，简历写精通Java，但连HashMap原理都说不清。', opts:[
+      {text:'放水让TA过，反正来了再说', network:3, happy:-3},
+      {text:'认真评估，严格把关', skill:3, happy:-5},
+      {text:'推荐TA去做产品（开玩笑）', happy:8}
+    ]},
+    { year:[8,9], title:'裁员潮来袭', desc:'HR群里传出了"优化"的消息。隔壁组已经有人开始收拾工位了。你心里咯噔一下。', opts:[
+      {text:'疯狂刷题，准备跳槽', skill:8, happy:-10, network:5},
+      {text:'主动找领导谈，确认自己安全', network:8, happy:-5},
+      {text:'摸鱼等赔偿，N+1不香吗？', happy:5, skill:-3}
+    ]},
+    { year:[9,10], title:'十年老程序员', desc:'你发现自己已经能一边写代码一边开会一边review PR了。但体检报告也越来越长了。', opts:[
+      {text:'继续写代码，直到写不动的那天', skill:5, health:-8},
+      {text:'转型管理，告别键盘', skill:-5, network:10, happy:3},
+      {text:'搞技术博客/开源，给自己留点遗产', skill:8, happy:8}
+    ]},
+  ],
+  biz: [
+    { year:[1,2], title:'第一个客户', desc:'你终于约到了人生中第一个大客户。但见面时发现——对方是个比你还能聊的销售。', opts:[
+      {text:'硬着头皮上，把PPT翻烂了讲', skill:5, network:5, happy:-3},
+      {text:'先聊感情再聊业务', network:8, happy:3},
+      {text:'直接报最低价，用价格说话', skill:-3, happy:-5}
+    ]},
+    { year:[1,2], title:'KPI压力', desc:'月底还差30%的业绩。你开始在朋友圈发广告了。前任给你点了个赞。', opts:[
+      {text:'疯狂call客户，打到手机欠费', skill:5, health:-8, happy:-8},
+      {text:'找老客户续签/增购', network:5, happy:-3},
+      {text:'编了一个"战略性调整"的故事给领导', happy:3, network:-5}
+    ]},
+    { year:[2,3], title:'渠道战争', desc:'竞争对手开始抢你的渠道商。你的核心渠道商暗示"那边给的点位更高"。', opts:[
+      {text:'以价换价，死守渠道', skill:-5, happy:-5},
+      {text:'请渠道商吃饭，打感情牌', network:8, happy:-3},
+      {text:'开发新渠道，不把鸡蛋放一个篮子', skill:5, network:5}
+    ]},
+    { year:[3,4], title:'大客户谈判', desc:'年度大单来了！但客户的采购总监特别难搞——砍价、拖期、改需求，全套服务。', opts:[
+      {text:'找关系绕过采购，直接找决策层', network:5, skill:3},
+      {text:'耐心周旋，满足每一个需求', health:-10, happy:-8, skill:3},
+      {text:'报价翻倍再让他砍，心理战', skill:8, happy:-3}
+    ]},
+    { year:[4,5], title:'团队内卷', desc:'同组的新人超额完成了KPI。领导在周会上表扬了TA，你假装鼓掌。', opts:[
+      {text:'更加努力，不能被比下去', skill:5, health:-8, happy:-10},
+      {text:'跟新人取经，学习TA的方法', skill:5, network:3, happy:-3},
+      {text:'跳槽去更好的平台', skill:-3, network:5, happy:3}
+    ]},
+    { year:[5,6], title:'转管理的诱惑', desc:'领导问你愿不愿意带团队。工资涨20%，但从此告别一线。', opts:[
+      {text:'接受！终于可以不当工具人了', network:10, skill:-5, happy:5},
+      {text:'再等等，我还想多做几年业务', skill:5, happy:-3},
+      {text:'提出独立带新业务线的方案', skill:8, network:3}
+    ]},
+    { year:[6,7], title:'数据造假的诱惑', desc:'季度目标差了15%。有同事建议把下个季度的单子提前签了。', opts:[
+      {text:'不行，底线不能破', happy:5, network:-3},
+      {text:'灰色地带操作一下', happy:-8, network:-5},
+      {text:'跟领导坦诚沟通目标差距', network:3, happy:-5}
+    ]},
+    { year:[7,8], title:'行业寒冬', desc:'整个行业都在收缩预算。客户的采购冻结了。你的奖金悬了。', opts:[
+      {text:'转型to B服务，找新方向', skill:10, happy:-5},
+      {text:'深耕老客户，保住基本盘', network:5, happy:-3},
+      {text:'趁机休息一下，调整心态', happy:8, health:5}
+    ]},
+    { year:[8,9], title:'创业的种子', desc:'有个前同事找你合伙创业。他的想法很疯狂，但你觉得——好像有点意思。', opts:[
+      {text:'热血上头，加入！', skill:-5, network:5, happy:8},
+      {text:'投资一点钱，但不辞职', happy:3, skill:3},
+      {text:'理性分析后婉拒', happy:-3, skill:5}
+    ]},
+    { year:[9,10], title:'业绩封王', desc:'十年了。你累计签过的合同金额，够买一栋楼了。虽然你连首付都凑不齐。', opts:[
+      {text:'写了一本《销售实战手册》', skill:8, happy:8},
+      {text:'组织了一次大型客户答谢会', network:10, happy:5},
+      {text:'申请了VP的竞聘', skill:5, network:5}
+    ]},
+  ],
+  state: [
+    { year:[1,2], title:'第一份材料', desc:'领导让你写一份汇报材料。你写了三天，改了八稿，最后用的还是领导自己改的版本。', opts:[
+      {text:'认真总结学习，下次写得更好', skill:8, happy:-5},
+      {text:'研究领导的风格，投其所好', network:5, skill:3},
+      {text:'心态放平，反正是份稳定工作', happy:8, skill:-3}
+    ]},
+    { year:[1,2], title:'迎检来了', desc:'上面要来检查了。整个部门开始疯狂补材料、打扫卫生、排练汇报流程。', opts:[
+      {text:'主动承担最难的材料整理', skill:5, health:-8, happy:-5},
+      {text:'做好自己分内的就行', happy:3, skill:2},
+      {text:'趁乱摸鱼，反正检查的不是我', happy:5, network:-3}
+    ]},
+    { year:[2,3], title:'饭局文化', desc:'部门聚餐。领导举杯说"大家随意"，但你注意到——不喝的那个人已经很久没升过了。', opts:[
+      {text:'喝！舍命陪领导', health:-8, network:8, happy:-5},
+      {text:'以茶代酒，真诚沟通', network:3, happy:3},
+      {text:'身体不舒服，先走一步', health:3, network:-8, happy:5}
+    ]},
+    { year:[3,4], title:'职称评定', desc:'今年的职称评定开始了。名额只有2个，但符合条件的有8个人。', opts:[
+      {text:'全力准备材料，争取评上', skill:8, happy:-8},
+      {text:'找关系打听一下内部情况', network:5, happy:-3},
+      {text:'今年不评了，让给年轻人', happy:5, skill:-3}
+    ]},
+    { year:[4,5], title:'关系户', desc:'新来了一个同事，是某领导的亲戚。啥也不会，但坐的位置比你好。', opts:[
+      {text:'心态放平，做好自己的事', happy:3, skill:3},
+      {text:'主动教TA，搞好关系', network:8, happy:-3},
+      {text:'向组织反映不公平', network:-10, skill:5, happy:-8}
+    ]},
+    { year:[5,6], title:'基层锻炼', desc:'组织安排你去基层挂职锻炼半年。条件艰苦，但回来有提拔机会。', opts:[
+      {text:'去！这是机会', health:-10, skill:10, network:5},
+      {text:'找理由推掉，家里有困难', happy:5, network:-5},
+      {text:'去了但想办法轻松度过', happy:3, skill:3}
+    ]},
+    { year:[6,7], title:'站队选择', desc:'两个副局在竞争局长位置，都来拉拢你。你夹在中间，左右为难。', opts:[
+      {text:'选一个，押宝到底', network:8, happy:-10},
+      {text:'两个都不得罪，做好本职', network:3, happy:-3},
+      {text:'向组织靠拢，只站组织的队', skill:5, network:-3, happy:3}
+    ]},
+    { year:[7,8], title:'写材料到凌晨', desc:'上级临时要一份汇报，明天早上就要。你已经连续加班一周了。', opts:[
+      {text:'硬着头皮写完', skill:5, health:-12, happy:-10},
+      {text:'写个框架，让同事帮忙完善', network:5, skill:3},
+      {text:'跟领导说需要更多时间', happy:-3, network:-5}
+    ]},
+    { year:[8,9], title:'巡视组来了', desc:'巡视组进驻了。所有人的材料都要被翻一遍。你突然想起去年那笔不太对的报销。', opts:[
+      {text:'主动说明情况，坦白从宽', happy:-5, skill:3},
+      {text:'祈祷别被查到', happy:-10, health:-5},
+      {text:'提前把材料整理好，没问题的', skill:5, happy:-3}
+    ]},
+    { year:[9,10], title:'十年老科员', desc:'你看着镜子里的自己，头发少了一半，职级升了一级。值吗？也许吧。', opts:[
+      {text:'感恩组织培养，继续奋斗', skill:5, happy:3},
+      {text:'写了一篇《体制内生存指南》发在知乎', skill:5, happy:8},
+      {text:'盘算着还能再熬几年就退休', happy:5, skill:-3}
+    ]},
+  ],
+  mnc: [
+    { year:[1,2], title:'First Day at Work', desc:'你穿着新买的西装走进写字楼。前台用英文问候你，你回了一句"Fine, thank you"。', opts:[
+      {text:'恶补商务英语，每天听BBC', skill:10, happy:-5},
+      {text:'反正同事们也讲中文', happy:5, skill:-3},
+      {text:'直接用翻译软件，效率至上', skill:3, happy:3}
+    ]},
+    { year:[1,2], title:'PPT地狱', desc:'老板要求一份"简洁有力"的50页PPT。你花了一周调格式、对齐、配色。', opts:[
+      {text:'做出一份惊艳全场的PPT', skill:8, health:-10, happy:-5},
+      {text:'用模板快速搞定，内容为王', skill:3, happy:3},
+      {text:'花钱找外包做，自己聚焦内容', happy:-3}
+    ]},
+    { year:[2,3], title:'出差到凌晨', desc:'连续出差三周，住了五家酒店。你已经分不清自己在哪个城市了。', opts:[
+      {text:'咬牙坚持，出差费真香', skill:5, health:-12, happy:-8},
+      {text:'申请调回总部', happy:5, skill:-3},
+      {text:'在出差中寻找当地美食，苦中作乐', happy:5, health:-3}
+    ]},
+    { year:[3,4], title:'文化冲突', desc:'总部发来一封邮件，抄送了20个人。内容只有两行字，但你读了三遍也没理解什么意思。', opts:[
+      {text:'约个电话会议当面问清楚', network:5, skill:3},
+      {text:'找翻译好的同事帮你解读', network:3, happy:-3},
+      {text:'写一封更看不懂的邮件回复', happy:8, network:-3}
+    ]},
+    { year:[4,5], title:'客户汇报', desc:'大客户不满意方案，当着老板的面说"这个方案不够专业"。老板看向你。', opts:[
+      {text:'现场修改方案，展示专业能力', skill:10, health:-5, happy:-8},
+      {text:'承认不足，承诺48小时内出新版', network:3, happy:-5},
+      {text:'用数据和案例反驳客户', skill:5, network:-3}
+    ]},
+    { year:[5,6], title:'被挖角了', desc:'猎头打来电话，一家中国互联网公司开双倍薪水挖你。', opts:[
+      {text:'跳！钱多事少离家近', salary:2, skill:-5, happy:5},
+      {text:'留在外企，稳定+title', happy:3, skill:5},
+      {text:'跟领导谈，要求加薪+晋升', network:5, happy:-3}
+    ]},
+    { year:[6,7], title:'全球化项目', desc:'你被选入一个跨国项目组。团队成员来自5个国家，时区跨越12小时。', opts:[
+      {text:'全力投入，锻炼国际视野', skill:10, health:-10, happy:-5},
+      {text:'做好分内事就行，不主动揽活', happy:3, skill:3},
+      {text:'主动承担跨时区协调工作', network:10, health:-8}
+    ]},
+    { year:[7,8], title:'Headcount冻结', desc:'总部宣布全球Headcount冻结。你申请的HC被毙了，但活还是那些活。', opts:[
+      {text:'一个人干三个人的活', skill:5, health:-15, happy:-12},
+      {text:'重新定义优先级，做最重要的事', skill:8, happy:-3},
+      {text:'开始更新LinkedIn', happy:-5, network:5}
+    ]},
+    { year:[8,9], title:'VP走了', desc:'你的VP突然离职了。新VP是从对手公司空降来的，风格完全不同。', opts:[
+      {text:'适应新风格，展现价值', network:5, skill:5},
+      {text:'保持低调，先观察', happy:-3, skill:3},
+      {text:'趁乱扩大自己的影响力', network:8, happy:-5}
+    ]},
+    { year:[9,10], title:'十年外企人', desc:'你的英文邮件写得比中文好了。你的PPT做得可以收费了。但你已经不知道自己到底会什么了。', opts:[
+      {text:'申请Partner或Director', skill:5, network:8, happy:-3},
+      {text:'回国企/创业，换个活法', happy:5, skill:-3},
+      {text:'写了一本《外企生存指南》', skill:8, happy:8}
+    ]},
+  ],
+  startup: [
+    { year:[1,2], title:'找到合伙人', desc:'你在网上发了找合伙人的帖子，来了三个候选人。一个有技术没时间，一个有时间没钱，一个什么都没有但很热情。', opts:[
+      {text:'选有技术的那个，兼职也行', skill:5, network:5, happy:-5},
+      {text:'选热情的那个，态度最重要', network:3, happy:5},
+      {text:'自己干算了，不找合伙人了', skill:8, health:-10, happy:-8}
+    ]},
+    { year:[1,2], title:'第一个产品', desc:'你花三个月做出了MVP。上线第一天，除了你妈没人用。', opts:[
+      {text:'疯狂推广，地推+社群', skill:5, network:8, health:-8},
+      {text:'分析数据，找到核心问题', skill:10, happy:-3},
+      {text:'改方向，这个赛道不行', skill:5, happy:-5}
+    ]},
+    { year:[2,3], title:'融资焦虑', desc:'账上只剩3个月的钱了。你开始疯狂见投资人。第20个投资人说"再看看"。', opts:[
+      {text:'继续见，总会有一个投的', network:8, health:-12, happy:-10},
+      {text:'先做盈利，不靠融资活', skill:8, happy:-5},
+      {text:'考虑卖掉公司', happy:-10, skill:-5}
+    ]},
+    { year:[3,4], title:'拿到了天使轮', desc:'终于有个投资人说"投"。你激动得差点哭出来。钱到账的那天，你请全团队吃了顿火锅。', opts:[
+      {text:'招人扩张，快速做大', skill:5, network:5, happy:8},
+      {text:'精打细算，这笔钱要花2年', skill:8, happy:3},
+      {text:'先给自己发一个月工资', happy:10}
+    ]},
+    { year:[4,5], title:'核心员工离职', desc:'你最重要的技术负责人说要走了。他去了一家大厂，薪水翻了三倍。', opts:[
+      {text:'加薪挽留', happy:-8, skill:3},
+      {text:'祝福他，然后赶紧招人', network:5, skill:-3, happy:-5},
+      {text:'自己顶上，继续干', skill:10, health:-12}
+    ]},
+    { year:[5,6], title:'产品终于爆发了', desc:'某个KOL无意中推荐了你的产品。下载量一夜暴涨10倍。服务器差点崩了。', opts:[
+      {text:'趁热打铁，疯狂迭代', skill:10, health:-10, happy:8},
+      {text:'稳住节奏，别被冲昏头', skill:5, happy:5},
+      {text:'赶紧融资，趁估值高的时候', network:8, happy:3}
+    ]},
+    { year:[6,7], title:'A轮融资', desc:'投资人终于从"再看看"变成了"我投"。但TA要求30%的股份和一票否决权。', opts:[
+      {text:'接受，先活下去', happy:-5, skill:3},
+      {text:'谈判，最多给15%', network:5, happy:-3},
+      {text:'找其他投资人比价', network:8, happy:-5}
+    ]},
+    { year:[7,8], title:'996的代价', desc:'连续加班三个月后，你在工位上晕倒了。救护车来的时候，你手里还握着手机。', opts:[
+      {text:'住院一周，然后回来继续', health:-20, happy:-10},
+      {text:'强制休息，学会放手', health:5, happy:8, skill:3},
+      {text:'把工作交给团队，转型做战略', skill:5, network:5}
+    ]},
+    { year:[8,9], title:'被大厂看上了', desc:'一个大厂提出收购你的公司。价格诱人，但你觉得——再等等也许能更大。', opts:[
+      {text:'卖了！财务自由', happy:10, skill:-5},
+      {text:'不卖，我还能做得更大', happy:-5, skill:8, health:-10},
+      {text:'反向谈判，要更多钱和title', network:5, happy:3}
+    ]},
+    { year:[9,10], title:'创业十年', desc:'回头看，你从一个人变成了几十人的团队。中间差点死掉三次。但你活下来了。', opts:[
+      {text:'写了一篇《创业十年》发在朋友圈', happy:10, network:8},
+      {text:'准备IPO或下一轮融资', skill:8, network:5},
+      {text:'休息一下，想想下一步', happy:8, health:5}
+    ]},
+  ],
+  gig: [
+    { year:[1,2], title:'第一个甲方', desc:'你接到了人生中第一个付费单。甲方说"很简单，随便做做就行"。你信了。', opts:[
+      {text:'全力以赴，做出超预期的作品', skill:10, health:-8, happy:-3},
+      {text:'按"随便做做"的标准交付', happy:5, skill:-3},
+      {text:'先签合同再动手，避免扯皮', skill:3, network:3}
+    ]},
+    { year:[1,2], title:'收款困难', desc:'做完了甲方说"效果不错，先欠着"。这已经是第三个拖欠尾款的客户了。', opts:[
+      {text:'催！疯狂催！打到他接电话', network:-5, happy:-8},
+      {text:'以后只接受预付50%', skill:5, happy:-3},
+      {text:'算了，就当交个朋友', happy:-5, network:3}
+    ]},
+    { year:[2,3], title:'甲方需求变更', desc:'第15次改需求了。最初的"简约风"变成了"五彩斑斓的黑"。', opts:[
+      {text:'按合同来，超出范围另收费', skill:5, network:-3, happy:3},
+      {text:'改到甲方满意为止', health:-10, happy:-10, skill:3},
+      {text:'礼貌地终止合作', happy:5, skill:-3}
+    ]},
+    { year:[3,4], title:'全职的诱惑', desc:'前同事在大厂当总监，问你要不要来。年薪翻倍，还有期权。', opts:[
+      {text:'回去上班！稳定的真香', happy:8, skill:-5},
+      {text:'继续自由职业，自由无价', happy:5, skill:5},
+      {text:'兼职做，两边都不得罪', skill:3, health:-8}
+    ]},
+    { year:[4,5], title:'作品集危机', desc:'你发现自己的作品集越来越杂。什么都会一点，但什么都不精通。', opts:[
+      {text:'专注一个方向，深耕下去', skill:10, happy:-5},
+      {text:'做"全能型选手"也不错', happy:3, skill:-3},
+      {text:'花钱报个大师班系统学', skill:8, happy:-3}
+    ]},
+    { year:[5,6], title:'接了个大单', desc:'一个品牌方给了你一个大单。预算够你半年不开张。但deadline只有两周。', opts:[
+      {text:'拼了！这是翻身的机会', skill:8, health:-15, happy:5},
+      {text:'找几个freelancer一起做', network:8, skill:3},
+      {text:'谈延期，质量比速度重要', skill:5, happy:3}
+    ]},
+    { year:[6,7], title:'开了工作室', desc:'你终于从单打独斗变成了一个小团队。三个人，一间共享办公空间。', opts:[
+      {text:'招兵买马，做大团队', network:8, skill:5, health:-8},
+      {text:'保持小而美，控制成本', happy:5, skill:3},
+      {text:'专注品牌化，做个人IP', skill:8, happy:8}
+    ]},
+    { year:[7,8], title:'税务噩梦', desc:'自由职业三年了，你终于搞明白了什么叫"劳务报酬""经营所得""个税申报"。头大。', opts:[
+      {text:'请个专业会计', happy:5, skill:3},
+      {text:'自己研究政策，省了不少钱', skill:5, happy:-5},
+      {text:'注册公司，变成正规军', skill:8, network:3}
+    ]},
+    { year:[8,9], title:'行业寒冬', desc:'经济不好，品牌方都在砍预算。你的客户从20个缩减到了8个。', opts:[
+      {text:'降价保客户', happy:-8, skill:-3},
+      {text:'转型线上课程/知识付费', skill:8, happy:5},
+      {text:'趁机休息，存够的钱够撑一年', happy:3, health:5}
+    ]},
+    { year:[9,10], title:'工作室主理人', desc:'你的工作室已经有了稳定的客户群和口碑。虽然不大，但——这是你自己的事。', opts:[
+      {text:'继续扩大，目标年入百万', skill:5, network:5, happy:-3},
+      {text:'保持现状，享受工作生活平衡', happy:10, skill:3},
+      {text:'出一本书《自由职业的艺术》', skill:8, happy:8}
+    ]},
+  ]
+};
+
+// ====== DATA: Random Events (Shared) ======
+var RANDOM_EVENTS = [
+  { emoji:'🏥', title:'家人生病', desc:'妈妈打电话说身体不好需要住院。她让你别担心，但你知道手术费不便宜。', weight:2, opts:[
+    {text:'拿出积蓄安排最好的治疗', money:-50000, health:-5, happy:-5},
+    {text:'转2万让亲戚帮忙照顾', money:-20000, happy:-3},
+    {text:'请假回去陪护一周', money:-8000, health:-3, happy:5}
+  ]},
+  { emoji:'💸', title:'意外之财', desc:'你随手买的东西居然中奖了。不记得什么时候买的，但奖品是真的。', weight:2, opts:[
+    {text:'全部存起来', money:15000, happy:5},
+    {text:'请朋友吃顿好的', money:5000, network:5, happy:3},
+    {text:'投资自己，报个课程', money:-3000, skill:8, happy:3}
+  ]},
+  { emoji:'🐱', title:'捡了一只流浪猫', desc:'下班路上在单元门口看到一只小猫缩在纸箱里。眼睛还没睁开。', weight:1, opts:[
+    {text:'带回家养着', money:-3000, happy:10, health:-2},
+    {text:'送到宠物救助站', money:-200, happy:3},
+    {text:'放回去，自己都养不活', happy:-3}
+  ]},
+  { emoji:'🎂', title:'爸妈催婚了', desc:'过年回家，七大姑八大姨轮番上阵："你也老大不小了！"', weight:2, opts:[
+    {text:'认真聊聊自己的想法', happy:3, skill:2},
+    {text:'打哈哈转移话题', happy:-3},
+    {text:'相亲APP充个会员试试', money:-500, happy:-5, network:3}
+  ]},
+  { emoji:'📱', title:'手机摔碎屏了', desc:'上厕所刷手机手一滑，屏幕碎成蜘蛛网。换个屏还是换新手机？', weight:2, opts:[
+    {text:'换块原厂屏幕', money:-1500, happy:-3},
+    {text:'买个新手机', money:-5000, happy:3},
+    {text:'贴个钢化膜凑合用', money:-50, happy:-5}
+  ]},
+  { emoji:'🦷', title:'牙疼得睡不着', desc:'智齿发炎了，半夜疼得直打滚。牙科挂号要排到下周三。', weight:1, opts:[
+    {text:'挂急诊牙科', money:-2500, health:3},
+    {text:'忍到预约号', money:-800, health:-5},
+    {text:'去私立诊所当天搞定', money:-5000, health:5}
+  ]},
+  { emoji:'🌧️', title:'暴雨淹了出租屋', desc:'台风天暴雨，你的负一层出租屋水漫进来了。鞋和杂物泡了汤。', weight:2, opts:[
+    {text:'找房东索赔', money:2000, network:3},
+    {text:'自己收拾', money:-1000, happy:-5},
+    {text:'趁机换个更好的房子', money:-6000, happy:5}
+  ]},
+  { emoji:'🎂', title:'年终奖发了', desc:'今年公司业绩超预期，多发了两个月年终奖。同事群炸了锅。', weight:2, opts:[
+    {text:'全部存起来', money:30000, happy:5},
+    {text:'奖励自己一趟旅行', money:10000, happy:10, health:5},
+    {text:'投资学习，报个MBA', money:-15000, skill:10}
+  ]},
+  { emoji:'💔', title:'失恋了', desc:'在一起三年的TA说"我们不合适"。你在被窝里哭了一晚上。', weight:1, opts:[
+    {text:'找朋友倾诉，大醉一场', money:-2000, network:5, happy:-5},
+    {text:'把悲伤化为工作的动力', skill:8, happy:-8, health:-3},
+    {text:'开始健身，变成更好的自己', health:8, happy:3, skill:3}
+  ]},
+  { emoji:'🎰', title:'朋友圈都在炒股', desc:'行情好，连你那个从来不投资的同学都赚了30%。', weight:1, opts:[
+    {text:'拿1万试水', money: Math.random()>0.5 ? 5000 : -3000, happy:-3},
+    {text:'系统学习投资知识', money:-2000, skill:5},
+    {text:'不看朋友圈最省心', happy:5}
+  ]},
+  { emoji:'🎓', title:'同学聚会', desc:'大学班长组织同学会。人均600。看着群里接龙——去的都是混得好的。', weight:1, opts:[
+    {text:'参加！不能输面子', money:-2000, network:5, happy:-3},
+    {text:'不去，省钱', happy:-3},
+    {text:'私聊班长说下次约', happy:0}
+  ]},
+  { emoji:'🏃', title:'体检报告亮红灯', desc:'年度体检，报告上好几个指标偏高。医生说要注意休息和饮食。', weight:2, opts:[
+    {text:'开始规律运动', health:10, happy:3, skill:2},
+    {text:'买一堆保健品', money:-3000, health:3},
+    {text:'忽略它，年轻扛得住', health:-8, happy:-3}
+  ]},
+  { emoji:'🐱', title:'养了一只猫', desc:'终于下定决心养了一只橘猫。取名叫"工资"——因为花了你很多。', weight:1, opts:[
+    {text:'认真当铲屎官', money:-5000, happy:15, health:-2},
+    {text:'让室友帮忙养', happy:5},
+    {text:'拍照发朋友圈收获100个赞', happy:8, network:3}
+  ]},
+  { emoji:'🎸', title:'组了个乐队', desc:'周末跟朋友组了个业余乐队。你是鼓手，因为只有你会敲东西。', weight:1, opts:[
+    {text:'认真排练，争取上台表演', skill:5, happy:8, health:-3},
+    {text:'玩玩就好，开心最重要', happy:10},
+    {text:'发现自己五音不全，退出了', happy:-3, skill:2}
+  ]},
+  { emoji:'📺', title:'追剧上头了', desc:'新出了一部剧，你连续三天看到凌晨三点。领导说你最近精神不好。', weight:1, opts:[
+    {text:'戒剧！工作重要', skill:3, happy:-8},
+    {text:'边追边工作，一心二用', skill:-5, happy:5, health:-3},
+    {text:'承认自己是追剧废物', happy:3}
+  ]},
+  { emoji:'💰', title:'接了个私活', desc:'前同事找你做个外包项目，预算2万，工期两周。', weight:1, opts:[
+    {text:'接了，加班做', money:20000, skill:5, health:-10},
+    {text:'推了，周末要休息', happy:5, health:3},
+    {text:'接了但找了人帮忙分摊', money:8000, network:3, skill:3}
+  ]},
+  { emoji:'🏠', title:'搬家了', desc:'租的房子到期，房东涨价30%。你决定搬到远一点但便宜很多的地方。', weight:2, opts:[
+    {text:'搬到郊区，通勤时间翻倍', money:5000, health:-5, happy:-8},
+    {text:'咬牙续租，生活质量不能降', money:-8000, happy:3},
+    {text:'找人合租，分摊房租', money:3000, network:3, happy:-3}
+  ]},
+];
+
+// ====== DATA: Endings ======
+var ENDINGS = [
+  // Self-deprecating endings (Impact boosters - the sharing engine)
+  { id:'pie_master', emoji:'🫓', name:'画饼大师', track:null, desc:'你职级很高但人脉为零。年终述职时，台下只有HR在打哈欠。你画的饼，连自己都不信了。', theme:'red', condition:function(s){ return s.rankIdx >= 2 && s.network <= 40; } },
+  { id:'corporate_slave', emoji:'🦥', name:'社畜の日常', track:null, desc:'你用十年证明了一件事：你的存在感还不如公司饮水机。每天加班到十点，老板说你\"不够努力\"。', theme:'gray', condition:function(s){ return s.health <= 25 && s.year >= 5; } },
+  { id:'leek', emoji:'🥬', name:'韭菜本菜', track:null, desc:'你在朋友圈发了句\"还行\"。没人点赞。十年存款不够买一平米。但你学会了割自己。', theme:'green', condition:function(s){ return (s.money <= 0 || (s.money < 8000 && s.happy < 50)) && s.year >= 5; } },
+  // Tech endings
+  { id:'emperor', emoji:'🏆', name:'打工皇帝', track:'tech', desc:'你用十年证明了，打工也能打出一片天。', theme:'gold', condition:function(s){ return s.rankIdx>=4 && s.salary>=15000; } },
+  { id:'old_driver', emoji:'😎', name:'职场老司机', track:'tech', desc:'你找到了工作和生活的平衡点。虽然不是最高的，但你每天笑着下班。', theme:'blue', condition:function(s){ return s.rankIdx>=3 && s.health>=60; } },
+  { id:'slacker_pro', emoji:'🐟', name:'佛系咸鱼', track:'tech', desc:'你选择了不卷。同事说你没追求，但你每天准时下班撸猫。', theme:'green', condition:function(s){ return s.happy>=75 && s.rankIdx<=2; } },
+  { id:'burnout', emoji:'💀', name:'过劳战士', track:'tech', desc:'你用命换来了升职加薪。现在你有时间花钱治病了。', theme:'red', condition:function(s){ return s.health<30 && s.rankIdx>=3; } },
+  { id:'tech_god', emoji:'🌟', name:'技术大牛', track:'tech', desc:'你的代码能跑，你的演讲能打，你是团队的灵魂。', theme:'purple', condition:function(s){ return s.skill>=85 && s.rankIdx>=3; } },
+  // Biz endings
+  { id:'sales_king', emoji:'👑', name:'销售封王', track:'biz', desc:'你签过的单子够买一栋楼了。虽然你连首付都凑不齐。', theme:'gold', condition:function(s){ return s.rankIdx>=3 && s.network>=70; } },
+  // State endings
+  { id:'bureaucrat', emoji:'🏛️', name:'体制之光', track:'state', desc:'你用十年证明了，体制内也能做出一番事业。', theme:'blue', condition:function(s){ return s.rankIdx>=3; } },
+  // MNC endings
+  { id:'partner', emoji:'🌐', name:'Partner之路', track:'mnc', desc:'你从Analyst做到了Partner。PPT做得可以收费了。', theme:'purple', condition:function(s){ return s.rankIdx>=4; } },
+  // Startup endings
+  { id:'ipo', emoji:'🚀', name:'上市敲钟', track:'startup', desc:'十年后你站在纳斯达克，想起了那个在咖啡馆写BP的下午。', theme:'gold', condition:function(s){ return s.rankIdx>=5; } },
+  { id:'acquired', emoji:'💰', name:'被收购了', track:'startup', desc:'大厂花了一个亿买你的公司。你终于可以不看任何人脸色了。', theme:'green', condition:function(s){ return s.rankIdx>=4; } },
+  { id:'startup_dead', emoji:'🏚️', name:'创业烈士', track:'startup', desc:'你的创业以失败告终。但你在朋友圈写："感谢所有经历"。', theme:'gray', condition:function(s){ return s.rankIdx<=1 && s.year>=5; } },
+  // Gig endings
+  { id:'studio_owner', emoji:'🎨', name:'工作室主理人', track:'gig', desc:'你有了自己的团队，做着喜欢的事，收入还比上班高。', theme:'purple', condition:function(s){ return s.rankIdx>=3; } },
+  { id:'back_to_work', emoji:'🔄', name:'回归打工人', track:'gig', desc:'自由职业后你决定回去上班。原因：交社保太麻烦了。', theme:'gray', condition:function(s){ return s.rankIdx<=1 && s.happy<40; } },
+  { id:'lying_flat', emoji:'🌊', name:'躺平艺术家', track:'gig', desc:'你证明了，不卷也能活得很开心。虽然银行卡余额不太开心。', theme:'green', condition:function(s){ return s.happy>=80 && s.salary<8000; } },
+  // Universal endings
+  { id:'winner', emoji:'🎭', name:'人生赢家', track:null, desc:'你做到了大多数人做不到的事：有钱，有闲，还有朋友。', theme:'gold', condition:function(s){ return s.skill>=70 && s.network>=70 && s.health>=70 && s.happy>=70; } },
+  { id:'parallel', emoji:'💫', name:'平行宇宙的你', track:null, desc:'你活成了最普通的自己。但也许，这就是最好的结局。', theme:'blue', condition:function(s){ return s.skill>=35 && s.skill<=65 && s.network>=35 && s.network<=65 && s.health>=35 && s.health<=65; } },
+  // Hidden endings
+  { id:'cat_life', emoji:'🐱', name:'猫奴人生', track:null, desc:'你最大的成就是在工位上养了一只猫。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('catlovers')>=0 && s.happy>=70; }, hidden:true },
+  { id:'social_legend', emoji:'👻', name:'社恐传奇', track:null, desc:'你从来不和同事说话，但你的代码替你说了所有。', theme:'blue', condition:function(s){ return s._talents && s._talents.indexOf('shy')>=0 && s.skill>=85; }, hidden:true },
+  // Combo endings (rare — talent synergy triggers)
+  { id:'night_owl_boss', emoji:'🦉', name:'深夜CEO', track:null, desc:'你同时拥有了"夜猫子"和"卷王"天赋。白天开会，晚上写代码，凌晨复盘。你的日历App以为自己坏了。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('nightowl')>=0 && s._talents.indexOf('workaholic')>=0 && s.rankIdx>=3; }, hidden:true },
+  { id:'cat_boss', emoji:'😼', name:'猫系老板', track:null, desc:'你有"猫奴"天赋，养了三只猫，开了家公司专门做猫粮。员工都是猫。KPI是喵喵叫的次数。', theme:'purple', condition:function(s){ return s._talents && s._talents.indexOf('catlovers')>=0 && s._talents.indexOf('entrepreneur')>=0; }, hidden:true },
+  { id:'social_butterfly', emoji:'🦋', name:'社交蝴蝶', track:null, desc:'你有"社牛"和"锦鲤"双重天赋。人脉是你的超能力，运气是你的护城河。别人投简历，你投微信。', theme:'gold', condition:function(s){ return s._talents && s._talents.indexOf('socialite')>=0 && s._talents.indexOf('lucky')>=0 && s.network>=70; }, hidden:true },
+];
+
+// ====== DATA: Achievements ======
+var ACHIEVEMENTS = [
+  { id:'first_year', emoji:'🎓', name:'职场新人', desc:'完成第一年', check:function(s){ return s.year>=1; } },
+  { id:'five_years', emoji:'⭐', name:'五年之痒', desc:'完成五年', check:function(s){ return s.year>=5; } },
+  { id:'ten_years', emoji:'🏆', name:'十年老兵', desc:'完成十年', check:function(s){ return s.year>=10; } },
+  { id:'high_skill', emoji:'🧠', name:'技能天花板', desc:'技能达到90', check:function(s){ return s.skill>=90; } },
+  { id:'network_king', emoji:'👥', name:'社交天花板', desc:'人脉达到90', check:function(s){ return s.network>=90; } },
+  { id:'health_hero', emoji:'💪', name:'铁人', desc:'健康始终80+', check:function(s){ return s.health>=80 && s.year>=5; } },
+  { id:'burnout_badge', emoji:'💀', name:'赛博植物人', desc:'健康降到10以下', check:function(s){ return s.health<=10; } },
+  { id:'happy_soul', emoji:'😊', name:'幸福达人', desc:'满足度达到90', check:function(s){ return s.happy>=90; } },
+  { id:'salary_10w', emoji:'💰', name:'月薪十万', desc:'月薪超过10万', check:function(s){ return s.salary>=100000; } },
+  { id:'talent_collector', emoji:'🎨', name:'天赋收藏家', desc:'解锁所有天赋', check:function(s){ return false; } },
+  { id:'all_endings', emoji:'📖', name:'结局大师', desc:'解锁所有结局', check:function(s){ return false; } },
+];
+
+// ====== Game State ======
+var state = {};
+var _selectedTrack = null;
+var _personaSelections = {};
+var _talentSelections = [];
+var _usedSceneEvents = {};
+var _yearlyRecords = [];
+var _shownRandomEvents = [];
+
+function initState() {
+  state = {
+    track: null, year: 0, salary: 0, rankIdx: 0,
+    skill: 30, network: 20, health: 80, happy: 60,
+    money: 0, persona: null, talents: [],
+    _shownEvents: {}, _shownRandom: [], _yearlyRecords: [],
+    _playEnded: false, _endingSaved: false,
+    _promoCooldown: 0, _playStartTime: null
+  };
+}
+
+// ====== Balance Bar / Top Bar ======
+function updateTopBar() {
+  var yl = document.getElementById('yearLabel');
+  var ab = document.getElementById('attrBar');
+  if (state.year === 0) {
+    yl.textContent = '准备开始';
+    ab.style.display = 'none';
+    return;
+  }
+  ab.style.display = 'flex';
+  yl.textContent = '第' + state.year + '年';
+  var track = CAREER_TRACKS[state.track];
+  var rankLabel = track ? (track.ladderShort[state.rankIdx] || 'L1') : '—';
+  document.getElementById('attrSalary').textContent = state.salary >= 10000 ? Math.round(state.salary/10000) + 'W' : state.salary + '';
+  document.getElementById('attrRank').textContent = rankLabel;
+  document.getElementById('attrSkill').textContent = state.skill;
+  document.getElementById('attrNetwork').textContent = state.network;
+  document.getElementById('attrHealth').textContent = state.health;
+  document.getElementById('attrHappy').textContent = state.happy;
+  document.getElementById('barSalary').style.width = Math.min(100, state.salary / 3000) + '%';
+  document.getElementById('barSkill').style.width = state.skill + '%';
+  document.getElementById('barNetwork').style.width = state.network + '%';
+  document.getElementById('barHealth').style.width = state.health + '%';
+  document.getElementById('barHappy').style.width = state.happy + '%';
+}
+
+// ====== Setup Step 1: Choose Career Track ======
+function showIntro() {
+  // Check for challenge referral
+  var _params = new URLSearchParams(window.location.search);
+  var _from = _params.get('from');
+  initState();
+  window.scrollTo(0, 0);
+  updateTopBar();
+  if (_from) { setTimeout(function(){ toast('🔥 ' + _from + ' 向你发起了挑战！测测你的职场结局？'); }, 500); }
+  // Parse rival stats from challenge URL
+  var _rv = _params.get('rv');
+  if (_rv) {
+    var _parts = _rv.split(',');
+    state._rival = {
+      name: _from || '挑战者',
+      skill: parseInt(_parts[0]) || 50,
+      network: parseInt(_parts[1]) || 50,
+      health: parseInt(_parts[2]) || 50,
+      happy: parseInt(_parts[3]) || 50,
+      salary: parseInt(_parts[4]) || 5000,
+      emoji: decodeURIComponent(_parts[5] || ''),
+      endingName: decodeURIComponent(_parts[6] || ''),
+      talents: _parts[7] ? decodeURIComponent(_parts[7]).split('|') : []
+    };
+  } else {
+    state._rival = null;
+  }
+  var main = document.getElementById('mainContent');
+  var html = '<div class="setup-section"><div class="setup-header"><div class="setup-title">平行offer</div><div class="setup-subtitle">选择你的职业路线，开启一段职场人生</div></div><div class="track-grid">';
+  var keys = Object.keys(CAREER_TRACKS);
+  for (var i = 0; i < keys.length; i++) {
+    var t = CAREER_TRACKS[keys[i]];
+    html += '<div class="track-card" onclick="selectTrack(\'' + t.id + '\', this)">';
+    html += '<div class="tc-emoji">' + t.emoji + '</div>';
+    html += '<div class="tc-label">' + t.label + '</div>';
+    html += '<div class="tc-desc">' + t.desc + '</div>';
+    html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<div style="height:16px"></div>';
+  html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
+  html += '<div class="entry-bar" style="margin-top:12px">';
+  html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
+  html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
+  html += '</div>';
+  html += '</div>';
+  main.innerHTML = html;
+}
+
+function selectTrack(id, el) {
+  _selectedTrack = id;
+  var cards = el.parentElement.querySelectorAll('.track-card');
+  cards.forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('step1Btn').disabled = false;
+}
+
+// ====== Setup Step 2: Persona ======
+function showSetupStep(step) {
+  var main = document.getElementById('mainContent');
+  if (step === 2) {
+    if (!_selectedTrack) { showIntro(); return; }
+    var dims = [
+      { key:'personality', label:'🧠 性格特质', desc:'面对选择时，你的第一反应是？', options:[
+        {id:'steady', label:'🧘 稳重型', desc:'三思后行', salaryMod:0.9, skillMod:0.8},
+        {id:'balanced', label:'⚖️ 均衡型', desc:'该冲就冲', salaryMod:1.0, skillMod:1.0},
+        {id:'bold', label:'🔥 进取型', desc:'干了再说', salaryMod:1.15, skillMod:1.2}
+      ]},
+      { key:'background', label:'🏡 家庭背景', desc:'选择你的起点', options:[
+        {id:'modest', label:'🌱 普通家庭', desc:'全靠自己', startMoney:5000},
+        {id:'middle', label:'🏠 小康之家', desc:'有些兜底', startMoney:30000},
+        {id:'wealthy', label:'🏰 优渥家庭', desc:'起步就有资本', startMoney:100000}
+      ]},
+      { key:'city', label:'🌆 所在城市', desc:'在哪儿开始？', options:[
+        {id:'t1', label:'🏙️ 一线', desc:'北上广深', salaryMod:1.3, expenseMod:1.2},
+        {id:'t2', label:'🏢 新一线', desc:'杭州成都', salaryMod:1.0, expenseMod:1.0},
+        {id:'t3', label:'🏘️ 二三线', desc:'节奏慢压力小', salaryMod:0.7, expenseMod:0.7}
+      ]}
+    ];
+    _personaSelections = {};
+    var html = '<div class="persona-section"><div class="persona-header"><div class="persona-title">🪪 配置个人属性</div><div class="persona-subtitle">这些选择会影响你的人生轨迹</div></div>';
+    for (var d = 0; d < dims.length; d++) {
+      var dim = dims[d];
+      html += '<div class="persona-dim"><div class="persona-dim-label">' + dim.label + '</div><div class="persona-dim-desc">' + dim.desc + '</div><div class="persona-options">';
+      for (var o = 0; o < dim.options.length; o++) {
+        var opt = dim.options[o];
+        html += '<div class="persona-card" data-dim="' + dim.key + '" data-id="' + opt.id + '" onclick="selectPersona(\'' + dim.key + '\', \'' + opt.id + '\', this)">';
+        html += '<div class="persona-card-label">' + opt.label + '</div>';
+        html += '<div class="persona-card-desc">' + opt.desc + '</div></div>';
+      }
+      html += '</div></div>';
+    }
+    html += '<div class="setup-back"><button onclick="showIntro()">← 返回重选职业</button></div>';
+    html += '<button class="confirm-btn" id="step2Btn" disabled onclick="showSetupStep(3)">下一步 → 抽天赋卡</button></div>';
+    main.innerHTML = html;
+    window._personaDims = dims;
+  } else if (step === 3) {
+    showTalentDraw();
+  }
+}
+
+function selectPersona(dim, id, el) {
+  _personaSelections[dim] = id;
+  var cards = el.parentElement.querySelectorAll('.persona-card');
+  cards.forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  var allDone = ['personality','background','city'].every(function(k) { return _personaSelections[k]; });
+  var btn = document.getElementById('step2Btn');
+  if (btn) btn.disabled = !allDone;
+}
+
+// ====== Setup Step 3: Talent Draw ======
+function showTalentDraw() {
+  var main = document.getElementById('mainContent');
+  // Draw 5 random talents
+  var pool = shuffle(TALENT_POOL).slice(0, 5);
+  window._drawnTalents = pool;
+  _talentSelections = [];
+  var html = '<div class="talent-section"><div class="talent-header"><div class="talent-title">✨ 天赋抽卡</div><div class="talent-subtitle">从5张天赋卡中选择3张，它们将影响你的职场人生</div></div>';
+  html += '<div class="talent-grid">';
+  for (var i = 0; i < pool.length; i++) {
+    var t = pool[i];
+    html += '<div class="talent-card" id="talent_' + t.id + '" onclick="toggleTalent(\'' + t.id + '\')">';
+    html += '<div class="tc-emoji">' + t.emoji + '</div>';
+    html += '<div class="tc-info">';
+    html += '<div class="tc-name">' + t.name + '</div>';
+    html += '<div class="tc-desc">' + t.desc + '</div>';
+    html += '<div class="tc-tag ' + t.cat + '">' + (t.cat === 'work' ? '职场天赋' : t.cat === 'life' ? '生活天赋' : '✨ 稀有天赋') + '</div>';
+    html += '</div></div>';
+  }
+  html += '</div>';
+  html += '<div class="talent-hint" id="talentHint">已选择 0/3 张天赋卡</div>';
+  html += '<div class="setup-back"><button onclick="showSetupStep(2)">← 返回重选属性</button></div>';
+  html += '<button class="confirm-btn" id="step3Btn" disabled onclick="startGame()">🎮 开始平行人生</button></div>';
+  main.innerHTML = html;
+}
+
+function toggleTalent(id) {
+  var idx = _talentSelections.indexOf(id);
+  if (idx >= 0) {
+    _talentSelections.splice(idx, 1);
+    document.getElementById('talent_' + id).classList.remove('selected');
+  } else {
+    if (_talentSelections.length >= 3) { toast('最多选择3张天赋卡'); return; }
+    _talentSelections.push(id);
+    document.getElementById('talent_' + id).classList.add('selected');
+  }
+  document.getElementById('talentHint').textContent = '已选择 ' + _talentSelections.length + '/3 张天赋卡';
+  var btn = document.getElementById('step3Btn');
+  if (btn) btn.disabled = _talentSelections.length !== 3;
+}
+
+// ====== Start Game ======
+function startGame() {
+  var track = CAREER_TRACKS[_selectedTrack];
+  if (!track) return;
+  state.track = _selectedTrack;
+  state.year = 1;
+  state.salary = track.salary;
+  state.rankIdx = 0;
+  state.skill = 30;
+  state.network = 20;
+  state.health = 80;
+  state.happy = 60;
+  state.money = 0;
+  state.talents = _talentSelections.slice();
+  state.persona = Object.assign({}, _personaSelections);
+  state._shownEvents = {};
+  state._shownRandom = [];
+  state._yearlyRecords = [];
+  state._playEnded = false;
+  state._endingSaved = false;
+  state._promoCooldown = 0;
+  state._undoSnapshot = null;
+  state._lastChoiceType = null;
+  state._playStartTime = Date.now();
+
+  // Apply persona bonuses
+  var bg = window._personaDims[1].options.find(function(o){ return o.id === _personaSelections.background; });
+  var city = window._personaDims[2].options.find(function(o){ return o.id === _personaSelections.city; });
+  var pers = window._personaDims[0].options.find(function(o){ return o.id === _personaSelections.personality; });
+  if (bg) state.money = bg.startMoney;
+  if (city) {
+    state.salary = Math.round(state.salary * city.salaryMod);
+  }
+  if (pers) {
+    state.salary = Math.round(state.salary * pers.salaryMod);
+    state.skill = Math.round(state.skill * pers.skillMod);
+  }
+
+  // Apply talent effects
+  for (var i = 0; i < state.talents.length; i++) {
+    var talent = TALENT_POOL.find(function(t){ return t.id === state.talents[i]; });
+    if (talent && talent.effect) {
+      if (talent.effect.healthPenalty) state.health += talent.effect.healthPenalty;
+      if (talent.effect.happyBonus) state.happy += talent.effect.happyBonus;
+    }
+  }
+  state.health = clamp(state.health, 0, 100);
+  state.happy = clamp(state.happy, 0, 100);
+
+  updateTopBar();
+  render();
+}
+
+// ====== Render Main Game ======
+function render() {
+  if (state.year > 10) {
+    showEnding();
+    return;
+  }
+  var main = document.getElementById('mainContent');
+  updateTopBar();
+
+  // Check for promotion year
+  var track = CAREER_TRACKS[state.track];
+  var isPromoYear = track.promoYears.indexOf(state.year) >= 0;
+  if (isPromoYear && state._promoCooldown <= 0 && state.rankIdx < track.ladder.length - 1) {
+    showPromotionChallenge();
+    return;
+  }
+  if (state._promoCooldown > 0) state._promoCooldown--;
+
+  // Normal year - show career scene
+  var events = CAREER_EVENTS[state.track] || [];
+  var pool = [];
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    if (e.year[0] <= state.year && e.year[1] >= state.year) {
+      if (!state._shownEvents[e.title]) pool.push(e);
+    }
+  }
+  if (pool.length === 0) {
+    // Fallback: any event from this track not yet shown
+    for (var j = 0; j < events.length; j++) {
+      if (!state._shownEvents[events[j].title]) pool.push(events[j]);
+    }
+  }
+  if (pool.length === 0) {
+    // All shown, reset
+    state._shownEvents = {};
+    pool = events.slice();
+  }
+  var event = pick(pool);
+  state._shownEvents[event.title] = true;
+  window._currentEvent = event;
+
+  // Build choices HTML
+  var choicesHtml = '';
+  for (var c = 0; c < event.opts.length; c++) {
+    var opt = event.opts[c];
+    var effectParts = [];
+    if (opt.skill) effectParts.push('🧠' + (opt.skill > 0 ? '+' : '') + opt.skill);
+    if (opt.network) effectParts.push('👥' + (opt.network > 0 ? '+' : '') + opt.network);
+    if (opt.health) effectParts.push('❤️' + (opt.health > 0 ? '+' : '') + opt.health);
+    if (opt.happy) effectParts.push('😊' + (opt.happy > 0 ? '+' : '') + opt.happy);
+    if (opt.money) effectParts.push('💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money));
+    choicesHtml += '<button class="choice-btn" onclick="chooseEvent(' + c + ')" id="eventOpt' + c + '">';
+    choicesHtml += opt.text;
+    if (effectParts.length > 0) {
+      choicesHtml += '<div class="choice-effect">' + effectParts.join('  ') + '</div>';
+    }
+    choicesHtml += '</button>';
+  }
+
+  var trackInfo = CAREER_TRACKS[state.track];
+  var rankName = trackInfo.ladder[state.rankIdx] || '新人';
+
+  var html = '<div class="scenario-card">';
+  html += '<span class="year-badge">第' + state.year + '年</span>';
+  html += '<span class="track-tag ' + trackInfo.tag + '">' + trackInfo.emoji + ' ' + rankName + '</span>';
+  html += '<div class="scene-text">' + _makeVariantText(event.desc) + '</div>';
+  html += '</div>';
+  html += '<div class="choices">' + choicesHtml + '</div>';
+  html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选</button></div>';
+  html += '<div class="restart-link"><button onclick="showIntro()">🔄 重新开始</button></div>';
+
+  main.innerHTML = html;
+}
+
+function chooseEvent(optIdx) {
+  var event = window._currentEvent;
+  if (!event) return;
+  var opt = event.opts[optIdx];
+
+  // Save snapshot for undo
+  state._undoSnapshot = {
+    skill: state.skill, network: state.network, health: state.health,
+    happy: state.happy, money: state.money, salary: state.salary,
+    rankIdx: state.rankIdx, year: state.year, eventTitle: event.title,
+    promoCooldown: state._promoCooldown || 0
+  };
+  state._lastChoiceType = 'event';
+
+  // Apply effects
+  if (opt.skill) state.skill = clamp(state.skill + getModifiedBonus(opt.skill, 'skill'), 0, 100);
+  if (opt.network) state.network = clamp(state.network + getModifiedBonus(opt.network, 'network'), 0, 100);
+  if (opt.health) state.health = clamp(state.health + getModifiedBonus(opt.health, 'health'), 0, 100);
+  if (opt.happy) state.happy = clamp(state.happy + getModifiedBonus(opt.happy, 'happy'), 0, 100);
+  if (opt.money) state.money += opt.money;
+  if (opt.salary) state.salary = Math.max(0, Math.round(state.salary * (1 + opt.salary * 0.1)));
+
+  // Natural aging
+  state.health -= (state.year >= 5 ? 4 : 2);
+
+  // Talent: zen adds happy
+  if (state.talents.indexOf('zen') >= 0) state.happy += 5;
+  if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
+  if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
+  if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
+
+  state.health = clamp(state.health, 0, 100);
+  state.happy = clamp(state.happy, 0, 100);
+
+  // Record year
+  if (!state._yearlyRecords.find(function(r){ return r.year === state.year; })) {
+    state._yearlyRecords.push({
+    year: state.year,
+    salary: state.salary,
+    rank: CAREER_TRACKS[state.track].ladderShort[state.rankIdx],
+    skill: state.skill,
+    network: state.network,
+    health: state.health,
+    happy: state.happy,
+    money: state.money,
+    event: event.title
+  });
+  }
+
+  // Maybe trigger random event
+  if (Math.random() < 0.35 && state.year <= 9) {
+    showRandomEvent();
+    return;
+  }
+
+  state.year++;
+  render();
+}
+
+function getModifiedBonus(base, type) {
+  var mod = 1;
+  for (var i = 0; i < state.talents.length; i++) {
+    var talent = TALENT_POOL.find(function(t){ return t.id === state.talents[i]; });
+    if (!talent || !talent.effect) continue;
+    if (type === 'skill' && talent.effect.skillBonus) mod += talent.effect.skillBonus;
+    if (type === 'skill' && talent.effect.skillPenalty) mod += talent.effect.skillPenalty;
+    if (type === 'network' && talent.effect.networkBonus) mod += talent.effect.networkBonus;
+    if (type === 'network' && talent.effect.networkPenalty) mod += talent.effect.networkPenalty;
+  }
+  return Math.round(base * Math.max(0, mod));
+}
+
+
+// ====== Undo/Regret System ======
+function undoLastChoice() {
+  if (!state._undoSnapshot) { toast('没有可以撤回的选择'); return; }
+  var snap = state._undoSnapshot;
+  state.skill = snap.skill;
+  state.network = snap.network;
+  state.health = snap.health;
+  state.happy = snap.happy;
+  state.money = snap.money;
+  state.salary = snap.salary;
+  state.rankIdx = snap.rankIdx;
+  state.year = snap.year;
+  state._promoCooldown = snap.promoCooldown || 0;
+  var wasRandom = state._lastChoiceType === 'random';
+  // Remove current event from dedup so same event re-appears
+  if (snap.eventTitle) {
+    if (wasRandom) {
+      var idx = state._shownRandom.indexOf(snap.eventTitle);
+      if (idx >= 0) state._shownRandom.splice(idx, 1);
+    } else {
+      delete state._shownEvents[snap.eventTitle];
+    }
+  }
+  state._undoSnapshot = null;
+  state._lastChoiceType = null;
+  // Re-show the same event
+  if (wasRandom) {
+    showRandomEvent();
+  } else {
+    render();
+  }
+  toast('↩️ 已撤回，重新选择');
+}
+
+
+// ====== Random Event ======
+function showRandomEvent() {
+  var pool = [];
+  for (var i = 0; i < RANDOM_EVENTS.length; i++) {
+    if (state._shownRandom.indexOf(RANDOM_EVENTS[i].title) < 0) pool.push(RANDOM_EVENTS[i]);
+  }
+  if (pool.length === 0) {
+    state._shownRandom = [];
+    pool = RANDOM_EVENTS.slice();
+  }
+  // Weighted random
+  var totalW = 0;
+  for (var j = 0; j < pool.length; j++) totalW += pool[j].weight;
+  var r = Math.random() * totalW;
+  var cumul = 0;
+  var event = pool[0];
+  for (var k = 0; k < pool.length; k++) {
+    cumul += pool[k].weight;
+    if (r <= cumul) { event = pool[k]; break; }
+  }
+  state._shownRandom.push(event.title);
+  window._currentRandomEvent = event;
+
+  var html = '<div class="scenario-card" style="border-left:3px solid #ff6b35">';
+  html += '<span class="track-tag" style="background:#ff6b35;color:#fff">🎲 随机事件</span>';
+  html += '<div class="scene-text">' + _makeVariantText(event.desc) + '</div></div>';
+  html += '<div class="choices">';
+  for (var c = 0; c < event.opts.length; c++) {
+    var opt = event.opts[c];
+    var parts = [];
+    if (opt.money) parts.push('💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money));
+    if (opt.skill) parts.push('🧠' + (opt.skill > 0 ? '+' : '') + opt.skill);
+    if (opt.network) parts.push('👥' + (opt.network > 0 ? '+' : '') + opt.network);
+    if (opt.health) parts.push('❤️' + (opt.health > 0 ? '+' : '') + opt.health);
+    if (opt.happy) parts.push('😊' + (opt.happy > 0 ? '+' : '') + opt.happy);
+    html += '<button class="choice-btn" onclick="chooseRandom(' + c + ')" id="randOpt' + c + '">';
+    html += opt.text;
+    if (parts.length > 0) html += '<div class="choice-effect">' + parts.join('  ') + '</div>';
+    html += '</button>';
+  }
+  html += '</div>';
+
+  html += '\u003cdiv class="undo-bar"\u003e\u003cbutton class="undo-btn" onclick="undoLastChoice()"\u003e\u21a9\ufe0f 后悔药 \u00b7 撤回重选\u003c/button\u003e\u003c/div\u003e';
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+function chooseRandom(optIdx) {
+  var event = window._currentRandomEvent;
+  if (!event) return;
+  var opt = event.opts[optIdx];
+
+  // Save snapshot for undo
+  state._undoSnapshot = {
+    skill: state.skill, network: state.network, health: state.health,
+    happy: state.happy, money: state.money, salary: state.salary,
+    rankIdx: state.rankIdx, year: state.year, eventTitle: event.title,
+    promoCooldown: state._promoCooldown || 0
+  };
+  state._lastChoiceType = 'random';
+
+  if (opt.money) state.money += opt.money;
+  if (opt.skill) state.skill = clamp(state.skill + opt.skill, 0, 100);
+  if (opt.network) state.network = clamp(state.network + opt.network, 0, 100);
+  if (opt.health) state.health = clamp(state.health + opt.health, 0, 100);
+  if (opt.happy) state.happy = clamp(state.happy + opt.happy, 0, 100);
+
+  // Record year for timeline
+  if (!state._yearlyRecords.find(function(r){ return r.year === state.year; })) {
+    state._yearlyRecords.push({
+    year: state.year,
+    salary: state.salary,
+    rank: CAREER_TRACKS[state.track].ladderShort[state.rankIdx],
+    skill: state.skill,
+    network: state.network,
+    health: state.health,
+    happy: state.happy,
+    money: state.money,
+    event: event.title + ' (随机)'
+  });
+  }
+
+  state.year++;
+  render();
+}
+
+// ====== Promotion Challenge ======
+function showPromotionChallenge() {
+  var track = CAREER_TRACKS[state.track];
+  var currentRank = track.ladder[state.rankIdx];
+  var nextRank = track.ladder[state.rankIdx + 1];
+  var main = document.getElementById('mainContent');
+
+  var html = '<div class="scenario-card promo-card">';
+  html += '<div class="promo-badge">🎯 晋升答辩</div>';
+  html += '<div class="scene-text">';
+  html += '第' + state.year + '年，你迎来了从 <strong>' + currentRank + '</strong> 晋升到 <strong>' + nextRank + '</strong> 的机会。';
+  html += '<br><br>你需要在三选一中做出决定：';
+  html += '</div></div>';
+  html += '<div class="choices">';
+  html += '<button class="choice-btn" onclick="promoChoice(0)">';
+  html += '🎯 拼一把冲晋升';
+  html += '<div class="choice-effect">高风险高回报 · 技能要求高</div></button>';
+  html += '<button class="choice-btn" onclick="promoChoice(1)">';
+  html += '🛡️ 稳住别浪';
+  html += '<div class="choice-effect">安全但错过机会</div></button>';
+  html += '<button class="choice-btn" onclick="promoChoice(2)">';
+  html += '🔄 骑驴找马';
+  html += '<div class="choice-effect">跳槽涨薪但职级可能重置</div></button>';
+  html += '</div>';
+
+
+  // Show required thresholds
+  var skillReq = 30 + state.rankIdx * 12;
+  var networkReq = 20 + state.rankIdx * 10;
+  html += '\u003cdiv style="text-align:center;margin-top:12px;padding:10px 16px;background:#f5f0e3;border-radius:12px;font-size:13px;color:#6b5d4f"\u003e';
+  html += '\u003cdiv style="margin-bottom:6px;font-weight:600"\u003e📋 晋升门槛\u003c/div\u003e';
+  html += '\u003cdiv\u003e需要 \u003cspan style="color:' + (state.skill >= skillReq ? '#2e7d32' : '#c62828') + '\u003e🧠' + skillReq + '\u003c/span\u003e';
+  html += ' \u0026amp; \u003cspan style="color:' + (state.network >= networkReq ? '#2e7d32' : '#c62828') + '\u003e👥' + networkReq + '\u003c/span\u003e';
+  html += ' \u003cspan style="color:#999;font-size:11px"\u003e(你: 🧠' + state.skill + ' 👥' + state.network + ')\u003c/span\u003e\u003c/div\u003e';
+  html += '\u003c/div\u003e';
+
+  html += '\u003cdiv class="undo-bar"\u003e\u003cbutton class="undo-btn" onclick="undoLastChoice()"\u003e\u21a9\ufe0f 后悔药 \u00b7 撤回重选\u003c/button\u003e\u003c/div\u003e';
+  main.innerHTML = html;
+}
+
+function promoChoice(choice) {
+  var track = CAREER_TRACKS[state.track];
+  var promoted = false;
+  var talentMod = 0;
+  for (var i = 0; i < state.talents.length; i++) {
+    var t = TALENT_POOL.find(function(tal){ return tal.id === state.talents[i]; });
+    if (t && t.effect && t.effect.promoBonus) talentMod += t.effect.promoBonus;
+    if (t && t.effect && t.effect.promoPenalty) talentMod += t.effect.promoPenalty;
+  }
+
+  if (choice === 0) {
+    // Push for promotion: chance based on skill + talent
+    var chance = 0.3 + (state.skill / 200) + talentMod;
+    if (state.network >= 60) chance += 0.1;
+    promoted = Math.random() < chance;
+    if (promoted) {
+      state.rankIdx = Math.min(state.rankIdx + 1, track.ladder.length - 1);
+      state.skill = clamp(state.skill + 10, 0, 100);
+      state.health = clamp(state.health - 8, 0, 100);
+      state.happy = clamp(state.happy + 10, 0, 100);
+      toast('🎉 晋升成功！现在是 ' + track.ladder[state.rankIdx]);
+      state.salary = Math.round(state.salary * 1.3);
+    } else {
+      state.happy = clamp(state.happy - 10, 0, 100);
+      state._promoCooldown = 2;
+      toast('😔 晋升失败... 冷却2年');
+    }
+  } else if (choice === 1) {
+    // Stay safe: slight skill bonus, no promotion
+    state.skill = clamp(state.skill + 3, 0, 100);
+    state.health = clamp(state.health + 3, 0, 100);
+    state.happy = clamp(state.happy + 2, 0, 100);
+    toast('🛡️ 稳住，等待下次机会');
+  } else {
+    // Job hop: salary boost but rank may reset
+    state.salary = Math.round(state.salary * 1.25);
+    state.network = clamp(state.network + 10, 0, 100);
+    state.happy = clamp(state.happy + 5, 0, 100);
+    if (Math.random() < 0.4) {
+      state.rankIdx = Math.max(0, state.rankIdx - 1);
+      toast('🔄 跳槽了！薪资涨了，但职级重置...');
+    } else {
+      toast('🔄 跳槽成功！薪资涨了！');
+    }
+  }
+
+  // Record year for timeline
+  if (!state._yearlyRecords.find(function(r){ return r.year === state.year; })) {
+    state._yearlyRecords.push({
+    year: state.year,
+    salary: state.salary,
+    rank: CAREER_TRACKS[state.track].ladderShort[state.rankIdx],
+    skill: state.skill,
+    network: state.network,
+    health: state.health,
+    happy: state.happy,
+    money: state.money,
+    event: '晋升答辩'
+  });
+  }
+
+  state.year++;
+  render();
+}
+
+// ====== Ending ======
+function showEnding() {
+  if (state._playEnded) return;
+  state._playEnded = true;
+  savePlayedTrack();
+  checkAchievements();
+
+  var track = CAREER_TRACKS[state.track];
+
+  // Calculate total score
+  var totalScore = state.skill + state.network + state.health + state.happy + Math.min(state.rankIdx * 15, 90) + Math.min(state.salary / 1000, 50);
+
+  // Find matching ending
+  var ending = null;
+  var hiddenEndings = [];
+  for (var i = 0; i < ENDINGS.length; i++) {
+    var e = ENDINGS[i];
+    if (e.track && e.track !== state.track) continue;
+    try {
+      if (e.condition(state)) {
+        if (e.hidden) hiddenEndings.push(e);
+        else if (!ending) ending = e;
+      }
+    } catch(ex) {}
+  }
+  if (!ending) {
+    // Default ending based on highest attribute
+    if (state.happy >= 70) ending = ENDINGS.find(function(e){ return e.id === 'lying_flat' || e.id === 'parallel'; });
+    else if (state.skill >= 70) ending = ENDINGS.find(function(e){ return e.id === 'tech_god'; });
+    else if (state.network >= 70) ending = ENDINGS.find(function(e){ return e.id === 'sales_king' || e.id === 'social_legend'; });
+    else ending = ENDINGS.find(function(e){ return e.id === 'parallel'; });
+  }
+  if (!ending) ending = ENDINGS[ENDINGS.length - 1];
+
+  // Save to gallery
+  if (!state._endingSaved) {
+    state._endingSaved = true;
+    saveEnding(ending);
+  }
+
+  // Store ending for share
+  state._ending = ending;
+
+  // PK card check
+  if (state._rival && showPKCard(state._rival, {skill:state.skill, network:state.network, health:state.health, happy:state.happy, salary:state.salary, emoji:(ending?ending.emoji:''), endingName:(ending?ending.name:''), talents:state.talents})) {
+    return;
+  }
+
+  // Render ending card
+  var main = document.getElementById('mainContent');
+  var themeClass = 'theme-' + (ending.theme || 'blue');
+
+  var html = '<div style="text-align:center;margin-bottom:8px"><div style="font-size:13px;color:#b0a590;margin-bottom:12px">🎯 十年过去，这就是你的职场结局——</div></div>';
+  html += '<div class="id-card ' + themeClass + '">';
+  html += '<div class="id-card-badge">平行人生 · 职场鉴定报告</div>';
+  html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
+  html += '<div class="id-card-ending">' + ending.name + '</div>';
+  html += '<div class="id-card-desc">' + ending.desc + '</div>';
+  if (hiddenEndings.length > 0) {
+    html += '<div style="margin-top:8px;padding:6px 12px;background:linear-gradient(135deg,#ffd700,#ff6b35);border-radius:20px;display:inline-block;font-size:12px;color:#fff;font-weight:bold">🏆 隐藏结局解锁！' + hiddenEndings.map(function(e){ return e.emoji + ' ' + e.name; }).join(' · ') + '</div>';
+  }
+  html += '<div class="id-dims">';
+  html += '<div class="id-dim"><div class="id-dim-icon">📊</div><div class="id-dim-text"><div class="id-dim-label">职级：' + track.ladder[state.rankIdx] + '</div><div class="id-dim-desc">' + track.label + '</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">💰</div><div class="id-dim-text"><div class="id-dim-label">月薪：¥' + state.salary.toLocaleString() + '</div><div class="id-dim-desc">累计收入 ¥' + Math.round(state._yearlyRecords.reduce(function(a,r){ return a + (r.salary||0); }, 0)).toLocaleString() + '</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">🧠</div><div class="id-dim-text"><div class="id-dim-label">技能：' + state.skill + '</div><div class="id-dim-desc">专业能力指数</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">👥</div><div class="id-dim-text"><div class="id-dim-label">人脉：' + state.network + '</div><div class="id-dim-desc">社会关系网络</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">❤️</div><div class="id-dim-text"><div class="id-dim-label">健康：' + state.health + '</div><div class="id-dim-desc">身体是革命的本钱</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">😊</div><div class="id-dim-text"><div class="id-dim-label">满足度：' + state.happy + '</div><div class="id-dim-desc">人生幸福感指数</div></div></div>';
+  html += '</div>';
+  // Show talents
+  html += '<div class="id-talents">';
+  for (var ti = 0; ti < state.talents.length; ti++) {
+    var talentData = TALENT_POOL.find(function(t){ return t.id === state.talents[ti]; });
+    if (talentData) html += '<div class="id-talent">' + talentData.emoji + ' ' + talentData.name + '</div>';
+  }
+  html += '</div>';
+  html += '<div class="id-share-hint">📸 测测你是什么职场动物？我已经是' + ending.emoji + ending.name + '了</div>';
+  html += '</div>';
+
+  // Narrative summary
+  html += '<div class="narrative-box">';
+  html += '<div style="font-size:12px;color:#b0a590;margin-bottom:8px;letter-spacing:2px">📖 你 的 十 年</div>';
+  html += '<div style="font-size:14px;line-height:1.8;color:#3d3226">';
+  html += '你选择了<strong>' + track.label + '</strong>路线，从' + track.ladder[0] + '做到了<strong>' + track.ladder[state.rankIdx] + '</strong>。';
+  html += '十年间，你的技能从30提升到' + state.skill + '，人脉从20扩展到' + state.network + '。';
+  if (state.health < 40) html += '可惜健康透支了不少...';
+  else if (state.health >= 70) html += '难得的是，你保持了不错的身体状态。';
+  html += ' 最终你获得了 <strong>' + ending.emoji + ' ' + ending.name + '</strong> 的结局。';
+  html += '</div></div>';
+
+  // Timeline
+  html += '<div class="timeline-section"><div style="font-size:13px;color:#b0a590;margin-bottom:8px;text-align:center">📍 十年生命线</div>';
+  html += '<div style="display:flex;gap:0;overflow-x:auto;padding:8px 4px;-webkit-overflow-scrolling:touch" id="timelineContainer"></div></div>';
+
+  // Action buttons
+  html += '<div class="entry-bar">';
+  html += '<button class="entry-btn" onclick="generatePoster()">📸 生成海报</button>';
+  html += '<button class="entry-btn" onclick="location.href=location.pathname">🔄 重新开始</button>';
+  html += '<button class="entry-btn" onclick="shareChallenge()" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff;border-color:#ff6b6b">🔥 挑战好友</button>';
+  html += '</div>';
+  html += '<div class="entry-bar" style="margin-top:8px">';
+  html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴 (' + getUnlockedCount() + '/' + ENDINGS.length + ')</button>';
+  html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
+  html += '</div>';
+
+  main.innerHTML = html;
+  updateTopBar();
+
+  // Render timeline
+  renderTimeline();
+}
+
+function renderTimeline() {
+  var c = document.getElementById('timelineContainer');
+  if (!c || !state._yearlyRecords || state._yearlyRecords.length === 0) return;
+  var records = state._yearlyRecords;
+  var html = '';
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    var isLast = i === records.length - 1;
+    html += '<div style="display:flex;flex-direction:column;align-items:center;min-width:60px;position:relative">';
+    html += '<div style="width:12px;height:12px;border-radius:50%;background:' + (isLast ? '#b8913c' : '#c9ba9e') + ';border:2px solid #f5f0e8;z-index:2"></div>';
+    html += '<div style="font-size:10px;color:#8c7b64;margin-top:4px">第' + r.year + '年</div>';
+    html += '<div style="font-size:10px;color:#8c7b64">' + r.rank + '</div>';
+    if (isLast) {
+      html += '<div style="font-size:9px;color:#b0a590;margin-top:2px">💰' + (r.salary >= 10000 ? Math.round(r.salary/10000) + 'W' : r.salary) + '</div>';
+    }
+    html += '</div>';
+  }
+  c.innerHTML = html;
+}
+
+// ====== Gallery ======
+function getUnlockedCount() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}');
+    return Object.keys(saved).length;
+  } catch(e) { return 0; }
+}
+
+function showGallery() {
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}'); } catch(e) {}
+  var grid = document.getElementById('galleryGrid');
+  var html = '';
+  var count = 0;
+  for (var i = 0; i < ENDINGS.length; i++) {
+    var e = ENDINGS[i];
+    var unlocked = saved[e.id];
+    if (unlocked) count++;
+    var locked = !unlocked;
+    html += '<div class="gallery-item ' + (locked ? 'locked' : 'unlocked') + '">';
+    html += '<div class="g-emoji">' + (locked ? '❓' : e.emoji) + '</div>';
+    html += '<div class="g-name">' + (locked ? '???' : e.name) + '</div>';
+    if (!locked && e.track) html += '<div class="g-track">' + (CAREER_TRACKS[e.track] ? CAREER_TRACKS[e.track].label : '') + '</div>';
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+  document.getElementById('galleryCount').textContent = '已解锁 ' + count + '/' + ENDINGS.length + ' 个结局';
+  document.getElementById('galleryModal').classList.add('show');
+}
+function closeGallery() { document.getElementById('galleryModal').classList.remove('show'); }
+
+// ====== Achievements ======
+function showAchievements() {
+  var list = document.getElementById('achieveList');
+  var count = 0;
+  var html = '';
+  for (var i = 0; i < ACHIEVEMENTS.length; i++) {
+    var a = ACHIEVEMENTS[i];
+    var unlocked = false;
+    try { unlocked = a.check(state); } catch(e) {}
+    // Also check localStorage
+    try {
+      var saved = JSON.parse(localStorage.getItem('parallel_offer_achievements') || '{}');
+      if (saved[a.id]) unlocked = true;
+    } catch(e) {}
+    if (unlocked) count++;
+    html += '<div class="achieve-item ' + (unlocked ? 'unlocked' : 'locked') + '">';
+    html += '<div class="a-emoji">' + a.emoji + '</div>';
+    html += '<div class="a-text"><div class="a-name">' + a.name + '</div><div class="a-desc">' + a.desc + '</div></div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+  document.getElementById('achieveSub').textContent = '收集你的职场成就';
+  document.getElementById('achieveProgress').textContent = '已解锁 ' + count + '/' + ACHIEVEMENTS.length;
+  document.getElementById('achieveModal').classList.add('show');
+}
+function closeAchievements() { document.getElementById('achieveModal').classList.remove('show'); }
+
+// ====== Save/Load ======
+function saveEnding(ending) {
+  try {
+    var saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}');
+    saved[ending.id] = { name: ending.name, emoji: ending.emoji, track: state.track, date: Date.now() };
+    localStorage.setItem('parallel_offer_endings', JSON.stringify(saved));
+  } catch(e) {}
+}
+
+function savePlayedTrack() {
+  try {
+    var record = { track: state.track, year: state.year, salary: state.salary, rankIdx: state.rankIdx, skill: state.skill, network: state.network, health: state.health, happy: state.happy, talents: state.talents };
+    var history = JSON.parse(localStorage.getItem('parallel_offer_history') || '[]');
+    history.push(record);
+    if (history.length > 20) history = history.slice(-20);
+    localStorage.setItem('parallel_offer_history', JSON.stringify(history));
+  } catch(e) {}
+}
+
+function checkAchievements() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('parallel_offer_achievements') || '{}');
+    for (var i = 0; i < ACHIEVEMENTS.length; i++) {
+      var a = ACHIEVEMENTS[i];
+      try {
+        if (a.check(state) && !saved[a.id]) {
+          saved[a.id] = { date: Date.now() };
+          toast('🏆 成就解锁：' + a.name);
+        }
+      } catch(e) {}
+    }
+    localStorage.setItem('parallel_offer_achievements', JSON.stringify(saved));
+  } catch(e) {}
+}
+
+// ====== Poster ======
+function generatePoster() {
+  var canvas = document.getElementById('posterCanvas');
+  var ctx = canvas.getContext('2d');
+  var w = 750, h = 1334;
+
+  // Background
+  var grad = ctx.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, '#1a1a2e');
+  grad.addColorStop(0.5, '#16213e');
+  grad.addColorStop(1, '#0f3460');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Title
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.font = '600 28px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('平行offer · 职场鉴定报告', w/2, 80);
+
+  // Track
+  var track = CAREER_TRACKS[state.track];
+  ctx.font = '24px -apple-system, sans-serif';
+  ctx.fillText(track.emoji + ' ' + track.label + ' · ' + track.ladder[state.rankIdx], w/2, 130);
+
+  // Talents
+  ctx.font = '20px -apple-system, sans-serif';
+  var talentStr = state.talents.map(function(id) {
+    var t = TALENT_POOL.find(function(tal){ return tal.id === id; });
+    return t ? t.emoji + t.name : '';
+  }).join('  ');
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(talentStr, w/2, 175);
+
+  // Attrs
+  var attrs = [
+    { icon:'💰', label:'月薪', value:'¥' + state.salary.toLocaleString() },
+    { icon:'📊', label:'职级', value: track.ladder[state.rankIdx] },
+    { icon:'🧠', label:'技能', value: state.skill },
+    { icon:'👥', label:'人脉', value: state.network },
+    { icon:'❤️', label:'健康', value: state.health },
+    { icon:'😊', label:'满足度', value: state.happy }
+  ];
+  ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  ctx.fillRect(60, 220, w - 120, attrs.length * 60 + 20);
+
+  for (var i = 0; i < attrs.length; i++) {
+    var a = attrs[i];
+    var y = 260 + i * 60;
+    ctx.fillStyle = '#fff';
+    ctx.font = '22px -apple-system, sans-serif';
+    ctx.fillText(a.icon + ' ' + a.label, 90, y);
+    ctx.font = 'bold 22px -apple-system, sans-serif';
+    ctx.fillText('' + a.value, 500, y);
+    // Bar
+    var barVal = typeof a.value === 'number' ? a.value : 50;
+    if (a.label === '月薪') barVal = Math.min(100, state.salary / 3000 * 100);
+    if (a.label === '职级') barVal = (state.rankIdx + 1) / track.ladder.length * 100;
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.fillRect(90, y + 8, w - 180, 6);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.fillRect(90, y + 8, (w - 180) * barVal / 100, 6);
+  }
+
+  // Ending
+  var ending = null;
+  for (var j = 0; j < ENDINGS.length; j++) {
+    if (ENDINGS[j].track && ENDINGS[j].track !== state.track) continue;
+    try { if (ENDINGS[j].condition(state)) { ending = ENDINGS[j]; break; } } catch(e) {}
+  }
+  if (!ending) ending = ENDINGS[ENDINGS.length - 1];
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 36px -apple-system, sans-serif';
+  ctx.fillText(ending.emoji + ' ' + ending.name, w/2, 700);
+  ctx.font = '20px -apple-system, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+
+  // Word wrap description
+  var words = ending.desc.split('');
+  var line = '';
+  var lineY = 740;
+  for (var k = 0; k < words.length; k++) {
+    line += words[k];
+    if (ctx.measureText(line).width > 580 || k === words.length - 1) {
+      ctx.fillText(line, w/2, lineY);
+      line = '';
+      lineY += 30;
+    }
+  }
+
+  // CTA
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '16px -apple-system, sans-serif';
+  ctx.fillText('测测你是什么动物？我已经是' + ending.emoji + ending.name + '了', w/2, h - 60);
+
+  // Show poster
+  var img = document.getElementById('posterImage');
+  img.src = canvas.toDataURL('image/png');
+  document.getElementById('posterModal').style.display = 'flex';
+  var _pc = document.getElementById('posterCaption'); if (_pc) { _pc.textContent = '📸 测测你是什么职场动物？我已经是' + (ending.emoji||'') + (ending.name||'') + '了'; }
+}
+
+function closePosterModal() {
+  document.getElementById('posterModal').style.display = 'none';
+}
+
+
+function showPKCard(rival, me) {
+  var myScore = me.skill + me.network + me.health + me.happy;
+  var rvScore = rival.skill + rival.network + rival.health + rival.happy;
+  var myWin = myScore > rvScore;
+  var tie = myScore === rvScore;
+
+  var track = CAREER_TRACKS[state.track] || {};
+  var meName = track.ladder ? (track.ladder[state.rankIdx] || '职场人') : '职场人';
+  var rivalName = rival.name || '挑战者';
+
+  function row(emoji, label, rv, me) {
+    var rvWin = rv > me;
+    var meWin = me > rv;
+    return '<div class="pk-row">' +
+      '<div class="pk-side"><span class="pk-val ' + (rvWin ? 'pk-win' : '') + '">' + rv + '</span></div>' +
+      '<div class="pk-vs">' + emoji + '</div>' +
+      '<div class="pk-side"><span class="pk-val ' + (meWin ? 'pk-win' : '') + '">' + me + '</span></div>' +
+      '</div>' +
+      '<div style="text-align:center;font-size:10px;color:rgba(255,255,255,0.4);margin:-4px 0 8px">' + label + '</div>';
+  }
+
+  var resultText = tie ? '🤝 平局！你俩棋逢对手' :
+    (myWin ? '🎉 你赢了！' + rivalName + '被你碾压' : '😤 你输了！' + rivalName + '更胜一筹');
+
+  var html = '<div class="pk-card">';
+  html += '<div class="pk-title">⚔️ ' + rivalName + ' VS 你</div>';
+  html += '<div style="display:flex;justify-content:space-between;padding:0 8px;margin-bottom:12px">';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center">👤 ' + rivalName + '</div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center">👤 我</div>';
+  html += '</div>';
+  html += row('🧠', '技能', rival.skill, me.skill);
+  html += row('👥', '人脉', rival.network, me.network);
+  html += row('❤️', '健康', rival.health, me.health);
+  html += row('😊', '满足', rival.happy, me.happy);
+  html += '<div class="pk-result"><div class="pk-result-text">' + resultText + '</div></div>';
+  html += '</div>';
+  html += '<div class="pk-subtitle">你和 ' + rivalName + ' 的十年对比 ↑</div>';
+
+  var main = document.getElementById('mainContent');
+  main.innerHTML = html + main.innerHTML;
+  updateTopBar();
+  window.scrollTo(0, 0);
+  return true;
+}
+
+
+function shareChallenge() {
+  var ending = state._ending || {};
+  var name = ending.name || '社畜';
+  var emoji = ending.emoji || '🦥';
+  // Encode stats for PK: skill,network,health,happy,salary,emoji,endingName,talents
+  var rv = state.skill + ',' + state.network + ',' + state.health + ',' + state.happy + ',' + state.salary + ',' + encodeURIComponent(emoji) + ',' + encodeURIComponent(name) + ',' + state.talents.map(function(t){ return t; }).join('|');
+  var baseUrl = window.location.href.split('?')[0];
+  var challengeUrl = baseUrl + '?from=' + encodeURIComponent(name) + '&rv=' + encodeURIComponent(rv);
+  var text = '📸 我已经是' + emoji + name + '了！\n敢来和我PK吗？\n👉 ' + challengeUrl;
+  if (navigator.share) {
+    navigator.share({ title: '平行offer · 职场天赋RPG', text: text });
+  } else {
+    navigator.clipboard.writeText(text).then(function(){
+      toast('🔗 挑战链接已复制，发给好友PK吧！');
+    }).catch(function(){
+      toast('📋 请手动复制链接分享');
+    });
+  }
+}
+
+
+// ====== INIT ======
+showIntro();
+</script>
+</body>
+</html>
