@@ -3840,18 +3840,8 @@ function showEnding() {
   html += '<div class="id-share-hint">📸 测测你是什么职场动物？我已经是' + ending.emoji + ending.name + '了</div>';
   html += '</div>';
 
-  // Narrative summary
-  html += '<div class="narrative-box">';
-  html += '<div style="font-size:12px;color:#b0a590;margin-bottom:8px;letter-spacing:2px">📖 你 的 十 年</div>';
-  html += '<div style="font-size:14px;line-height:1.8;color:#3d3226">';
-  html += '你选择了<strong>' + track.label + '</strong>路线，从' + track.ladder[0] + '做到了<strong>' + track.ladder[state.rankIdx] + '</strong>。';
-  html += '十年间，你的技能从30提升到' + state.skill + '，人脉从20扩展到' + state.network + '。';
-  if (state.health < 40) html += '可惜健康透支了不少...';
-  else if (state.health >= 70) html += '难得的是，你保持了不错的身体状态。';
-  html += ' 最终你获得了 <strong>' + ending.emoji + ' ' + ending.name + '</strong> 的结局。';
-  html += '</div></div>';
-
-  // Timeline
+    // Narrative summary removed per user request
+// Timeline
   html += '<div class="timeline-section"><div class="tl-header">📍 十年生命线</div><div class="tl-track" id="tlTrack"></div></div>';
 
   // Action buttons
