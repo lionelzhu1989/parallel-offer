@@ -12,9 +12,9 @@
     min-height: 100vh; display: flex; flex-direction: column;
     -webkit-font-smoothing: antialiased;
   }
-  .top-bar { position: sticky; top: 0; z-index: 100; background: linear-gradient(135deg, rgba(251,146,60,0.95), rgba(244,114,182,0.95), rgba(192,132,252,0.95)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: none; padding: 10px 14px 8px; font-size: 13px; color: #fff; box-shadow: 0 4px 20px rgba(244,114,182,0.3); }
+  .top-bar { position: sticky; top: 0; z-index: 100; background: linear-gradient(135deg, #e11d48, #be185d, #9333ea); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: none; padding: 10px 14px 8px; font-size: 13px; color: #fff; box-shadow: 0 4px 20px rgba(244,114,182,0.3); }
   .top-bar .main-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .top-bar .year-label { background: rgba(255,255,255,0.25); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 13pxpx; font-weight: 600; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3); }
+  .top-bar .year-label { background: rgba(255,255,255,0.2); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.25); }
   .top-bar .track-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
   .track-badge.tech { background: #eff6ff; color: #2563eb; }
   .track-badge.biz { background: #fffbeb; color: #d97706; }
@@ -25,14 +25,14 @@
   .year-progress-wrap { margin-top: 6px; }
   .year-progress-bar { width: 100%; height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden; }
   .year-progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f472b6, #a78bfa); border-radius: 2px; transition: width 0.5s ease; }
-  .year-progress-text { display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8; margin-top: 2px; }
+  .year-progress-text { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 2px; }
   .attr-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:6px 4px; margin-top:10px; }
-  .attr-item { display:flex; flex-direction:column; align-items:center; gap:2px; background:rgba(255,255,255,0.12); border-radius:12px; padding:8px 4px; border:1px solid rgba(255,255,255,0.15); transition:all 0.3s; position:relative; backdrop-filter:blur(8px); }
-  .attr-item:hover { background:rgba(255,255,255,0.2); transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+  .attr-item { display:flex; flex-direction:column; align-items:center; gap:2px; background:rgba(255,255,255,0.92); border-radius:12px; padding:8px 4px; border:1px solid rgba(255,255,255,0.6); transition:all 0.3s; position:relative; backdrop-filter:blur(8px); box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .attr-item:hover { background:rgba(255,255,255,1); transform:translateY(-2px); box-shadow:0 4px 16px rgba(244,114,182,0.2); }
   .attr-item .attr-top { display:flex; align-items:center; gap:2px; }
   .attr-item .attr-icon { font-size:12px; }
-  .attr-item .attr-label { font-size:10px; color:rgba(255,255,255,0.7); letter-spacing:0.5px; font-weight:500; }
-  .attr-item .attr-val { font-weight:700; font-size:14px; color:#fff; line-height:1.2; text-shadow:0 1px 3px rgba(0,0,0,0.2); }
+  .attr-item .attr-label { font-size:10px; color:#64748b; letter-spacing:0.5px; font-weight:500; }
+  .attr-item .attr-val { font-weight:700; font-size:14px; color:#1e293b; line-height:1.2; }
   .attr-item .attr-bar-bg { width:85%; height:3px; background:rgba(255,255,255,0.2); border-radius:2px; overflow:hidden; margin-top:2px; }
   .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.5s ease, background 0.3s; }
   .attr-bar-fill.salary { background:linear-gradient(90deg,#fbbf24,#fb923c); }
@@ -42,7 +42,7 @@
   .attr-bar-fill.health.danger { background:linear-gradient(90deg,#f87171,#ef4444); }
   .attr-bar-fill.satisfaction { background:linear-gradient(90deg,#f472b6,#ec4899); }
   .attr-item.money-card { background:linear-gradient(135deg,#fef9c3,#fef08a); border-color:#facc15; }
-  .attr-item.money-card .attr-val { color:#a16207; font-size:12px; }
+  .attr-item.money-card .attr-val { color:#92400e; font-size:12px; }
   .attr-tooltip { display:none; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:6px 10px; border-radius:8px; font-size:11px; white-space:nowrap; z-index:200; margin-bottom:4px; box-shadow:0 4px 12px rgba(0,0,0,0.15); }
   .attr-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:#1e293b; }
   .attr-item:hover .attr-tooltip { display:block; }
@@ -369,7 +369,7 @@
 <div class="top-bar" id="topBar">
   <div class="main-row">
     <span class="year-label" id="yearLabel">准备开始</span>
-    <div id="undoIndicator" style="display:none;font-size:11px;color:#94a3b8;background:#f1f5f9;padding:3px 10px;border-radius:12px">↩️ <span id="undoCount">3</span>/3</div>
+    <div id="undoIndicator" style="display:none;font-size:11px;color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:12px">↩️ <span id="undoCount">3</span>/3</div>
   </div>
   <div class="year-progress-wrap" id="yearProgress" style="display:none">
     <div class="year-progress-bar"><div class="year-progress-fill" id="yearProgressFill" style="width:10%"></div></div>
