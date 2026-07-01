@@ -17,8 +17,7 @@
   .top-bar .year-label { background: #3b82f6; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
   .top-bar .track-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
   .track-badge.tech { background: #eff6ff; color: #2563eb; }
-  .track-badge.biz { background: #fff7ed; color: #ea580c; }
-  .track-badge.state { background: #fef2f2; color: #dc2626; }
+    .track-badge.state { background: #fef2f2; color: #dc2626; }
   .track-badge.mnc { background: #f0fdf4; color: #16a34a; }
   .track-badge.startup { background: #faf5ff; color: #9333ea; }
   .track-badge.gig { background: #eff6ff; color: #2563eb; }
@@ -594,7 +593,7 @@ var CAREER_EVENTS = {
       {text:'发了个"正在排查"的消息，然后继续睡', happy:3, network:-3}
     ]},
     { year:[3,4], title:'技术选型争论', desc:'团队为用React还是Vue吵了三天。你作为唯一一个两个都会的人，被两边拉拢。', opts:[
-      {text:'提出一个全新框架（Svelte）', skill:5, network:-5, happy:-3, __buff:{id:'tech_debt',name:'技术债',desc:'新框架需要适应',dur:2,fx:{skill:2,health:-3}}},,
+      {text:'提出一个全新框架（Svelte）', skill:5, network:-5, happy:-3, __buff:{id:'tech_debt',name:'技术债',desc:'新框架需要适应',dur:2,fx:{skill:2,health:-3}}},
       {text:'两边都不得罪，建议用团队熟悉的', network:5, happy:3,health:-4},
       {text:'写了个性能对比报告，用数据说话', skill:8, network:3}
     ],health:-3},
@@ -1283,8 +1282,8 @@ var CAREER_EVENTS = {
 // ====== DATA: Random Events (Shared) ======
 var RANDOM_EVENTS = [
   { emoji:'🏥', title:'家人生病', desc:'妈妈打电话说身体不好需要住院。她让你别担心，但你知道手术费不便宜。', weight:2, opts:[
-    {text:'拿出积蓄安排最好的治疗', money:-50000, health:-5, happy:-5, __buff:{id:'family_care',name:'家人陪护',desc:'投入精力照顾家人',dur:2,fx:{health:-5,happy:-3}}},,
-    {text:'转2万让亲戚帮忙照顾', money:-20000, happy:-3, __buff:{id:'worry',name:'牵挂',desc:'担心家人健康',dur:2,fx:{happy:-5}}},,
+    {text:'拿出积蓄安排最好的治疗', money:-50000, health:-5, happy:-5, __buff:{id:'family_care',name:'家人陪护',desc:'投入精力照顾家人',dur:2,fx:{health:-5,happy:-3}}},
+    {text:'转2万让亲戚帮忙照顾', money:-20000, happy:-3, __buff:{id:'worry',name:'牵挂',desc:'担心家人健康',dur:2,fx:{happy:-5}}},
     {text:'请假回去陪护一周', money:-8000, health:-3, happy:5},
   ]},
   { emoji:'💸', title:'意外之财', desc:'你随手买的东西居然中奖了。不记得什么时候买的，但奖品是真的。', weight:2, opts:[
@@ -1777,7 +1776,7 @@ function showIntro() {
     html += '<div class="tc-label">' + t.label + '</div>';
     html += '<div class="tc-desc">' + t.desc + '</div>';
 
-    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',biz:'商务路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
+    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
     html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
     html += '</div>';
   }
