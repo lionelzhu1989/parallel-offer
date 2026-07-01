@@ -4327,16 +4327,16 @@ function showSwitchModal() {
   var grid = document.getElementById('switchGrid');
   if (!grid) return;
   var html = '';
-  var tracks = ['tech','media','finance','startup','public','gig'];
+  var tracks = ['tech','biz','state','mnc','startup','gig'];
   var emojis = {'tech':'💻','media':'🎨','finance':'📊','startup':'🚀','public':'🏛️','gig':'🎵'};
   for (var i = 0; i < tracks.length; i++) {
     var t = tracks[i];
     var tk = CAREER_TRACKS[t];
     if (t === state.track) {
-      html += '<div class="switch-card current"><div class="sw-title">' + emojis[t] + ' ' + tk.name + ' (当前)</div></div>';
+      html += '<div class="switch-card current"><div class="sw-title">' + tk.emoji + ' ' + tk.label + ' (当前)</div></div>';
     } else {
       var penalty = '技能-10 · 人脉-15 · 健康-5 · 发量-10 · 薪资重置为' + (tk.salary/1000) + 'K';
-      html += '<div class="switch-card" onclick="switchTrack(\'' + t + '\')"><div class="sw-title">' + emojis[t] + ' ' + tk.name + '</div><div class="sw-cost">' + penalty + '</div></div>';
+      html += '<div class="switch-card" onclick="switchTrack(\'' + t + '\')"><div class="sw-title">' + tk.emoji + ' ' + tk.label + '</div><div class="sw-cost">' + penalty + '</div></div>';
     }
   }
   grid.innerHTML = html;
