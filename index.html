@@ -2001,6 +2001,41 @@ function showPromotionChallenge() {
   var nextRank = track.ladder[state.rankIdx + 1];
   var main = document.getElementById('mainContent');
 
+  // Calculate thresholds
+  var skillReq = 30 + state.rankIdx * 12;
+  var networkReq = 20 + state.rankIdx * 10;
+
+  // Calculate talent modifier
+  var talentMod = 0;
+  var talentDetails = [];
+  for (var i = 0; i < state.talents.length; i++) {
+    var t = TALENT_POOL.find(function(tal){ return tal.id === state.talents[i]; });
+    if (t && t.effect) {
+      if (t.effect.promoBonus) { talentMod += t.effect.promoBonus; talentDetails.push({name:t.emoji+' '+t.name, val:t.effect.promoBonus}); }
+      if (t.effect.promoPenalty) { talentMod += t.effect.promoPenalty; talentDetails.push({name:t.emoji+' '+t.name, val:t.effect.promoPenalty}); }
+      if (t.effect.skillBonus && state.skill >= skillReq) { talentMod += 0.03; talentDetails.push({name:t.emoji+' '+t.name+'(技能加成)', val:0.03}); }
+    }
+  }
+
+  // Calculate effective chance (linked to thresholds)
+  var chance = 0.15; // base
+  var skillMet = state.skill >= skillReq;
+  var networkMet = state.network >= networkReq;
+  if (skillMet) chance += 0.15;
+  if (networkMet) chance += 0.10;
+  if (skillMet && networkMet) chance += 0.05; // both met bonus
+  // Beyond thresholds bonus
+  if (state.skill > skillReq) chance += Math.min((state.skill - skillReq) / 300, 0.1);
+  if (state.network > networkReq) chance += Math.min((state.network - networkReq) / 400, 0.05);
+  // Talent modifier
+  chance += talentMod;
+  chance = Math.max(0.05, Math.min(0.85, chance));
+
+  // Store for promoChoice to use
+  state._promoChance = chance;
+  state._promoSkillReq = skillReq;
+  state._promoNetworkReq = networkReq;
+
   var html = '<div class="scenario-card promo-card">';
   html += '<div class="promo-badge">🎯 晋升答辩</div>';
   html += '<div class="scene-text">';
@@ -2010,7 +2045,7 @@ function showPromotionChallenge() {
   html += '<div class="choices">';
   html += '<button class="choice-btn" onclick="promoChoice(0)">';
   html += '🎯 拼一把冲晋升';
-  html += '<div class="choice-effect">高风险高回报 · 技能要求高</div></button>';
+  html += '<div class="choice-effect">成功概率 ' + Math.round(chance * 100) + '% · 高风险高回报</div></button>';
   html += '<button class="choice-btn" onclick="promoChoice(1)">';
   html += '🛡️ 稳住别浪';
   html += '<div class="choice-effect">安全但错过机会</div></button>';
@@ -2019,18 +2054,29 @@ function showPromotionChallenge() {
   html += '<div class="choice-effect">跳槽涨薪但职级可能重置</div></button>';
   html += '</div>';
 
+  // Threshold + talent breakdown panel
+  html += '<div style="text-align:center;margin-top:12px;padding:12px 16px;background:#f5f0e3;border-radius:12px;font-size:13px">';
+  html += '<div style="margin-bottom:8px;font-weight:600">📋 晋升门槛 & 加成</div>';
+  html += '<div style="margin-bottom:4px">需要 <span style="color:' + (skillMet ? '#2e7d32' : '#c62828') + ';font-weight:600">🧠' + skillReq + '</span>';
+  html += ' & <span style="color:' + (networkMet ? '#2e7d32' : '#c62828') + ';font-weight:600">👥' + networkReq + '</span>';
+  html += ' <span style="color:#999;font-size:11px">(你: 🧠' + state.skill + ' 👥' + state.network + ')</span></div>';
 
-  // Show required thresholds
-  var skillReq = 30 + state.rankIdx * 12;
-  var networkReq = 20 + state.rankIdx * 10;
-  html += '\u003cdiv style="text-align:center;margin-top:12px;padding:10px 16px;background:#f5f0e3;border-radius:12px;font-size:13px;color:#6b5d4f"\u003e';
-  html += '\u003cdiv style="margin-bottom:6px;font-weight:600"\u003e📋 晋升门槛\u003c/div\u003e';
-  html += '\u003cdiv\u003e需要 \u003cspan style="color:' + (state.skill >= skillReq ? '#2e7d32' : '#c62828') + '\u003e🧠' + skillReq + '\u003c/span\u003e';
-  html += ' \u0026amp; \u003cspan style="color:' + (state.network >= networkReq ? '#2e7d32' : '#c62828') + '\u003e👥' + networkReq + '\u003c/span\u003e';
-  html += ' \u003cspan style="color:#999;font-size:11px"\u003e(你: 🧠' + state.skill + ' 👥' + state.network + ')\u003c/span\u003e\u003c/div\u003e';
-  html += '\u003c/div\u003e';
+  if (talentDetails.length > 0) {
+    html += '<div style="margin-top:6px;padding-top:6px;border-top:1px dashed #d4c9a8">';
+    html += '<span style="color:#6b5b3e">🎭 天赋加成：</span>';
+    for (var j = 0; j < talentDetails.length; j++) {
+      var td = talentDetails[j];
+      html += '<span style="color:' + (td.val > 0 ? '#2e7d32' : '#c62828') + '">' + td.name + ' ' + (td.val > 0 ? '+' : '') + Math.round(td.val * 100) + '%</span>';
+      if (j < talentDetails.length - 1) html += ' ';
+    }
+    html += '</div>';
+  }
 
-  html += '\u003cdiv class="undo-bar"\u003e\u003cbutton class="undo-btn" onclick="undoLastChoice()"\u003e\u21a9\ufe0f 后悔药 \u00b7 撤回重选\u003c/button\u003e\u003c/div\u003e';
+  html += '<div style="margin-top:8px;padding-top:6px;border-top:1px dashed #d4c9a8;font-weight:600">';
+  html += '🎲 晋升概率：<span style="color:#ff6b35;font-size:15px">' + Math.round(chance * 100) + '%</span>';
+  html += '</div></div>';
+
+  html += '<div class="undo-bar"><button class="undo-btn" onclick="undoLastChoice()">↩️ 后悔药 · 撤回重选</button></div>';
   main.innerHTML = html;
 }
 
@@ -2053,9 +2099,8 @@ function promoChoice(choice) {
   }
 
   if (choice === 0) {
-    // Push for promotion: chance based on skill + talent
-    var chance = 0.3 + (state.skill / 200) + talentMod;
-    if (state.network >= 60) chance += 0.1;
+    // Push for promotion: use pre-calculated threshold-linked chance
+    var chance = state._promoChance || 0.3;
     promoted = Math.random() < chance;
     if (promoted) {
       state.rankIdx = Math.min(state.rankIdx + 1, track.ladder.length - 1);
