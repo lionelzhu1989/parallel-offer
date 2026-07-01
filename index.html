@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行offer · 职场天赋RPG v11</title>
+<title>平行offer · 职场天赋RPG v12b</title>
 <style>/* ===== Design System ===== */
 :root {
   --primary: #6366f1;
@@ -266,7 +266,7 @@ body {
 .talent-subtitle { font-size:13px; color:var(--text-muted); margin-top:4px; }
 .talent-grid { display:grid; grid-template-columns:1fr; gap:10px; }
 .talent-card {
-  display:flex; align-items:center; gap:12px;
+  display:flex; align-items:flex-start; gap:12px;
   background:var(--bg-card); border:1.5px solid var(--border);
   border-radius:var(--radius-lg); padding:14px 16px;
   cursor:pointer; transition:all 0.2s ease;
@@ -289,7 +289,8 @@ body {
 .talent-card .tc-tag.risk { background:rgba(255,118,117,0.15); color:#ff7675; }
 .talent-card .tc-tag.biz { background:rgba(162,155,254,0.15); color:#a29bfe; }
 .talent-card .tc-tag.neutral { background:rgba(178,190,195,0.15); color:#b2bec3; }
-.talent-debuff { font-size:10px; color:#ef4444; margin-top:2px; }
+.talent-buff { font-size:10px; color:#16a34a; background:rgba(34,197,94,0.08); padding:4px 8px; border-radius:6px; margin-top:4px; line-height:1.4; letter-spacing:0.2px; }
+.talent-debuff { font-size:10px; color:#dc2626; background:rgba(239,68,68,0.08); padding:4px 8px; border-radius:6px; margin-top:4px; line-height:1.4; letter-spacing:0.2px; }
 .rarity-common { border-color:var(--border); }
 .rarity-rare { border-color:#6366f1; }
 .rarity-epic { border-color:#f59e0b; background:linear-gradient(135deg,#fffbeb,#fef3c7); }
@@ -308,7 +309,7 @@ body {
 }
 /* Ensure cards have minimum tap target size */
 .persona-card { min-height: 56px; }
-.talent-card { min-height: 64px; }
+.talent-card { min-height: 80px; }
 /* Fix potential z-index stacking issues */
 .persona-options, .talent-grid { position: relative; z-index: 1; }
 
@@ -2803,7 +2804,7 @@ function showIntro() {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v11 · 2026.07.01</div>';
+  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v12b · 2026.07.01</div>';
   html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
@@ -2915,7 +2916,7 @@ function showTalentDraw() {
     if (te.startBonus) buffTexts.push('📊 全属性+2起步');
     if (te.startupDiscount) buffTexts.push('🚀 创业门槛降低');
     if (buffTexts.length > 0) {
-      html += '<div class="talent-buff">' + buffTexts.join('　') + '</div>';
+      html += '<div class="talent-buff">' + buffTexts.join(' / ') + '</div>';
     }
     if (t.debuff) html += '<div class="talent-debuff">' + t.debuff + '</div>';
     html += '<div class="tc-tag ' + t.cat + '">' + (schoolNames[t.school] || '') + (t.cat === 'special' ? ' · 稀有' : '') + '</div>';
