@@ -1896,13 +1896,8 @@ function chooseEvent(optIdx) {
   }
   if (opt.salary) state.salary = Math.max(0, Math.round(state.salary * (1 + opt.salary * 0.1)));
 
-  // Natural aging
-  state.health -= (state.year >= 5 ? 4 : 2);
 
-  // Talent effects
-  if (state.talents.indexOf('zen') >= 0) state.happy += 5;
-  if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
-  if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
+  applyYearlyEffects();
   if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
   // runner: health recovery + cap boost
   if (state.talents.indexOf('runner') >= 0) state.health = clamp(state.health + 3, 0, 120);
@@ -1958,6 +1953,13 @@ function chooseEvent(optIdx) {
   render();
 }
 
+// ====== Unified yearly health/talent effects ======
+function applyYearlyEffects() {
+  state.health -= (state.year >= 5 ? 4 : 2);
+  if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
+  if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
+  state.health = clamp(state.health, 0, state._healthMax || 100);
+}
 function getModifiedBonus(base, type) {
   var mod = 1;
   for (var i = 0; i < state.talents.length; i++) {
@@ -2091,8 +2093,7 @@ function chooseRandom(optIdx) {
   state.health = clamp(state.health - (state.year >= 5 ? 4 : 2), 0, 100);
   // Talent effects
   if (state.talents.indexOf('zen') >= 0) state.happy += 5;
-  if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
-  if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
+  applyYearlyEffects();
   if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
     // Apply healthCap from talents (runner: +20)
   var healthMax = 100;
@@ -2261,6 +2262,7 @@ function promoChoice(choice) {
   });
   }
 
+    applyYearlyEffects();
   state.year++;
   render();
 }
