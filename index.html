@@ -3258,7 +3258,12 @@ function openShop(type) {
     for (var ii = 0; ii < state._investments.length; ii++) {
       var inv = state._investments[ii];
       totalInvested += inv.principal;
-      shopHtml += '<div style="font-size:11px;color:#15803d;margin:3px 0">• ' + inv.name + ': ¥' + (inv.principal/10000).toFixed(0) + '万 (年化' + (inv.rate*100).toFixed(0) + '%, 年收益¥' + (inv.principal*inv.rate/10000).toFixed(1) + '万)</div>';
+      var yearsHeld = Math.max(1, state.year - inv.year);
+      var penalty = yearsHeld < 3 ? '手续费10%' : '免手续费';
+      shopHtml += '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#15803d;margin:4px 0;padding:4px 0;border-bottom:1px solid #dcfce7">';
+      shopHtml += '<div>• ' + inv.name + ': ¥' + (inv.principal/10000).toFixed(0) + '万 (年化' + (inv.rate*100).toFixed(0) + '%, 持有' + yearsHeld + '年)</div>';
+      shopHtml += '<button onclick="sellInvest(' + ii + ')" style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:6px;padding:2px 8px;font-size:10px;cursor:pointer;white-space:nowrap;margin-left:6px">赎回</button>';
+      shopHtml += '</div>';
     }
     shopHtml += '<div style="font-size:11px;color:#166534;font-weight:600;margin-top:4px">总投入: ¥' + (totalInvested/10000).toFixed(0) + '万</div>';
     shopHtml += '</div>';
@@ -3333,6 +3338,25 @@ function buyInvest(cost, rate) {
   var invName = rateMap[rate] || '理财';
   state._investments.push({principal:cost, rate:rate, name:invName, year:state.year});
   toast('✅ 已投入 ' + (cost/10000).toFixed(0) + '万，年化' + (rate*100).toFixed(0) + '%，每年自动复利');
+  closeAllModals();
+  render();
+}
+
+function sellInvest(idx) {
+  if (!state._investments || idx >= state._investments.length) return;
+  var inv = state._investments[idx];
+  // Calculate years held
+  var yearsHeld = Math.max(1, state.year - inv.year);
+  // Penalty: lose 10% of principal if sold early (within 3 years)
+  var penalty = yearsHeld < 3 ? 0.1 : 0;
+  var returnMoney = Math.round(inv.principal * (1 - penalty));
+  state.money += returnMoney;
+  state._investments.splice(idx, 1);
+  if (penalty > 0) {
+    toast('💸 赎回' + inv.name + '，持有' + yearsHeld + '年，手续费' + (penalty*100) + '%，到账¥' + (returnMoney/10000).toFixed(1) + '万');
+  } else {
+    toast('✅ 赎回' + inv.name + '，持有' + yearsHeld + '年，全额到账¥' + (returnMoney/10000).toFixed(1) + '万');
+  }
   closeAllModals();
   render();
 }
