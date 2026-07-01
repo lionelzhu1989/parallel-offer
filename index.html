@@ -4547,6 +4547,36 @@ function generatePoster() {
     ctx.fillText(talentStr, w/2, talentY);
   }
 
+  // Hidden endings badge
+  var _hEndings = [];
+  var _sorted = ENDINGS.slice().sort(function(a,b){ return (b.track?1:0)-(a.track?1:0); });
+  for (var _hi = 0; _hi < _sorted.length; _hi++) {
+    var _he = _sorted[_hi];
+    if (_he.track && _he.track !== state.track) continue;
+    try { if (_he.condition(state) && _he.hidden) _hEndings.push(_he); } catch(_ex) {}
+  }
+  if (_hEndings.length > 0) {
+    var hy = talentY + (state.talents && state.talents.length > 0 ? 30 : 0);
+    var hText = '\ud83c\udfc6 \u9690\u85cf\u7ed3\u5c40\u89e3\u9501 \xb7 ' + _hEndings.map(function(e){ return e.emoji + ' ' + e.name; }).join(' \xb7 ');
+    ctx.font = 'bold 22px -apple-system, "PingFang SC", sans-serif';
+    var tw = ctx.measureText(hText).width;
+    // Gold badge background
+    var bx = (w - tw - 36) / 2;
+    var badgeGrad = ctx.createLinearGradient(bx, hy - 16, bx + tw + 36, hy + 8);
+    badgeGrad.addColorStop(0, 'rgba(255,215,0,0.25)');
+    badgeGrad.addColorStop(1, 'rgba(255,107,53,0.25)');
+    roundRect(ctx, bx, hy - 18, tw + 36, 34, 17);
+    ctx.fillStyle = badgeGrad;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,215,0,0.5)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, bx, hy - 18, tw + 36, 34, 17);
+    ctx.stroke();
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText(hText, w/2, hy + 4);
+  }
+
   // CTA at bottom
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(255,255,255,0.3)';
