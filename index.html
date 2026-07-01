@@ -1121,8 +1121,7 @@ body.dark-mode .entry-btn {
   background:var(--bg-card); border-radius:var(--radius-xl);
   padding:20px 16px; width:90%; max-width:380px;
   box-shadow:var(--shadow-lg);
-  max-height:80vh; overflow-y:auto;
-  scrollbar-width:thin;
+  max-height:85vh; overflow-y:auto;
 }
 .char-creator-title {
   font-size:20px; font-weight:800; text-align:center;
@@ -1139,18 +1138,14 @@ body.dark-mode .entry-btn {
   margin-bottom:8px;
 }
 .char-cards-wrap {
-  display:flex; flex-wrap:wrap; gap:6px;
+  display:grid; grid-template-columns:1fr 1fr; gap:6px;
   margin-bottom:18px;
-  max-height:260px; overflow-y:auto;
   padding-right:2px;
-  scrollbar-width:thin;
 }
-.char-cards-wrap::-webkit-scrollbar { width:3px; }
-.char-cards-wrap::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
+/* char-cards-wrap scrollbar removed - uses grid layout */
 .char-card {
-  width:calc(50% - 4px); min-width:100px;
   display:flex; flex-direction:column; align-items:center;
-  padding:10px 4px 8px; border-radius:12px; cursor:pointer;
+  padding:8px 4px 6px; border-radius:12px; cursor:pointer;
   border:2px solid transparent; background:var(--bg-page);
   transition:all 0.2s ease; text-align:center;
 }
@@ -2927,7 +2922,7 @@ function showIntro() {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v12c · 2026.07.01</div>';
+  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v16 · 2026.07.02</div>';
   html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
@@ -4720,8 +4715,8 @@ function generatePoster() {
   if (!ending) ending = ENDINGS[ENDINGS.length - 1];
 
   // Big emoji (floating style)
-  ctx.font = '60px -apple-system, sans-serif';
-  ctx.fillText(ending.emoji, w/2, 160);
+  ctx.font = '42px -apple-system, sans-serif';
+  ctx.fillText(ending.emoji, w/2, 128);
 
   // Ending name - gradient effect via multiple draws
   ctx.font = 'bold 52px -apple-system, "PingFang SC", sans-serif';
@@ -4730,7 +4725,7 @@ function generatePoster() {
   nameGrad.addColorStop(0.5, '#f59e0b');
   nameGrad.addColorStop(1, '#f97316');
   ctx.fillStyle = nameGrad;
-  ctx.fillText(ending.name, w/2, 270);
+  ctx.fillText(ending.name, w/2, 230);
 
   // Personality tag
   var posterPersLabel = '';
@@ -4747,7 +4742,7 @@ function generatePoster() {
   if (posterPersLabel) {
     ctx.font = '22px -apple-system, "PingFang SC", sans-serif';
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillText(posterPersLabel, w/2, 315);
+    ctx.fillText(posterPersLabel, w/2, 275);
   }
 
   // Description
@@ -4755,7 +4750,7 @@ function generatePoster() {
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
   var desc = ending.desc;
   var line = '';
-  var lineY = 380;
+  var lineY = 340;
   for (var k = 0; k < desc.length; k++) {
     line += desc[k];
     if (ctx.measureText(line).width > 560 || k === desc.length - 1) {
