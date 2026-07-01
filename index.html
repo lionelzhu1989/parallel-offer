@@ -80,21 +80,23 @@ body {
 .year-progress-text { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px; }
 
 /* ===== Attribute Bar ===== */
-.attr-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:8px 6px; margin-top:12px; padding:0 2px; }
+.attr-bar { display:grid; grid-template-columns:repeat(5,1fr); gap:6px 4px; margin-top:12px; padding:0 1px; }
 .attr-item {
-  display:flex; flex-direction:column; align-items:center; gap:3px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
   background: rgba(255,255,255,0.15);
-  border-radius: var(--radius-md); padding:8px 4px;
+  border-radius: var(--radius-md); padding:6px 2px;
   border: 1px solid rgba(255,255,255,0.1);
   transition: all 0.2s ease;
   position: relative;
+  min-width:0;
+  overflow:hidden;
 }
 .attr-item:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
 .attr-item .attr-top { display:flex; align-items:center; gap:3px; }
-.attr-item .attr-icon { font-size:13px; }
-.attr-item .attr-label { font-size:9px; color:rgba(255,255,255,0.7); letter-spacing:0.5px; font-weight:500; text-transform:uppercase; }
-.attr-item .attr-val { font-weight:700; font-size:13px; color:#fff; line-height:1.2; }
-.attr-item .attr-bar-bg { width:80%; height:3px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; margin-top:2px; }
+.attr-item .attr-icon { font-size:11px; }
+.attr-item .attr-label { font-size:7px; color:rgba(255,255,255,0.7); letter-spacing:0.3px; font-weight:500; text-transform:uppercase; }
+.attr-item .attr-val { font-weight:700; font-size:11px; color:#fff; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.attr-item .attr-bar-bg { width:90%; height:2px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; margin-top:1px; }
 .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.5s ease; }
 .attr-bar-fill.salary { background:linear-gradient(90deg,#fbbf24,#fb923c); }
 .attr-bar-fill.skill { background:linear-gradient(90deg,#60a5fa,#3b82f6); }
@@ -108,7 +110,7 @@ body {
   background: linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.3));
   border-color: rgba(251,191,36,0.3);
 }
-.attr-item.money-card .attr-val { color:#fde68a; font-size:12px; font-weight:800; }
+.attr-item.money-card .attr-val { color:#fde68a; font-size:10px; font-weight:800; }
 .money-card .attr-label { color:rgba(253,230,138,0.8); }
 .money-card .attr-icon { font-size:15px; }
 .attr-sub { font-size:9px; color:rgba(253,230,138,0.7); margin-top:1px; }
@@ -126,7 +128,15 @@ body {
 .num-float.down { color:#ef4444; animation-name:numDown; }
 
 /* ===== Main Content ===== */
-.main-content { flex:1; padding:16px 14px; display:flex; flex-direction:column; gap:14px; }
+
+/* Custom scrollbar */
+.main-content::-webkit-scrollbar { width:3px; }
+.main-content::-webkit-scrollbar-track { background:transparent; }
+.main-content::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
+.choices::-webkit-scrollbar { width:3px; }
+.choices::-webkit-scrollbar-track { background:transparent; }
+.choices::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
+.main-content { flex:1; padding:16px 14px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
 
 /* ===== Scenario Card ===== */
 .scenario-card {
@@ -160,7 +170,7 @@ body {
 .event-title { font-size:16px; font-weight:700; color:var(--text-primary); }
 
 /* ===== Choice Buttons ===== */
-.choices { display:flex; flex-direction:column; gap:10px; }
+.choices { display:flex; flex-direction:column; gap:10px; max-height:calc(100vh - 320px); overflow-y:auto; padding-right:4px; }
 .choice-btn {
   background: var(--bg-card);
   border: 1.5px solid var(--border);
@@ -1107,8 +1117,8 @@ body.dark-mode .entry-btn {
     <div class="attr-item"><div class="attr-tooltip" id="tipRank">职级: L1</div><div class="attr-top"><span class="attr-icon">📊</span><span class="attr-label">职级</span></div><span class="attr-val" id="attrRank">L1</span></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipSkill">技能: 30/100</div><div class="attr-top"><span class="attr-icon">🧠</span><span class="attr-label">技能</span></div><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipNetwork">人脉: 20/100</div><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><span class="health-tier normal" id="healthTier">正常</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipHair">发量: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">发量</span></div><span class="attr-val" id="attrHair">60</span><span class="hair-emoji" id="hairEmoji"></span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipHair">发量: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">发量</span></div><span class="attr-val" id="attrHair">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
     <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span><span class="attr-sub" id="attrTotalAsset" style="font-size:9px;color:#b45309;margin-top:1px"></span></div>    <div class="attr-item" id="propItem" style="display:none"><div class="attr-top"><span class="attr-icon">🏠</span><span class="attr-label">房产</span></div><span class="attr-val" id="attrProp">0</span></div>
   </div>
 </div>
