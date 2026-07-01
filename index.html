@@ -1778,7 +1778,12 @@ function chooseEvent(optIdx) {
   if (opt.network) state.network = clamp(state.network + getModifiedBonus(opt.network, 'network'), 0, 100);
   if (opt.health) state.health = clamp(state.health + getModifiedBonus(opt.health, 'health'), 0, 100);
   if (opt.happy) state.happy = clamp(state.happy + getModifiedBonus(opt.happy, 'happy'), 0, 100);
-  if (opt.money) state.money += opt.money;
+  if (opt.money) {
+    state.money += opt.money;
+    // Money floor: bankruptcy at -50000
+    if (state.money < -50000) { state.money = -50000; toast('💸 负债累累！信用破产了...'); }
+    if (state.money >= 1000000) { toast('🏆 千万存款！财务自由指日可待！'); }
+  }
   if (opt.salary) state.salary = Math.max(0, Math.round(state.salary * (1 + opt.salary * 0.1)));
 
   // Natural aging
@@ -1809,7 +1814,13 @@ function chooseEvent(optIdx) {
   // phone: chance of random phone distraction event (skill penalty)
   if (state.talents.indexOf('phone') >= 0 && Math.random() < 0.15) state.skill -= 1;
 
-  state.health = clamp(state.health, 0, 100);
+    // Apply healthCap from talents (runner: +20)
+  var healthMax = 100;
+  for (var _ti = 0; _ti < state.talents.length; _ti++) {
+    var _tp = TALENT_POOL.find(function(t){ return t.id === state.talents[_ti]; });
+    if (_tp && _tp.effect && _tp.effect.healthCap) healthMax += _tp.effect.healthCap;
+  }
+  state.health = clamp(state.health, 0, healthMax);
   state.happy = clamp(state.happy, 0, 100);
 
   // Record year
@@ -1865,15 +1876,8 @@ function undoLastChoice() {
   state.year = snap.year;
   state._promoCooldown = snap.promoCooldown || 0;
   var wasRandom = state._lastChoiceType === 'random';
-  // Remove current event from dedup so same event re-appears
-  if (snap.eventTitle) {
-    if (wasRandom) {
-      var idx = state._shownRandom.indexOf(snap.eventTitle);
-      if (idx >= 0) state._shownRandom.splice(idx, 1);
-    } else {
-      delete state._shownEvents[snap.eventTitle];
-    }
-  }
+  // Keep event in dedup (prevent re-rolling)
+  // Just re-show the same event without removing from shown list
   state._undoSnapshot = null;
   state._lastChoiceType = null;
   // Re-show the same event
@@ -1946,7 +1950,10 @@ function chooseRandom(optIdx) {
   };
   state._lastChoiceType = 'random';
 
-  if (opt.money) state.money += opt.money;
+  if (opt.money) {
+    state.money += opt.money;
+    if (state.money < -50000) { state.money = -50000; toast('💸 负债累累！信用破产了...'); }
+  }
   if (opt.skill) state.skill = clamp(state.skill + opt.skill, 0, 100);
   if (opt.network) state.network = clamp(state.network + opt.network, 0, 100);
   if (opt.health) state.health = clamp(state.health + opt.health, 0, 100);
@@ -1967,18 +1974,23 @@ function chooseRandom(optIdx) {
   });
   }
 
-    // Natural aging for promo year
+  // Natural aging
   state.health = clamp(state.health - (state.year >= 5 ? 4 : 2), 0, 100);
-  // Talent effects for promo year
+  // Talent effects
   if (state.talents.indexOf('zen') >= 0) state.happy += 5;
   if (state.talents.indexOf('hardwork') >= 0) state.health -= 3;
   if (state.talents.indexOf('nightowl') >= 0) state.health -= 1;
   if (state.talents.indexOf('foodie') >= 0) state.happy += 3;
-  state.health = clamp(state.health, 0, 100);
+    // Apply healthCap from talents (runner: +20)
+  var healthMax = 100;
+  for (var _ti = 0; _ti < state.talents.length; _ti++) {
+    var _tp = TALENT_POOL.find(function(t){ return t.id === state.talents[_ti]; });
+    if (_tp && _tp.effect && _tp.effect.healthCap) healthMax += _tp.effect.healthCap;
+  }
+  state.health = clamp(state.health, 0, healthMax);
   state.happy = clamp(state.happy, 0, 100);
 
-  state.year++;
-  render();
+  state.year++;;
   render();
 }
 
@@ -2107,11 +2119,17 @@ function showEnding() {
   // Calculate total score
   var totalScore = state.skill + state.network + state.health + state.happy + Math.min(state.rankIdx * 15, 90) + Math.min(state.salary / 1000, 50);
 
-  // Find matching ending
+  // Find matching ending (priority: track-specific > general, hidden always included)
   var ending = null;
   var hiddenEndings = [];
-  for (var i = 0; i < ENDINGS.length; i++) {
-    var e = ENDINGS[i];
+  // Sort: track-specific endings first for priority
+  var sortedEndings = ENDINGS.slice().sort(function(a, b) {
+    var aTrack = a.track ? 1 : 0;
+    var bTrack = b.track ? 1 : 0;
+    return bTrack - aTrack;
+  });
+  for (var i = 0; i < sortedEndings.length; i++) {
+    var e = sortedEndings[i];
     if (e.track && e.track !== state.track) continue;
     try {
       if (e.condition(state)) {
@@ -2122,7 +2140,7 @@ function showEnding() {
   }
   if (!ending) {
     // Default ending based on highest attribute
-    if (state.happy >= 70) ending = ENDINGS.find(function(e){ return e.id === 'lying_flat' || e.id === 'parallel'; });
+    if (state.happy >= 70) ending = ENDINGS.find(function(e){ return e.id === 'lying_flat'; });
     else if (state.skill >= 70) ending = ENDINGS.find(function(e){ return e.id === 'tech_god'; });
     else if (state.network >= 70) ending = ENDINGS.find(function(e){ return e.id === 'sales_king' || e.id === 'social_legend'; });
     else ending = ENDINGS.find(function(e){ return e.id === 'parallel'; });
