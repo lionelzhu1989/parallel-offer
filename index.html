@@ -321,6 +321,7 @@ function toast(msg) {
 
 function closeAllModals() {
   document.querySelectorAll('.modal-overlay').forEach(function(m) { m.classList.remove('show'); });
+  closeShopPanel();
 }
 
 
@@ -3004,37 +3005,25 @@ function applyYearlyIncome() {
 
 // ====== Promotion Dual-Branch ======
 function showPromoBranch() {
-  var html = '<div class="modal-title">🎯 晋升成功！选择发展方向</div>';
-  html += '<div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:12px">这个决定不可逆，将影响你接下来的整个职业生涯</div>';
-  html += '<div class="switch-grid">';
-  
   var tk = CAREER_TRACKS[state.track];
   var salaryBoost = Math.round(state.salary * 0.4);
-  
-  html += '<div class="switch-card" onclick="choosePromoBranch(\'tech\')">';
-  html += '<div class="sw-title">🔬 技术专家线</div>';
-  html += '<div class="sw-desc">深耕技术，成为领域权威</div>';
-  html += '<div class="sw-cost">技能+20 · 底薪+' + (salaryBoost/1000) + 'K<br>⚡ 代价：人脉-10 · 每年健康额外-3</div>';
-  html += '</div>';
-  
-  html += '<div class="switch-card" onclick="choosePromoBranch(\'leader\')">';
-  html += '<div class="sw-title">👔 管理领导线</div>';
-  html += '<div class="sw-desc">带团队，走仕途</div>';
-  html += '<div class="sw-cost">人脉+20 · 解锁团队分红<br>⚡ 代价：技能增长停滞 · 晋升门槛持续抬高</div>';
-  html += '</div>';
-  
-  html += '</div>';
-  html += '<div class="confirm-btn" onclick="closeAllModals()">再想想</div>';
-  
-  var modal = document.getElementById('branchModal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.id = 'branchModal';
-    document.body.appendChild(modal);
-  }
-  modal.innerHTML = '<div class="modal-inner">' + html + '</div>';
-  modal.classList.add('show');
+  var grid = document.getElementById('promoBranchGrid');
+  var sub = document.getElementById('promoBranchSub');
+  if (sub) sub.textContent = '这个决定不可逆，将影响你接下来的整个职业生涯';
+  grid.innerHTML = '';
+  // Tech branch
+  var techCard = document.createElement('div');
+  techCard.className = 'branch-card';
+  techCard.onclick = function(){ choosePromoBranch('tech'); };
+  techCard.innerHTML = '<div class="bc-icon">🔬</div><div class="bc-title">技术专家线</div><div class="bc-desc">深耕技术，成为领域权威</div><div class="bc-pros">✅ 技能+20 · 底薪+' + (salaryBoost/1000) + 'K</div><div class="bc-cons">⚡ 代价：人脉-10 · 每年健康额外-3</div>';
+  grid.appendChild(techCard);
+  // Leader branch
+  var leaderCard = document.createElement('div');
+  leaderCard.className = 'branch-card';
+  leaderCard.onclick = function(){ choosePromoBranch('leader'); };
+  leaderCard.innerHTML = '<div class="bc-icon">👔</div><div class="bc-title">管理领导线</div><div class="bc-desc">带团队，走仕途</div><div class="bc-pros">✅ 人脉+20 · 解锁团队分红</div><div class="bc-cons">⚡ 代价：技能增长停滞 · 晋升门槛持续抬高</div>';
+  grid.appendChild(leaderCard);
+  document.getElementById('promoBranchModal').classList.add('show');
 }
 
 function choosePromoBranch(branch) {
