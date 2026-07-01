@@ -381,7 +381,7 @@
     <div class="attr-item"><div class="attr-tooltip" id="tipSkill">技能: 30/100</div><div class="attr-top"><span class="attr-icon">🧠</span><span class="attr-label">技能</span></div><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipNetwork">人脉: 20/100</div><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><span class="health-tier normal" id="healthTier">正常</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipHair">满足: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">满足</span></div><span class="attr-val" id="attrHair">60</span><span class="hair-emoji" id="hairEmoji"></span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipHair">发量: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">发量</span></div><span class="attr-val" id="attrHair">60</span><span class="hair-emoji" id="hairEmoji"></span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
     <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span></div>
   </div>
 </div>
@@ -529,7 +529,7 @@ function _getTalentEffectSummary(talent) {
   if (e.healthPenalty) parts.push('<span class="eff-neg">❤️健康' + e.healthPenalty + '</span>');
   if (e.healthRecovery) parts.push('<span class="eff-pos">❤️恢复+' + Math.round(e.healthRecovery * 100) + '%</span>');
   if (e.healthCap) parts.push('<span class="eff-pos">❤️上限+' + (e.healthCap - 100) + '</span>');
-  if (e.hairBonus) parts.push('<span class="eff-pos">😊满足+' + e.hairBonus + '</span>');
+  if (e.hairBonus) parts.push('<span class="eff-pos">😊发量+' + e.hairBonus + '</span>');
   if (e.promoBonus) parts.push('<span class="eff-pos">📈晋升+' + Math.round(e.promoBonus * 100) + '%</span>');
   if (e.promoPenalty) parts.push('<span class="eff-neg">📈晋升' + Math.round(e.promoPenalty * 100) + '%</span>');
   if (e.promoSpeed) {
@@ -615,12 +615,12 @@ var TALENT_POOL = [
     promoBonus:0.3 },
   { id:'marathon', name:'铁人马拉松', emoji:'🏃', school:'tech',
     desc:'连续通宵不在话下。技能拉满，但发际线也拉满了。',
-    talentEffect:{skillBonus:1.3}, debuff:'每年健康-5，满足度-5',
+    talentEffect:{skillBonus:1.3}, debuff:'每年健康-5，发量-5',
     yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.hair=clamp(s.hair-5,0,100); },
     promoBonus:0.2 },
   { id:'geek', name:'极客之魂', emoji:'🤖', school:'tech',
     desc:'代码就是浪漫。技术暴涨，社交为零。',
-    talentEffect:{skillBonus:1.4}, debuff:'人脉增长-50%，每年满足度-3',
+    talentEffect:{skillBonus:1.4}, debuff:'人脉增长-50%，每年发量-3',
     yearlyEffect:function(s){ s.network=Math.max(0,s.network-1); s.hair=clamp(s.hair-3,0,100); },
     promoBonus:0.25 },
 
@@ -653,7 +653,7 @@ var TALENT_POOL = [
     yearlyEffect:function(s){},
     promoBonus:-0.4 },
   { id:'optimist', name:'乐天派', emoji:'☀️', school:'zen',
-    desc:'开心就好。满足度永远高，但没什么野心。',
+    desc:'开心就好。发量永远高，但没什么野心。',
     talentEffect:{hairBonus:true}, debuff:'技能增长-30%，不会主动触发贵人事件',
     yearlyEffect:function(s){ s.hair=Math.min(100, s.hair+2); },
     promoBonus:-0.2 },
@@ -670,8 +670,8 @@ var TALENT_POOL = [
     yearlyEffect:function(s){ s.health=clamp(s.health-3,0,100); if(Math.random()<0.2) s.money-=50000; },
     promoBonus:0 },
   { id:'hustler', name:'搞钱达人', emoji:'💰', school:'risk',
-    desc:'赚钱不要命。副业翻倍，但健康和满足暴跌。',
-    talentEffect:{sideIncome:2.5}, debuff:'每年健康-5，满足度-8',
+    desc:'赚钱不要命。副业翻倍，但健康和发量暴跌。',
+    talentEffect:{sideIncome:2.5}, debuff:'每年健康-5，发量-8',
     yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.hair=clamp(s.hair-8,0,100); },
     promoBonus:0 },
 
@@ -1901,7 +1901,7 @@ var ACHIEVEMENTS = [
   { id:'hospital_survivor', emoji:'🏥', name:'病房钉子户', desc:'住院超过3年', check:function(s){ return s._isHospitalized && (s.year - s._hospitalYear) >= 3; } },
   { id:'bald_hero', emoji:'🧑‍🦲', name:'聪明绝顶', desc:'发量降到10以下', check:function(s){ return s.hair<=10; } },
   { id:'hair_king', emoji:'💇', name:'发量王者', desc:'发量保持80+到结局', check:function(s){ return s.hair>=80 && s._playEnded; } },
-  { id:'hair_soul', emoji:'😊', name:'幸福达人', desc:'满足度达到90', check:function(s){ return s.hair>=90; } },
+  { id:'hair_soul', emoji:'😊', name:'幸福达人', desc:'发量达到90', check:function(s){ return s.hair>=90; } },
   { id:'salary_10w', emoji:'💰', name:'月薪十万', desc:'月薪超过10万', check:function(s){ return s.salary>=100000; } },
   { id:'talent_collector', emoji:'🎨', name:'天赋收藏家', desc:'解锁所有天赋', check:function(s){ return s.talents && s.talents.length >= 5; } },
   { id:'all_endings', emoji:'📖', name:'结局大师', desc:'解锁所有结局', check:function(s){ try { var saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}'); return Object.keys(saved).length >= 10; } catch(e) { return false; } } },
@@ -2363,7 +2363,7 @@ function render() {
   for (var c = 0; c < event.opts.length; c++) {
     var opt = event.opts[c];
         var effectParts = [];
-    var _dims = [['skill','🧠','技能'],['network','👥','人脉'],['health','❤️','健康'],['hair','😊','满足']];
+    var _dims = [['skill','🧠','技能'],['network','👥','人脉'],['health','❤️','健康'],['hair','😊','发量']];
     for (var d = 0; d < _dims.length; d++) {
       var dk = _dims[d][0], emoji = _dims[d][1], label = _dims[d][2];
       if (opt[dk]) {
@@ -2924,7 +2924,7 @@ function getPersonality(s) {
   else if (s.health >= 90) animal = '🦌 养生小鹿';
   else if (s.skill >= 85) animal = '🧠 技术猫头鹰';
   else if (s.network >= 85) animal = '🐺 社交狼';
-  else if (s.hair >= 80) animal = '😺 满足喵';
+  else if (s.hair >= 80) animal = '😺 发量喵';
   else if (s.hair <= 40) animal = '🦘 逃命袋鼠';
 
   return { traits: traits, animal: animal };
@@ -3014,7 +3014,7 @@ function showEnding() {
   html += '<div class="id-dim"><div class="id-dim-icon">🧠</div><div class="id-dim-text"><div class="id-dim-label">技能：' + state.skill + '</div><div class="id-dim-desc">专业能力指数</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">👥</div><div class="id-dim-text"><div class="id-dim-label">人脉：' + state.network + '</div><div class="id-dim-desc">社会关系网络</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">❤️</div><div class="id-dim-text"><div class="id-dim-label">健康：' + state.health + '</div><div class="id-dim-desc">身体是革命的本钱</div></div></div>';
-  html += '<div class="id-dim"><div class="id-dim-icon">😊</div><div class="id-dim-text"><div class="id-dim-label">满足度：' + state.hair + '</div><div class="id-dim-desc">人生幸福感指数</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">😊</div><div class="id-dim-text"><div class="id-dim-label">发量：' + state.hair + '</div><div class="id-dim-desc">人生幸福感指数</div></div></div>';
   html += '</div>';
   // Show talents
   html += '<div class="id-talents">';
@@ -3465,7 +3465,7 @@ function showSwitchModal() {
     if (t === state.track) {
       html += '<div class="switch-card current"><div class="sw-title">' + emojis[t] + ' ' + tk.name + ' (当前)</div></div>';
     } else {
-      var penalty = '技能-10 · 人脉-15 · 健康-5 · 满足-10 · 薪资重置为' + (tk.salary/1000) + 'K';
+      var penalty = '技能-10 · 人脉-15 · 健康-5 · 发量-10 · 薪资重置为' + (tk.salary/1000) + 'K';
       html += '<div class="switch-card" onclick="switchTrack(\'' + t + '\')"><div class="sw-title">' + emojis[t] + ' ' + tk.name + '</div><div class="sw-cost">' + penalty + '</div></div>';
     }
   }
@@ -3577,7 +3577,7 @@ ctx.fillText('平行offer · 职场鉴定报告', w/2, 80);
     { icon:'🧠', label:'技能', value: state.skill },
     { icon:'👥', label:'人脉', value: state.network },
     { icon:'❤️', label:'健康', value: state.health },
-    { icon:'😊', label:'满足度', value: state.hair }
+    { icon:'😊', label:'发量', value: state.hair }
   ];
   ctx.textAlign = 'left';
   ctx.fillStyle = 'rgba(255,255,255,0.12)';
@@ -3679,7 +3679,7 @@ function showPKCard(rival, me) {
   html += row('🧠', '技能', rival.skill, me.skill);
   html += row('👥', '人脉', rival.network, me.network);
   html += row('❤️', '健康', rival.health, me.health);
-  html += row('😊', '满足', rival.hair, me.hair);
+  html += row('😊', '发量', rival.hair, me.hair);
   html += '<div class="pk-result"><div class="pk-result-text">' + resultText + '</div></div>';
   html += '</div>';
   html += '<div class="pk-subtitle">你和 ' + rivalName + ' 的十年对比 ↑</div>';
@@ -3846,7 +3846,7 @@ function hospitalAction(action) {
 function showYearReview(event, opt, before) {
   // Calculate deltas
   var changes = [];
-  var dims = [['skill','🧠','技能'],['network','👥','人脉'],['health','❤️','健康'],['hair','😊','满足']];
+  var dims = [['skill','🧠','技能'],['network','👥','人脉'],['health','❤️','健康'],['hair','😊','发量']];
   for (var d = 0; d < dims.length; d++) {
     var dk = dims[d][0], emoji = dims[d][1], label = dims[d][2];
     var delta = (state[dk]||0) - (before[dk]||0);
@@ -4033,7 +4033,7 @@ function showFinale() {
   html += '<span class="year-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff">🏁 第十年</span>';
   html += '<div class="scenario-title">终局抉择</div>';
   html += '<div class="scene-text">十年了。你站在人生十字路口回望来路——<br>';
-  html += '技能 '+state.skill+' · 人脉 '+state.network+' · 健康 '+state.health+' · 满足 '+state.hair+'<br>';
+  html += '技能 '+state.skill+' · 人脉 '+state.network+' · 健康 '+state.health+' · 发量 '+state.hair+'<br>';
   html += '存款 ¥'+(state.money>=10000?Math.round(state.money/10000)+'万':state.money.toLocaleString());
   html += '</div>';
 
