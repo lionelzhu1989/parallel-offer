@@ -622,7 +622,7 @@ var TALENT_POOL = [
 var CAREER_EVENTS = {
   tech: [
     { year:[1,2], title:'需求又变了', desc:'产品经理第三次改需求。上一版的代码白写了。你开始怀疑"敏捷开发"是不是"赶快重写"的意思。', opts:[
-      {text:'默默重写，毕竟工资照发', skill:5, health:-3, happy:-5},
+      {text:'默默重写，毕竟工资照发', skill:5, health:-3, happy:-5}, addBuff('overtime','加班模式','健康小幅下降',2,{health:-3});
       {text:'跟产品经理battle一下', skill:3, network:5, happy:-2},
       {text:'截图留证，下次甩锅用', skill:2, network:-3, happy:3}
     ]},
@@ -632,7 +632,7 @@ var CAREER_EVENTS = {
       {text:'偷偷去学了设计模式', skill:10, happy:-5}
     ]},
     { year:[2,3], title:'线上事故！', desc:'凌晨3点，你写的代码在生产环境炸了。告警群炸锅，你开始思考人生的意义。', opts:[
-      {text:'爬起来修复，通宵达旦', skill:8, health:-10, happy:-8},
+      {text:'爬起来修复，通宵达旦', skill:8, health:-10, happy:-8}, addBuff('overwork','过劳状态','技能+15但健康持续下降',3,{health:-5,skill:2});
       {text:'假装没看到，等早上再说', health:-3, happy:5, network:-5},
       {text:'发了个"正在排查"的消息，然后继续睡', happy:3, network:-3}
     ]},
@@ -662,7 +662,7 @@ var CAREER_EVENTS = {
       {text:'推荐TA去做产品（开玩笑）', happy:8}
     ],health:-4},
     { year:[8,9], title:'裁员潮来袭', desc:'HR群里传出了"优化"的消息。隔壁组已经有人开始收拾工位了。你心里咯噔一下。', opts:[
-      {text:'疯狂刷题，准备跳槽', skill:8, happy:-10, network:5},
+      {text:'疯狂刷题，准备跳槽', skill:8, happy:-10, network:5}, addBuff('adapt','适应期','新环境需要时间',3,{network:-3});
       {text:'主动找领导谈，确认自己安全', network:8, happy:-5},
       {text:'摸鱼等赔偿，N+1不香吗？', happy:5, skill:-3}
     ]},
@@ -2960,7 +2960,25 @@ function generatePoster() {
   ctx.fillStyle = 'rgba(255,255,255,0.85)';
   ctx.font = '600 28px -apple-system, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('平行offer · 职场鉴定报告', w/2, 80);
+  
+  // School/flow label
+  var schoolMap = {tech:'🔬 内卷技术流', social:'🤝 人脉经商流', zen:'🧘 佛系躺平流', risk:'🎰 风险投机流'};
+  var dominantSchool = '';
+  if (state.talents && state.talents.length > 0) {
+    var schoolCount = {};
+    for (var si = 0; si < state.talents.length; si++) {
+      var td = TALENT_POOL.find(function(t){return t.id===state.talents[si]});
+      if (td && td.school) schoolCount[td.school] = (schoolCount[td.school]||0)+1;
+    }
+    var maxCount = 0;
+    for (var sk in schoolCount) { if (schoolCount[sk] > maxCount) { maxCount = schoolCount[sk]; dominantSchool = sk; } }
+  }
+  if (dominantSchool && schoolMap[dominantSchool]) {
+    ctx.fillStyle = '#e07a5f';
+    ctx.font = '600 24px -apple-system, sans-serif';
+    ctx.fillText(schoolMap[dominantSchool], 80, 200);
+  }
+ctx.fillText('平行offer · 职场鉴定报告', w/2, 80);
 
   // Track
   var track = CAREER_TRACKS[state.track];
@@ -3104,7 +3122,13 @@ function shareChallenge() {
   var emoji = ending.emoji || '🦥';
   // Encode stats for PK: skill,network,health,happy,salary,emoji,endingName,talents
   var rv = state.skill + ',' + state.network + ',' + state.health + ',' + state.happy + ',' + state.salary + ',' + encodeURIComponent(emoji) + ',' + encodeURIComponent(name) + ',' + state.talents.map(function(t){ return t; }).join('|');
-  var baseUrl = window.location.href.split('?')[0];
+  var baseUrl = window.location.href.split('?')[0
+  { id:'tech_master', emoji:'🔬', name:'技术大牛', desc:'走技术专家路线通关', check:function(s){ return s._promoBranch === 'tech' && s._playEnded; } },
+  { id:'leader_boss', emoji:'👔', name:'管理精英', desc:'走管理领导路线通关', check:function(s){ return s._promoBranch === 'leader' && s._playEnded; } },
+  { id:'landlord', emoji:'🏠', name:'包租公', desc:'拥有3套以上房产', check:function(s){ return (s._property || 0) >= 3; } },
+  { id:'millionaire', emoji:'💎', name:'百万富翁', desc:'存款超过100万', check:function(s){ return s.money >= 1000000; } },
+  { id:'bankrupt', emoji:'💸', name:'破产专业户', desc:'触发破产结局', check:function(s){ return s.money <= -50000; } },
+];
   var challengeUrl = baseUrl + '?from=' + encodeURIComponent(name) + '&rv=' + encodeURIComponent(rv);
   var text = '📸 我已经是' + emoji + name + '了！\n敢来和我PK吗？\n👉 ' + challengeUrl;
   if (navigator.share) {
