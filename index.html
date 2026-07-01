@@ -54,15 +54,15 @@ body {
   position: sticky; top: 0; z-index: 100;
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);
   backdrop-filter: blur(20px);
-  padding: 12px 14px 10px;
+  padding: 10px 12px 8px;
   border-radius: 0 0 var(--radius-xl) var(--radius-xl);
   box-shadow: 0 4px 20px rgba(99,102,241,0.3);
 }
-.top-bar .main-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.top-bar .main-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .top-bar .year-label {
   background: rgba(255,255,255,0.2); color: #fff;
-  padding: 5px 16px; border-radius: 20px;
-  font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
   backdrop-filter: blur(8px);
 }
 .top-bar .track-badge { display:inline-block; padding:3px 12px; border-radius:20px; font-size:11px; font-weight:600; backdrop-filter:blur(4px); }
@@ -74,29 +74,28 @@ body {
 .track-badge.gig { background: rgba(59,130,246,0.2); color: #bfdbfe; }
 
 /* ===== Progress Bar ===== */
-.year-progress-wrap { margin-top: 8px; }
+.year-progress-wrap { margin-top: 6px; }
 .year-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
 .year-progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f472b6, #a78bfa); border-radius: 2px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
 .year-progress-text { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px; }
 
 /* ===== Attribute Bar ===== */
-.attr-bar { display:grid; grid-template-columns:repeat(5,1fr); gap:6px 4px; margin-top:12px; padding:0 1px; }
+.attr-bar { display:flex; flex-wrap:wrap; gap:5px 4px; margin-top:10px; padding:0; }
 .attr-item {
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  background: rgba(255,255,255,0.15);
-  border-radius: var(--radius-md); padding:6px 2px;
-  border: 1px solid rgba(255,255,255,0.1);
-  transition: all 0.2s ease;
-  position: relative;
-  min-width:0;
-  overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; gap:1px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px; padding:4px 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  flex: 1 1 auto;
+  min-width: 52px;
+  max-width: 68px;
 }
 .attr-item:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
 .attr-item .attr-top { display:flex; align-items:center; gap:3px; }
-.attr-item .attr-icon { font-size:11px; }
-.attr-item .attr-label { font-size:7px; color:rgba(255,255,255,0.7); letter-spacing:0.3px; font-weight:500; text-transform:uppercase; }
-.attr-item .attr-val { font-weight:700; font-size:11px; color:#fff; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
-.attr-item .attr-bar-bg { width:90%; height:2px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; margin-top:1px; }
+.attr-item .attr-icon { font-size:12px; }
+.attr-item .attr-label { font-size:8px; color:rgba(255,255,255,0.6); font-weight:500; }
+.attr-item .attr-val { font-weight:700; font-size:12px; color:#fff; line-height:1.1; white-space:nowrap; }
+.attr-item .attr-bar-bg { width:100%; height:2px; background:rgba(255,255,255,0.12); border-radius:2px; overflow:hidden; margin-top:1px; }
 .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.5s ease; }
 .attr-bar-fill.salary { background:linear-gradient(90deg,#fbbf24,#fb923c); }
 .attr-bar-fill.skill { background:linear-gradient(90deg,#60a5fa,#3b82f6); }
@@ -107,10 +106,12 @@ body {
 
 /* Money card - special styling */
 .attr-item.money-card {
+  flex: 1.3 1 auto;
+  max-width: 80px;
   background: linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.3));
   border-color: rgba(251,191,36,0.3);
 }
-.attr-item.money-card .attr-val { color:#fde68a; font-size:10px; font-weight:800; }
+.attr-item.money-card .attr-val { color:#fde68a; font-size:11px; font-weight:800; }
 .money-card .attr-label { color:rgba(253,230,138,0.8); }
 .money-card .attr-icon { font-size:15px; }
 .attr-sub { font-size:9px; color:rgba(253,230,138,0.7); margin-top:1px; }
@@ -1067,9 +1068,10 @@ body {
 /* ===== Responsive ===== */
 @media (max-width: 360px) {
   .attr-bar { gap:6px 4px; }
-  .attr-item { padding:6px 3px; }
-  .attr-item .attr-val { font-size:12px; }
-  .attr-item .attr-label { font-size:8px; }
+  .attr-item { padding:3px 4px; min-width:44px; max-width:56px; }
+  .attr-item .attr-val { font-size:11px; }
+  .attr-item .attr-label { font-size:7px; }
+  .attr-item.money-card { max-width:68px; }
 }
 /* ====== Dark Mode ====== */
 body.dark-mode {
@@ -1077,6 +1079,8 @@ body.dark-mode {
   color: #e0e0e0 !important;
 }
 body.dark-mode .attr-item {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.05);
   background: rgba(255,255,255,0.05) !important;
 }
 body.dark-mode .scenario-card {
@@ -1119,7 +1123,7 @@ body.dark-mode .entry-btn {
     <div class="attr-item"><div class="attr-tooltip" id="tipNetwork">人脉: 20/100</div><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
     <div class="attr-item"><div class="attr-tooltip" id="tipHair">发量: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">发量</span></div><span class="attr-val" id="attrHair">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
-    <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span><span class="attr-sub" id="attrTotalAsset" style="font-size:9px;color:#b45309;margin-top:1px"></span></div>    <div class="attr-item" id="propItem" style="display:none"><div class="attr-top"><span class="attr-icon">🏠</span><span class="attr-label">房产</span></div><span class="attr-val" id="attrProp">0</span></div>
+    <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span><span class="attr-sub" id="attrTotalAsset" style="font-size:9px;color:#b45309;margin-top:1px"></span></div>    <div class="attr-item" id="propItem" style="display:none; flex:1 1 auto; max-width:60px"><div class="attr-top"><span class="attr-icon">🏠</span><span class="attr-label">房产</span></div><span class="attr-val" id="attrProp">0</span></div>
   </div>
 </div>
 <div class="main-content" id="mainContent"></div>
@@ -2675,7 +2679,7 @@ function initState() {
     money: 0, persona: null, talents: [],
     _shownEvents: {}, _shownRandom: [], _yearlyRecords: [],
     _playEnded: false, _endingSaved: false,
-    _promoCooldown: 0, _playStartTime: null, _switchCount: 0, _lastSwitchYear: -5, _buffs: [], _shopOpen: false, _property: 0, _yearlyRent: 0, _debtYears: 0, _investments: [], _isHospitalized: false, _hospitalYear: 0
+    _promoCooldown: 0, _playStartTime: null, _switchCount: 0, _lastSwitchYear: -5, _buffs: [], _shopOpen: false, _property: 0, _yearlyRent: 0, _debtYears: 0, _investments: [], _isHospitalized: false, _hospitalYear: 1
   };
 }
 
@@ -4732,7 +4736,7 @@ var HOSPITAL_EVENTS = [
 
 function renderHospital() {
   var main = document.getElementById('mainContent');
-  var days = state.year - state._hospitalYear;
+  var days = Math.max(0, state.year - state._hospitalYear);
   var html = '<div class="scenario-card" style="border-left:4px solid #ef4444">';
   html += '<span class="year-badge" style="background:linear-gradient(135deg,#ef4444,#dc2626)">🏥 住院中</span>';
   html += '<span class="track-tag ' + CAREER_TRACKS[state.track].tag + '">' + CAREER_TRACKS[state.track].emoji + ' 第' + state.year + '年</span>';
@@ -4745,8 +4749,8 @@ function renderHospital() {
     else html += '<br>你的存款不足以支付治疗费用...<br>只能硬抗了。';
   }
   html += '</div>';
-  var evtIdx = days % HOSPITAL_EVENTS.length;
-  var evt = HOSPITAL_EVENTS[evtIdx];
+  var evtIdx = Math.abs(days) % HOSPITAL_EVENTS.length;
+  var evt = HOSPITAL_EVENTS[evtIdx] || HOSPITAL_EVENTS[0];
   html += '<div style="margin-top:12px;padding:12px;background:#fff5f5;border-radius:12px;border:1px solid #fecaca">';
   html += '<div style="font-weight:600;margin-bottom:6px;color:#dc2626">' + evt.title + '</div>';
   html += '<div style="font-size:13px;color:#64748b;line-height:1.6">' + evt.desc + '</div>';
@@ -4763,7 +4767,7 @@ function renderHospital() {
   } else {
     for (var hi = 0; hi < evt.opts.length; hi++) {
       var hopt = evt.opts[hi];
-      html += '<button class="choice-btn safe" onclick="hospitalAction(\'evt_\' + hi)">' + hopt.text;
+      html += '<button class="choice-btn safe" onclick="hospitalAction(\'evt_' + hi + '\')">' + hopt.text;
       var effs = [];
       if (hopt.health) effs.push((hopt.health>0?'+':'') + hopt.health + '❤️');
       if (hopt.hair) effs.push((hopt.hair>0?'+':'') + hopt.hair + '💇');
@@ -4796,12 +4800,15 @@ function hospitalAction(action) {
   else if (action === 'wait') { state.health = clamp(state.health + randInt(2, 8), 0, 100); toast('💤 躺了一天...'); }
   else if (action.startsWith('evt_')) {
     var oi = parseInt(action.replace('evt_', ''));
-    var o = HOSPITAL_EVENTS[days % HOSPITAL_EVENTS.length].opts[oi];
-    if (o.health) state.health = clamp(state.health + o.health, 0, 100);
-    if (o.hair) state.hair = clamp(state.hair + o.hair, 0, 100);
-    if (o.money) state.money += o.money;
-    if (o.skill) state.skill = clamp(state.skill + o.skill, 0, 100);
-    if (o.network) state.network = clamp(state.network + o.network, 0, 100);
+    var evt = HOSPITAL_EVENTS[days % HOSPITAL_EVENTS.length];
+    var o = evt && evt.opts ? evt.opts[oi] : null;
+    if (o) {
+      if (o.health) state.health = clamp(state.health + o.health, 0, 100);
+      if (o.hair) state.hair = clamp(state.hair + o.hair, 0, 100);
+      if (o.money) state.money += o.money;
+      if (o.skill) state.skill = clamp(state.skill + o.skill, 0, 100);
+      if (o.network) state.network = clamp(state.network + o.network, 0, 100);
+    }
   }
   state.year++;
   if (state.year > 10) { state._playEnded = true; showEnding(); return; }
