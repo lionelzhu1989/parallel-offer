@@ -7,318 +7,283 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #faf6f0; color: #2c2416; max-width: 420px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f7fa; color: #1e293b; max-width: 420px; margin: 0 auto;
     min-height: 100vh; display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased;
   }
-
-  /* ====== Top Bar ====== */
-  .top-bar {
-    position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid #e8e0d5; padding: 10px 16px;
-    font-size: 13px; color: #8c7b64;
-  }
-  .top-bar .main-row { display: flex; justify-content: space-between; align-items: center; }
-  .top-bar .year-label { background: #f0e9db; padding: 4px 12px; border-radius: 12px; font-size: 13px; color: #8c7b64; }
-  .top-bar .track-badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; }
-  .track-badge.tech { background: #e8f0fe; color: #1a56db; }
-  .track-badge.biz { background: #fff3e0; color: #e65100; }
-  .track-badge.state { background: #fce4ec; color: #c62828; }
-  .track-badge.mnc { background: #e8f5e9; color: #2e7d32; }
-  .track-badge.startup { background: #f3e5f5; color: #6a1b9a; }
-  .track-badge.gig { background: #e3f2fd; color: #0d47a1; }
-
-  /* ====== Attribute Bars ====== */
-  .attr-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:4px 8px; margin-top:8px; }
-  .attr-item { display:flex; flex-direction:column; align-items:center; gap:1px; }
-  .attr-item .attr-top { display:flex; align-items:center; gap:3px; }
-  .attr-item .attr-icon { font-size:14px; }
-  .attr-item .attr-label { font-size:10px; color:#8c7b64; letter-spacing:0.5px; }
-  .attr-item .attr-val { font-weight:700; font-size:14px; color:#3d3226; line-height:1.2; }
-  .attr-item .attr-bar-bg { width:100%; height:4px; background:#e8e0d5; border-radius:2px; overflow:hidden; margin-top:2px; }
-  .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.4s; }
-  .attr-bar-fill.salary { background:#e65100; }
-  .attr-bar-fill.skill { background:#1a56db; }
-  .attr-bar-fill.network { background:#6a1b9a; }
-  .attr-bar-fill.health { background:#c62828; }
-  .attr-bar-fill.satisfaction { background:#2e7d32; }
-
-  /* ====== Main Content ====== */
-  .main-content { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
-  .scenario-card { background: linear-gradient(180deg,#fff 0%,#fdfaf6 100%); border-radius: 16px; padding: 22px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-  .scenario-card .year-badge { display: inline-block; background: #f5efe3; color: #8c7b64; font-size: 12px; padding: 3px 10px; border-radius: 8px; margin-bottom: 10px; }
-  .scenario-card .scene-text { font-size: 15px; line-height: 1.75; color: #3d3226; }
-  .scenario-card .track-tag { display:inline-block; margin-bottom:8px; padding:4px 12px; border-radius:12px; font-size:11px; font-weight:600; }
-
-  /* ====== Choices ====== */
-  .choices { display: flex; flex-direction: column; gap: 10px; }
-  .choice-btn {
-    background: linear-gradient(135deg,#fff 0%,#fdfaf5 100%); border: 1.5px solid #e0d6c4; border-radius: 12px;
-    padding: 14px 16px; font-size: 14px; line-height: 1.5; color: #3d3226;
-    text-align: left; cursor: pointer; transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent; min-height: 44px;
-  }
-  .choice-btn:active { background: #f5efe3; border-color: #c9b896; transform: scale(0.98); }
-  .choice-btn.selected { background: linear-gradient(135deg,#faf3e8,#f5e8d0); border-color: #b8913c; border-width: 2px; }
-  .choice-effect { font-size:11px; color:#b0a590; margin-top:4px; }
-
-  .confirm-btn {
-    width: 100%; background: linear-gradient(135deg,#c9a55a,#b8860b); color: #fff; border: none; border-radius: 12px;
-    padding: 14px; font-size: 16px; font-weight: 600; cursor: pointer;
-    transition: all 0.15s; box-shadow: 0 3px 12px rgba(184,134,11,0.25);
-  }
-  .confirm-btn:active { transform: scale(0.97); }
-  .confirm-btn:disabled { background: linear-gradient(135deg,#d8d0c4,#c9ba9e); box-shadow: none; cursor: not-allowed; }
-
-  .restart-link { text-align: center; margin: 4px 0; }
-  .restart-link button { background: none; border: none; color: #b0a590; font-size: 13px; cursor: pointer; padding: 6px 12px; border-radius: 8px; }
-  .restart-link button:active { background: #f5efe3; color: #8c7b64; }
-
-  /* ====== Setup Screens ====== */
-  .setup-section { padding: 4px 0; }
-  .setup-header { text-align: center; margin-bottom: 20px; }
-  .setup-title { font-size: 26px; font-weight: 800; color: #2c2416; }
-  .setup-subtitle { font-size: 14px; color: #8c7b64; margin-top: 6px; }
-
-  /* Career track selection */
-  .track-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .track-card {
-    background: #fff; border: 1.5px solid #e0d6c4; border-radius: 14px;
-    padding: 16px 12px; cursor: pointer; transition: all 0.2s;
-    text-align: center; min-height: 80px; display: flex; flex-direction: column; justify-content: center;
-  }
-  .track-card:active { background: #f5efe3; transform: scale(0.98); }
-  .track-card.selected { border-color: #b8913c; background: #faf3e3; box-shadow: 0 0 0 2px rgba(184,145,60,0.15); }
-  .track-card .tc-emoji { font-size: 28px; margin-bottom: 4px; }
-  .track-card .tc-label { font-size: 14px; font-weight: 600; color: #3d3226; }
-  .track-card .tc-desc { font-size: 11px; color: #b0a392; margin-top: 3px; }
-  .track-card .tc-ladder { font-size: 10px; color: #c9ba9e; margin-top: 6px; line-height: 1.4; }
-
-  /* Persona selection */
+  .top-bar { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid #e2e8f0; padding: 10px 14px 8px; font-size: 13px; color: #64748b; }
+  .top-bar .main-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .top-bar .year-label { background: #3b82f6; color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+  .top-bar .track-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+  .track-badge.tech { background: #eff6ff; color: #2563eb; }
+  .track-badge.biz { background: #fff7ed; color: #ea580c; }
+  .track-badge.state { background: #fef2f2; color: #dc2626; }
+  .track-badge.mnc { background: #f0fdf4; color: #16a34a; }
+  .track-badge.startup { background: #faf5ff; color: #9333ea; }
+  .track-badge.gig { background: #eff6ff; color: #2563eb; }
+  .year-progress-wrap { margin-top: 6px; }
+  .year-progress-bar { width: 100%; height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden; }
+  .year-progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 2px; transition: width 0.5s ease; }
+  .year-progress-text { display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8; margin-top: 2px; }
+  .attr-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:6px 4px; margin-top:6px; }
+  .attr-item { display:flex; flex-direction:column; align-items:center; gap:2px; background:#f8fafc; border-radius:8px; padding:4px 2px; border:1px solid #e2e8f0; transition:all 0.2s; position:relative; }
+  .attr-item:hover { border-color:#cbd5e1; background:#f1f5f9; }
+  .attr-item .attr-top { display:flex; align-items:center; gap:2px; }
+  .attr-item .attr-icon { font-size:12px; }
+  .attr-item .attr-label { font-size:9px; color:#94a3b8; letter-spacing:0.5px; font-weight:500; }
+  .attr-item .attr-val { font-weight:700; font-size:13px; color:#1e293b; line-height:1.2; }
+  .attr-item .attr-bar-bg { width:90%; height:3px; background:#e2e8f0; border-radius:2px; overflow:hidden; margin-top:1px; }
+  .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.5s ease, background 0.3s; }
+  .attr-bar-fill.salary { background:linear-gradient(90deg,#f59e0b,#f97316); }
+  .attr-bar-fill.skill { background:linear-gradient(90deg,#3b82f6,#2563eb); }
+  .attr-bar-fill.network { background:linear-gradient(90deg,#8b5cf6,#7c3aed); }
+  .attr-bar-fill.health { background:linear-gradient(90deg,#22c55e,#16a34a); }
+  .attr-bar-fill.health.danger { background:linear-gradient(90deg,#ef4444,#dc2626); }
+  .attr-bar-fill.satisfaction { background:linear-gradient(90deg,#06b6d4,#0891b2); }
+  .attr-item.money-card { background:linear-gradient(135deg,#fefce8,#fef9c3); border-color:#fde047; }
+  .attr-item.money-card .attr-val { color:#a16207; font-size:12px; }
+  .attr-tooltip { display:none; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:6px 10px; border-radius:8px; font-size:11px; white-space:nowrap; z-index:200; margin-bottom:4px; box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+  .attr-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:#1e293b; }
+  .attr-item:hover .attr-tooltip { display:block; }
+  @keyframes numUp { 0%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(-20px)} }
+  @keyframes numDown { 0%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(20px)} }
+  .num-float { position:absolute; font-size:12px; font-weight:700; pointer-events:none; animation:0.8s ease-out forwards; z-index:300; }
+  .num-float.up { color:#16a34a; animation-name:numUp; }
+  .num-float.down { color:#dc2626; animation-name:numDown; }
+  .main-content { flex:1; padding:16px 14px; display:flex; flex-direction:column; gap:14px; }
+  .scenario-card { background:#fff; border-radius:16px; padding:22px 18px; box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04); border:1px solid #e2e8f0; animation:cardSlideIn 0.35s ease-out; }
+  @keyframes cardSlideIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .scenario-card .year-badge { display:inline-block; background:#eff6ff; color:#3b82f6; font-size:12px; padding:3px 10px; border-radius:8px; margin-bottom:10px; font-weight:600; }
+  .scenario-card .scene-text { font-size:14px; line-height:1.8; color:#334155; }
+  .scenario-card .track-tag { display:inline-block; margin-bottom:8px; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; }
+  .event-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .event-emoji { font-size:28px; }
+  .event-title-wrap { flex:1; }
+  .event-title { font-size:16px; font-weight:700; color:#1e293b; }
+  .choices { display:flex; flex-direction:column; gap:10px; }
+  .choice-btn { background:#fff; border:1.5px solid #e2e8f0; border-radius:12px; padding:14px 16px; font-size:14px; line-height:1.5; color:#334155; text-align:left; cursor:pointer; transition:all 0.2s; -webkit-tap-highlight-color:transparent; min-height:44px; position:relative; overflow:hidden; }
+  .choice-btn:active { transform:scale(0.98); }
+  .choice-btn.safe { background:#f8fafc; border-color:#cbd5e1; }
+  .choice-btn.safe:active { background:#f1f5f9; border-color:#94a3b8; }
+  .choice-btn.risky { background:#eff6ff; border-color:#93c5fd; color:#1e40af; }
+  .choice-btn.risky:active { background:#dbeafe; border-color:#3b82f6; }
+  .choice-btn.dangerous { background:#fff7ed; border-color:#fdba74; color:#9a3412; }
+  .choice-btn.dangerous:active { background:#ffedd5; border-color:#f97316; }
+  .choice-btn.selected { border-width:2px; box-shadow:0 0 0 3px rgba(59,130,246,0.15); }
+  .choice-effect { font-size:11px; color:#94a3b8; margin-top:4px; }
+  .choice-effect .eff-pos { color:#16a34a; font-weight:600; }
+  .choice-effect .eff-neg { color:#dc2626; font-weight:600; }
+  .buff-marker { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; background:#fef3c7; color:#92400e; border:1px solid #fde68a; margin-top:4px; }
+  .confirm-btn { width:100%; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:600; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 12px rgba(37,99,235,0.25); }
+  .confirm-btn:active { transform:scale(0.97); }
+  .confirm-btn:disabled { background:linear-gradient(135deg,#cbd5e1,#94a3b8); box-shadow:none; cursor:not-allowed; }
+  .restart-link { text-align:center; margin:4px 0; }
+  .restart-link button { background:none; border:none; color:#94a3b8; font-size:13px; cursor:pointer; padding:6px 12px; border-radius:8px; }
+  .restart-link button:active { background:#f1f5f9; color:#64748b; }
+  .setup-section { padding:4px 0; }
+  .setup-header { text-align:center; margin-bottom:20px; }
+  .setup-title { font-size:28px; font-weight:800; color:#0f172a; }
+  .setup-subtitle { font-size:14px; color:#64748b; margin-top:6px; }
+  .track-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .track-card { background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:16px 12px; cursor:pointer; transition:all 0.2s; text-align:center; min-height:80px; display:flex; flex-direction:column; justify-content:center; }
+  .track-card:active { transform:scale(0.98); }
+  .track-card.selected { border-color:#3b82f6; background:#eff6ff; box-shadow:0 0 0 3px rgba(59,130,246,0.12); }
+  .track-card .tc-emoji { font-size:28px; margin-bottom:4px; }
+  .track-card .tc-label { font-size:14px; font-weight:600; color:#1e293b; }
+  .track-card .tc-desc { font-size:11px; color:#94a3b8; margin-top:3px; }
+  .track-card .tc-ladder { font-size:10px; color:#cbd5e1; margin-top:6px; line-height:1.4; }
   .persona-section { }
-  .persona-header { text-align: center; margin-bottom: 16px; }
-  .persona-title { font-size: 20px; font-weight: 800; color: #2c2416; }
-  .persona-subtitle { font-size: 13px; color: #8c7b64; margin-top: 4px; }
-  .persona-dim { margin-bottom: 16px; }
-  .persona-dim-label { font-size: 15px; font-weight: 700; color: #3d3226; margin-bottom: 4px; }
-  .persona-dim-desc { font-size: 12px; color: #b0a590; margin-bottom: 8px; }
-  .persona-options { display: flex; gap: 8px; }
-  .persona-card {
-    flex: 1; padding: 12px 8px; border: 1.5px solid #e0d6c4; border-radius: 12px;
-    background: #fff; cursor: pointer; transition: all 0.2s; text-align: center;
-  }
-  .persona-card:active { background: #f5efe3; transform: scale(0.97); }
-  .persona-card.selected { border-color: #b8913c; background: #faf3e3; box-shadow: 0 0 0 2px rgba(184,145,60,0.15); }
-  .persona-card-label { font-size: 13px; font-weight: 600; color: #3d3226; }
-  .persona-card-desc { font-size: 11px; color: #b0a392; margin-top: 3px; }
-
-  /* ====== Talent Draw ====== */
+  .persona-header { text-align:center; margin-bottom:16px; }
+  .persona-title { font-size:20px; font-weight:800; color:#0f172a; }
+  .persona-subtitle { font-size:13px; color:#64748b; margin-top:4px; }
+  .persona-dim { margin-bottom:16px; }
+  .persona-dim-label { font-size:15px; font-weight:700; color:#1e293b; margin-bottom:4px; }
+  .persona-dim-desc { font-size:12px; color:#94a3b8; margin-bottom:8px; }
+  .persona-options { display:flex; gap:8px; }
+  .persona-card { flex:1; padding:12px 8px; border:1.5px solid #e2e8f0; border-radius:12px; background:#fff; cursor:pointer; transition:all 0.2s; text-align:center; }
+  .persona-card:active { transform:scale(0.97); }
+  .persona-card.selected { border-color:#3b82f6; background:#eff6ff; box-shadow:0 0 0 3px rgba(59,130,246,0.12); }
+  .persona-card-label { font-size:13px; font-weight:600; color:#1e293b; }
+  .persona-card-desc { font-size:11px; color:#94a3b8; margin-top:3px; }
   .talent-section { }
-  .talent-header { text-align: center; margin-bottom: 16px; }
-  .talent-title { font-size: 20px; font-weight: 800; color: #2c2416; }
-  .talent-subtitle { font-size: 13px; color: #8c7b64; margin-top: 4px; }
-  .talent-grid { display: flex; flex-direction: column; gap: 10px; }
-  .talent-card {
-    background: linear-gradient(135deg,#fffdf8 0%,#faf3e3 100%); border: 2px solid #e4dbcd; border-radius: 14px;
-    padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; gap: 14px; align-items: center;
-  }
-  .talent-card:active { transform: scale(0.98); }
-  .talent-card.selected { border-color: #b8913c; box-shadow: 0 0 0 3px rgba(184,145,60,0.15); background: linear-gradient(135deg,#faf3e3,#f5e8d0); }
-  .talent-card .tc-emoji { font-size: 32px; flex-shrink: 0; }
-  .talent-card .tc-info { flex: 1; }
-  .talent-card .tc-name { font-size: 15px; font-weight: 700; color: #3d3226; }
-  .talent-card .tc-desc { font-size: 12px; color: #8c7b64; margin-top: 3px; line-height: 1.4; }
-  .talent-card .tc-tag { display:inline-block; font-size:10px; padding:2px 8px; border-radius:8px; margin-top:4px; }
-  .talent-card .tc-tag.work { background:#e8f0fe; color:#1a56db; }
-  .talent-card .tc-tag.life { background:#e8f5e9; color:#2e7d32; }
-  .talent-card .tc-tag.special { background:#f3e5f5; color:#6a1b9a; }
-  .talent-hint { text-align:center; font-size:12px; color:#b0a590; margin-top:8px; }
-
-  .setup-back { display: block; text-align: center; margin-top: 12px; }
-  .setup-back button { background: none; border: none; color: #b0a590; font-size: 13px; cursor: pointer; padding: 6px 12px; border-radius: 8px; }
-
-  /* ====== Promotion Challenge ====== */
-  .promo-card { border-left: 3px solid #ff6b35; }
-  .promo-badge { display:inline-block; background:linear-gradient(135deg,#ff6b35,#ff8a50); color:#fff; padding:4px 14px; border-radius:12px; font-size:12px; font-weight:600; margin-bottom:10px; }
-
-  /* ====== Identity Card (Ending) ====== */
-  .id-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%); border-radius: 20px; padding: 28px 20px 20px; text-align: center; color: #fff; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(15,52,96,0.35); animation: cardAppear 0.5s ease-out 0.3s both; }
-  .id-card::before { content: ''; position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: rgba(255,255,255,0.04); border-radius: 50%; }
-  .id-card-badge { display: inline-block; background: rgba(255,255,255,0.15); padding: 4px 14px; border-radius: 20px; font-size: 12px; color: rgba(255,255,255,0.85); margin-bottom: 16px; letter-spacing: 1px; }
-  .id-card-emoji { font-size: 64px; margin-bottom: 6px; }
-  .id-card-ending { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
-  .id-card-desc { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 16px; line-height: 1.5; }
-  .id-dims { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-  .id-dim { display: flex; align-items: center; gap: 10px; }
-  .id-dim-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-  .id-dim-text { text-align: left; flex: 1; }
-  .id-dim-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
-  .id-dim-desc { font-size: 11px; color: rgba(255,255,255,0.5); }
-  .id-talents { margin-top: 12px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-  .id-talent { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 10px; font-size: 12px; }
-  .id-share-hint { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 12px; }
-
-  @keyframes cardAppear { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
-
-  /* ====== Ending Color Themes ====== */
-  .id-card.theme-gold { background: linear-gradient(135deg, #5b2c0f 0%, #7b3f1c 40%, #c6a45a 100%); }
-  .id-card.theme-blue { background: linear-gradient(135deg, #1b3a4b 0%, #14486b 40%, #2c7da0 100%); }
-  .id-card.theme-green { background: linear-gradient(135deg, #2d4a22 0%, #3d6b2e 40%, #8bb84e 100%); }
-  .id-card.theme-purple { background: linear-gradient(135deg, #2a1a3d 0%, #4a2e6b 40%, #8b5fc4 100%); }
-  .id-card.theme-red { background: linear-gradient(135deg, #4a1a1a 0%, #6b2e2e 40%, #c45050 100%); }
-  .id-card.theme-gray { background: linear-gradient(135deg, #2d2d2d 0%, #4a4a4a 40%, #7a8a6a 100%); }
-
-  /* ====== Modals ====== */
-  .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:350; justify-content:center; align-items:center; padding:16px; }
+  .talent-header { text-align:center; margin-bottom:16px; }
+  .talent-title { font-size:22px; font-weight:800; color:#0f172a; }
+  .talent-subtitle { font-size:13px; color:#64748b; margin-top:4px; }
+  .talent-grid { display:flex; flex-direction:column; gap:10px; }
+  .talent-card { background:#fff; border:2px solid #e2e8f0; border-radius:14px; padding:14px 16px; cursor:pointer; transition:all 0.25s; display:flex; gap:14px; align-items:center; position:relative; overflow:hidden; }
+  .talent-card:active { transform:scale(0.98); }
+  .talent-card.selected { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,0.15); background:#eff6ff; }
+  .talent-card .tc-emoji { font-size:32px; flex-shrink:0; }
+  .talent-card .tc-info { flex:1; }
+  .talent-card .tc-name { font-size:15px; font-weight:700; color:#1e293b; }
+  .talent-card .tc-desc { font-size:12px; color:#64748b; margin-top:3px; line-height:1.4; }
+  .talent-card .tc-tag { display:inline-block; font-size:10px; padding:2px 8px; border-radius:8px; margin-top:4px; font-weight:500; }
+  .talent-card .tc-tag.work { background:#eff6ff; color:#2563eb; }
+  .talent-card .tc-tag.life { background:#f0fdf4; color:#16a34a; }
+  .talent-card .tc-tag.special { background:#faf5ff; color:#9333ea; }
+  .talent-card.rarity-common { border-color:#cbd5e1; }
+  .talent-card.rarity-rare { border-color:#3b82f6; background:linear-gradient(135deg,#eff6ff,#dbeafe); }
+  .talent-card.rarity-epic { border-color:#8b5cf6; background:linear-gradient(135deg,#faf5ff,#ede9fe); }
+  .talent-debuff { font-size:11px; color:#dc2626; margin-top:3px; line-height:1.3; }
+  .talent-debuff::before { content:'⚠️ '; }
+  .talent-hint { text-align:center; font-size:12px; color:#94a3b8; margin-top:8px; }
+  .setup-back { display:block; text-align:center; margin-top:12px; }
+  .setup-back button { background:none; border:none; color:#94a3b8; font-size:13px; cursor:pointer; padding:6px 12px; border-radius:8px; }
+  .promo-card { border-left:3px solid #f97316; }
+  .promo-badge { display:inline-block; background:linear-gradient(135deg,#f97316,#fb923c); color:#fff; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:10px; }
+  .id-card { background:linear-gradient(135deg,#0f172a 0%,#1e293b 40%,#334155 100%); border-radius:20px; padding:28px 20px 20px; text-align:center; color:#fff; position:relative; overflow:hidden; box-shadow:0 8px 32px rgba(15,23,42,0.35); animation:cardAppear 0.5s ease-out 0.3s both; }
+  .id-card::before { content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px; background:rgba(255,255,255,0.04); border-radius:50%; }
+  .id-card-badge { display:inline-block; background:rgba(255,255,255,0.15); padding:4px 14px; border-radius:20px; font-size:12px; color:rgba(255,255,255,0.85); margin-bottom:16px; letter-spacing:1px; }
+  .id-card-emoji { font-size:64px; margin-bottom:6px; }
+  .id-card-ending { font-size:20px; font-weight:800; margin-bottom:4px; }
+  .id-card-desc { font-size:13px; color:rgba(255,255,255,0.7); margin-bottom:16px; line-height:1.5; }
+  .score-bars { display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+  .score-bar-row { display:flex; align-items:center; gap:8px; }
+  .score-bar-label { width:60px; font-size:12px; color:rgba(255,255,255,0.7); text-align:right; flex-shrink:0; }
+  .score-bar-bg { flex:1; height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; }
+  .score-bar-fill { height:100%; border-radius:4px; transition:width 1s ease; }
+  .score-bar-fill.wealth { background:linear-gradient(90deg,#f59e0b,#f97316); }
+  .score-bar-fill.health-bar { background:linear-gradient(90deg,#22c55e,#16a34a); }
+  .score-bar-fill.career { background:linear-gradient(90deg,#3b82f6,#2563eb); }
+  .score-bar-fill.happiness { background:linear-gradient(90deg,#8b5cf6,#7c3aed); }
+  .score-bar-val { width:36px; font-size:12px; font-weight:700; color:rgba(255,255,255,0.9); flex-shrink:0; }
+  .id-dims { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+  .id-dim { display:flex; align-items:center; gap:10px; }
+  .id-dim-icon { width:32px; height:32px; border-radius:8px; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .id-dim-text { text-align:left; flex:1; }
+  .id-dim-label { font-size:13px; font-weight:600; color:rgba(255,255,255,0.9); }
+  .id-dim-desc { font-size:11px; color:rgba(255,255,255,0.5); }
+  .id-talents { margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .id-talent { background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:10px; font-size:12px; }
+  .id-share-hint { font-size:11px; color:rgba(255,255,255,0.4); margin-top:12px; }
+  .personality-tag { display:inline-block; padding:4px 14px; border-radius:20px; font-size:13px; font-weight:600; background:linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.08)); border:1px solid rgba(255,255,255,0.2); margin:8px 0; }
+  @keyframes cardAppear { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  .id-card.theme-gold { background:linear-gradient(135deg,#78350f 0%,#92400e 40%,#b45309 100%); }
+  .id-card.theme-blue { background:linear-gradient(135deg,#0c4a6e 0%,#075985 40%,#0284c7 100%); }
+  .id-card.theme-green { background:linear-gradient(135deg,#14532d 0%,#166534 40%,#16a34a 100%); }
+  .id-card.theme-purple { background:linear-gradient(135deg,#3b0764 0%,#581c87 40%,#7c3aed 100%); }
+  .id-card.theme-red { background:linear-gradient(135deg,#450a0a 0%,#7f1d1d 40%,#dc2626 100%); }
+  .id-card.theme-gray { background:linear-gradient(135deg,#1e293b 0%,#334155 40%,#64748b 100%); }
+  .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.5); z-index:350; justify-content:center; align-items:center; padding:16px; }
   .modal-overlay.show { display:flex; }
   .modal-inner { background:#fff; border-radius:20px; width:100%; max-width:400px; max-height:85vh; overflow-y:auto; padding:24px 16px; position:relative; animation:modalIn 0.25s ease-out; }
-  /* ====== PK Card ====== */
-  .pk-card { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-radius:20px; padding:24px 16px; color:#fff; margin-bottom:12px; animation:cardAppear 0.5s ease-out; }
+  .pk-card { background:linear-gradient(135deg,#0f172a,#1e293b,#334155); border-radius:20px; padding:24px 16px; color:#fff; margin-bottom:12px; animation:cardAppear 0.5s ease-out; }
   .pk-title { text-align:center; font-size:15px; font-weight:800; margin-bottom:16px; letter-spacing:2px; }
   .pk-row { display:flex; align-items:center; margin-bottom:10px; }
   .pk-label { width:52px; text-align:center; font-size:18px; flex-shrink:0; }
   .pk-side { flex:1; text-align:center; }
   .pk-val { font-size:22px; font-weight:800; }
   .pk-vs { width:36px; text-align:center; font-size:11px; color:rgba(255,255,255,0.5); font-weight:700; flex-shrink:0; }
-  .pk-win { color:#ffd700; }
+  .pk-win { color:#fbbf24; }
   .pk-lose { color:rgba(255,255,255,0.4); }
   .pk-result { text-align:center; margin-top:12px; padding:10px; background:rgba(255,255,255,0.08); border-radius:12px; }
   .pk-result-text { font-size:14px; font-weight:700; }
   .pk-subtitle { text-align:center; font-size:12px; color:rgba(255,255,255,0.5); margin-top:8px; }
-  @keyframes modalIn { from { opacity:0; transform:scale(0.92); } to { opacity:1; transform:scale(1); } }
-  .modal-title { font-size:20px; font-weight:800; color:#2c2416; text-align:center; margin-bottom:4px; }
-  .modal-sub { font-size:13px; color:#8c7b64; text-align:center; margin-bottom:16px; }
-  .modal-close { position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; cursor:pointer; color:#8c7b64; padding:4px 8px; border-radius:8px; }
-  .modal-close:active { background:#f5efe3; }
-
-  /* Gallery */
+  @keyframes modalIn { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+  .modal-title { font-size:20px; font-weight:800; color:#0f172a; text-align:center; margin-bottom:4px; }
+  .modal-sub { font-size:13px; color:#64748b; text-align:center; margin-bottom:16px; }
+  .modal-close { position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; cursor:pointer; color:#64748b; padding:4px 8px; border-radius:8px; }
+  .modal-close:active { background:#f1f5f9; }
   .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-  .gallery-item { background:#faf8f4; border:1.5px solid #e4dbcd; border-radius:14px; padding:14px 8px; text-align:center; min-height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-  .gallery-item.unlocked { border-color:#c9a96e; background:linear-gradient(135deg,#fffdf8,#faf3e3); }
+  .gallery-item { background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 8px; text-align:center; min-height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .gallery-item.unlocked { border-color:#3b82f6; background:#eff6ff; }
   .gallery-item.locked { opacity:0.5; filter:grayscale(0.6); }
   .gallery-item .g-emoji { font-size:32px; margin-bottom:4px; }
-  .gallery-item .g-name { font-size:13px; font-weight:700; color:#3d3226; }
-  .gallery-item .g-track { font-size:10px; color:#b0a590; margin-top:2px; }
-  .gallery-count { text-align:center; margin-top:12px; font-size:12px; color:#8c7b64; }
-
-  /* Achievements */
+  .gallery-item .g-name { font-size:13px; font-weight:700; color:#1e293b; }
+  .gallery-item .g-track { font-size:10px; color:#94a3b8; margin-top:2px; }
+  .gallery-count { text-align:center; margin-top:12px; font-size:12px; color:#64748b; }
   .achieve-list { display:flex; flex-direction:column; gap:8px; }
-  .achieve-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; border:1.5px solid #e4dbcd; background:#faf8f4; }
-  .achieve-item.unlocked { border-color:#c9a96e; background:linear-gradient(135deg,#fffdf8,#faf3e3); }
+  .achieve-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; border:1.5px solid #e2e8f0; background:#f8fafc; }
+  .achieve-item.unlocked { border-color:#3b82f6; background:#eff6ff; }
   .achieve-item.locked { opacity:0.5; }
   .achieve-item .a-emoji { font-size:24px; flex-shrink:0; }
   .achieve-item.locked .a-emoji { filter:grayscale(1); opacity:0.4; }
   .achieve-item .a-text { flex:1; }
-  .achieve-item .a-name { font-size:14px; font-weight:700; color:#3d3226; }
-  .achieve-item .a-desc { font-size:11px; color:#8c7b64; margin-top:2px; }
-  .achieve-item.locked .a-name { color:#b0a590; }
-  .achieve-progress { text-align:center; margin-top:12px; font-size:12px; color:#8c7b64; }
-
-  /* ====== Bottom Entry Buttons ====== */
+  .achieve-item .a-name { font-size:14px; font-weight:700; color:#1e293b; }
+  .achieve-item .a-desc { font-size:11px; color:#64748b; margin-top:2px; }
+  .achieve-item.locked .a-name { color:#94a3b8; }
+  .achieve-progress { text-align:center; margin-top:12px; font-size:12px; color:#64748b; }
   .entry-bar { display:flex; gap:8px; }
-  .entry-btn { flex:1; padding:12px 8px; border:1.5px solid #e0d6c4; border-radius:12px; background:linear-gradient(135deg,#faf8f4,#f5efe3); font-size:13px; font-weight:600; color:#5c4b2c; cursor:pointer; transition:all 0.15s; text-align:center; }
-  .entry-btn:active { background:#f5efe3; border-color:#c9b896; transform:scale(0.97); }
-
-  /* ====== Toast ====== */
-  .toast { position:fixed!important; top:24px!important; left:50%!important; transform:translateX(-50%)!important; background:linear-gradient(135deg,#2c2416,#4a3c28)!important; color:#fff!important; padding:12px 24px!important; border-radius:14px!important; font-size:14px!important; z-index:400!important; box-shadow:0 6px 24px rgba(0,0,0,0.18)!important; animation:toastSlide 0.35s ease,toastOut 0.3s ease 2.2s forwards!important; white-space:pre-wrap!important; max-width:90vw!important; text-align:left!important; line-height:1.5!important; }
-  @keyframes toastSlide { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
-  @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
-
-  /* ====== Timeline ====== */
-  .timeline-section { background: rgba(255,255,255,0.5); border-radius: 12px; padding: 12px 8px; margin: 8px 0; }
-
-  /* ====== Narrative Summary ====== */
-  .narrative-box { background:#fff; border-radius:16px; padding:20px 18px; margin:8px 0; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
-
-  
-  /* ====== Regret/Undo Button ====== */
+  .entry-btn { flex:1; padding:12px 8px; border:1.5px solid #e2e8f0; border-radius:12px; background:#fff; font-size:13px; font-weight:600; color:#475569; cursor:pointer; transition:all 0.2s; text-align:center; }
+  .entry-btn:hover { border-color:#cbd5e1; background:#f8fafc; }
+  .entry-btn:active { transform:scale(0.97); }
+  .shop-panel { position:fixed; bottom:0; left:50%; transform:translateX(-50%) translateY(100%); width:100%; max-width:420px; background:#fff; border-radius:20px 20px 0 0; padding:20px 16px 24px; z-index:400; box-shadow:0 -4px 24px rgba(0,0,0,0.12); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+  .shop-panel.open { transform:translateX(-50%) translateY(0); }
+  .shop-panel-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.4); z-index:399; }
+  .shop-panel-overlay.show { display:block; }
+  .shop-card { background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:14px; cursor:pointer; transition:all 0.2s; margin-bottom:8px; }
+  .shop-card:hover { border-color:#3b82f6; background:#eff6ff; }
+  .shop-card:active { transform:scale(0.98); }
+  .shop-card .sw-title { font-size:14px; font-weight:600; color:#1e293b; }
+  .shop-card .sw-desc { font-size:12px; color:#64748b; margin-top:2px; }
+  .shop-card .sw-cost { font-size:11px; color:#f97316; margin-top:4px; font-weight:600; }
+  .toast { position:fixed!important; top:24px!important; left:50%!important; transform:translateX(-50%)!important; background:#1e293b!important; color:#fff!important; padding:12px 24px!important; border-radius:12px!important; font-size:14px!important; z-index:500!important; box-shadow:0 8px 24px rgba(0,0,0,0.2)!important; animation:toastSlide 0.3s ease,toastOut 0.3s ease 2.2s forwards!important; white-space:pre-wrap!important; max-width:90vw!important; text-align:left!important; line-height:1.5!important; }
+  @keyframes toastSlide { from{opacity:0;transform:translateX(-50%) translateY(-16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+  @keyframes toastOut { from{opacity:1} to{opacity:0} }
+  .timeline-section { background:#fff; border-radius:12px; padding:12px 8px; margin:8px 0; border:1px solid #e2e8f0; }
+  .narrative-box { background:#fff; border-radius:16px; padding:20px 18px; margin:8px 0; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
   .undo-bar { text-align:center; margin-top:8px; }
-  .undo-btn { background:linear-gradient(135deg,#fff8f0 0%,#fff3e6 100%); border:1.5px solid #d4a574; border-radius:14px; padding:12px 28px; font-size:14px; color:#8b5e3c; cursor:pointer; transition:all 0.15s; font-weight:500; box-shadow:0 2px 8px rgba(180,130,70,0.15); }
-  .undo-btn:active { background:#f5efe3; transform:scale(0.97); }
-  .undo-btn:hover { background:#fff3e6; box-shadow:0 2px 12px rgba(180,130,70,0.25); }
-  /* ====== Talent Effect Label ====== */
-  .talent-effect-label { display:inline-block; font-size:11px; padding:3px 10px; border-radius:8px; margin-top:6px; background:#fff8e8; color:#b8860b; border:1px solid #e8dbb8; line-height:1.4; }
-  .talent-effect-label .eff-pos { color:#2e7d32; font-weight:600; }
-  .talent-effect-label .eff-neg { color:#c62828; font-weight:600; }
-  /* ====== Promo Threshold Display ====== */
-  .promo-threshold { background:#f5f0e8; border-radius:10px; padding:10px 14px; margin:8px 0; font-size:13px; color:#5c4b2c; }
-  .promo-threshold .met { color:#2e7d32; font-weight:600; }
-  .promo-threshold .unmet { color:#c62828; font-weight:600; }
-
-  .hidden { display: none !important; }
-
-.switch-grid{display:grid;gap:8px;margin:12px 0}
-.switch-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px;cursor:pointer;transition:all 0.2s}
-.switch-card:hover{border-color:#e07a5f;background:rgba(224,122,95,0.1)}
-.switch-card.current{border-color:#e07a5f;background:rgba(224,122,95,0.15);cursor:default}
-.switch-card .sw-title{font-size:14px;font-weight:600;color:#f5f0e8}
-.switch-card .sw-desc{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px}
-.switch-card .sw-cost{font-size:10px;color:#e07a5f;margin-top:4px}
-.switch-warn{background:rgba(255,150,50,0.1);border:1px solid rgba(255,150,50,0.3);border-radius:8px;padding:10px;margin-bottom:12px}
-.switch-warn b{color:#ff9632}
+  .undo-btn { background:#fff; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 24px; font-size:13px; color:#64748b; cursor:pointer; transition:all 0.2s; font-weight:500; }
+  .undo-btn:active { background:#f1f5f9; transform:scale(0.97); }
+  .undo-btn:hover { border-color:#cbd5e1; background:#f8fafc; }
+  .undo-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .undo-btn:disabled:active { transform:none; background:#fff; }
+  .talent-effect-label { display:inline-block; font-size:11px; padding:3px 10px; border-radius:8px; margin-top:6px; background:#f0f9ff; color:#0369a1; border:1px solid #bae6fd; line-height:1.4; }
+  .talent-effect-label .eff-pos { color:#16a34a; font-weight:600; }
+  .talent-effect-label .eff-neg { color:#dc2626; font-weight:600; }
+  .promo-threshold { background:#f1f5f9; border-radius:10px; padding:10px 14px; margin:8px 0; font-size:13px; color:#475569; }
+  .promo-threshold .met { color:#16a34a; font-weight:600; }
+  .promo-threshold .unmet { color:#dc2626; font-weight:600; }
+  .hidden { display:none !important; }
+  .switch-grid { display:grid; gap:8px; margin:12px 0; }
+  .switch-card { background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px; cursor:pointer; transition:all 0.2s; }
+  .switch-card:hover { border-color:#3b82f6; background:#eff6ff; }
+  .switch-card.current { border-color:#3b82f6; background:#dbeafe; cursor:default; }
+  .switch-card .sw-title { font-size:14px; font-weight:600; color:#1e293b; }
+  .switch-card .sw-desc { font-size:11px; color:#64748b; margin-top:2px; }
+  .switch-card .sw-cost { font-size:10px; color:#f97316; margin-top:4px; }
+  .switch-warn { background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:10px; margin-bottom:12px; color:#9a3412; font-size:13px; }
+  .switch-warn b { color:#ea580c; }
+  .branch-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+  .branch-card { background:#fff; border:2px solid #e2e8f0; border-radius:14px; padding:16px 12px; cursor:pointer; transition:all 0.2s; text-align:center; }
+  .branch-card:hover { border-color:#3b82f6; box-shadow:0 4px 12px rgba(59,130,246,0.1); }
+  .branch-card:active { transform:scale(0.97); }
+  .branch-card .bc-icon { font-size:28px; margin-bottom:6px; }
+  .branch-card .bc-title { font-size:14px; font-weight:700; color:#1e293b; }
+  .branch-card .bc-desc { font-size:11px; color:#64748b; margin-top:4px; line-height:1.4; }
+  .branch-card .bc-pros { font-size:10px; color:#16a34a; margin-top:6px; }
+  .branch-card .bc-cons { font-size:10px; color:#dc2626; margin-top:2px; }
 </style>
 </head>
 <body>
-
 <div class="top-bar" id="topBar">
   <div class="main-row">
     <span class="year-label" id="yearLabel">准备开始</span>
+    <div id="undoIndicator" style="display:none;font-size:11px;color:#94a3b8;background:#f1f5f9;padding:3px 10px;border-radius:12px">↩️ <span id="undoCount">3</span>/3</div>
+  </div>
+  <div class="year-progress-wrap" id="yearProgress" style="display:none">
+    <div class="year-progress-bar"><div class="year-progress-fill" id="yearProgressFill" style="width:10%"></div></div>
+    <div class="year-progress-text"><span>第1年</span><span>第10年</span></div>
   </div>
   <div class="attr-bar" id="attrBar" style="display:none">
-    <div class="attr-item"><div class="attr-top"><span class="attr-icon">💰</span><span class="attr-label">月薪</span></div><span class="attr-val" id="attrSalary">5K</span><div class="attr-bar-bg"><div class="attr-bar-fill salary" id="barSalary" style="width:20%"></div></div></div>
-    <div class="attr-item"><div class="attr-top"><span class="attr-icon">📊</span><span class="attr-label">职级</span></div><span class="attr-val" id="attrRank">L1</span></div>
-    <div class="attr-item"><div class="attr-top"><span class="attr-icon">🧠</span><span class="attr-label">技能</span></div><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
-    <div class="attr-item"><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
-    <div class="attr-item"><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
-    <div class="attr-item"><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">满足</span></div><span class="attr-val" id="attrHappy">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
-    <div class="attr-item"><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">0</span></div></div>
-    <div class="attr-item">
+    <div class="attr-item"><div class="attr-tooltip" id="tipSalary">月薪: 5K/月</div><div class="attr-top"><span class="attr-icon">💰</span><span class="attr-label">月薪</span></div><span class="attr-val" id="attrSalary">5K</span><div class="attr-bar-bg"><div class="attr-bar-fill salary" id="barSalary" style="width:5%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipRank">职级: L1</div><div class="attr-top"><span class="attr-icon">📊</span><span class="attr-label">职级</span></div><span class="attr-val" id="attrRank">L1</span></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipSkill">技能: 30/100</div><div class="attr-top"><span class="attr-icon">🧠</span><span class="attr-label">技能</span></div><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipNetwork">人脉: 20/100</div><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
+    <div class="attr-item"><div class="attr-tooltip" id="tipHappy">满足: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">满足</span></div><span class="attr-val" id="attrHappy">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+    <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span></div>
   </div>
 </div>
-
 <div class="main-content" id="mainContent"></div>
-
-<!-- Gallery Modal -->
-<div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()">
-  <div class="modal-inner">
-    <button class="modal-close" onclick="closeGallery()">✕</button>
-    <div class="modal-title">📖 结局图鉴</div>
-    <div class="modal-sub">收集所有平行宇宙的结局</div>
-    <div class="gallery-grid" id="galleryGrid"></div>
-    <div class="gallery-count" id="galleryCount"></div>
-  </div>
-</div>
-
-<!-- Achievement Modal -->
-<div class="modal-overlay" id="achieveModal" onclick="if(event.target===this)closeAchievements()">
-  <div class="modal-inner">
-    <button class="modal-close" onclick="closeAchievements()">✕</button>
-    <div class="modal-title">🏆 成就殿堂</div>
-    <div class="modal-sub" id="achieveSub"></div>
-    <div class="achieve-list" id="achieveList"></div>
-    <div class="achieve-progress" id="achieveProgress"></div>
-  </div>
-</div>
-
-<!-- Poster Modal -->
-<div id="posterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:500;justify-content:center;align-items:center;flex-direction:column" onclick="closePosterModal()">
-  <div style="position:relative;max-width:380px;width:90%">
-    <img id="posterImage" style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5)" />
-    <div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8"></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="switchModal">
-  <div class="modal-content">
-    <div class="modal-title">🔄 跳槽转行</div>
-    <div class="switch-warn">⚠️ 跳槽将重置职级和起薪，人脉大幅下降。每局限 <b>2次</b>，跳槽后 <b>3年冷却</b>。</div>
-    <div class="switch-grid" id="switchGrid"></div>
-    <div class="modal-btn" onclick="closeAllModals()">再想想</div>
-  </div>
-</div>
-
-
+<div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()"><div class="modal-inner"><button class="modal-close" onclick="closeGallery()">✕</button><div class="modal-title">📖 结局图鉴</div><div class="modal-sub">收集所有平行宇宙的结局</div><div class="gallery-grid" id="galleryGrid"></div><div class="gallery-count" id="galleryCount"></div></div></div>
+<div class="modal-overlay" id="achieveModal" onclick="if(event.target===this)closeAchievements()"><div class="modal-inner"><button class="modal-close" onclick="closeAchievements()">✕</button><div class="modal-title">🏆 成就殿堂</div><div class="modal-sub" id="achieveSub"></div><div class="achieve-list" id="achieveList"></div><div class="achieve-progress" id="achieveProgress"></div></div></div>
+<div id="posterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:500;justify-content:center;align-items:center;flex-direction:column" onclick="closePosterModal()"><div style="position:relative;max-width:380px;width:90%"><img id="posterImage" style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5)" /><div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8"></div></div></div>
+<div class="modal-overlay" id="switchModal"><div class="modal-inner"><div class="modal-title">🔄 跳槽转行</div><div class="switch-warn">⚠️ 跳槽将重置职级和起薪，人脉大幅下降。每局限 <b>2次</b>，跳槽后 <b>3年冷却</b>。</div><div class="switch-grid" id="switchGrid"></div><div class="confirm-btn" onclick="closeAllModals()" style="background:#f1f5f9;color:#64748b;box-shadow:none">再想想</div></div></div>
+<div class="shop-panel-overlay" id="shopOverlay" onclick="closeShopPanel()"></div>
+<div class="shop-panel" id="shopPanel"></div>
+<div class="modal-overlay" id="promoBranchModal"><div class="modal-inner"><div class="modal-title">🔀 选择发展方向</div><div class="modal-sub" id="promoBranchSub"></div><div class="branch-grid" id="promoBranchGrid"></div><div class="confirm-btn" onclick="closeAllModals()" style="background:#f1f5f9;color:#64748b;box-shadow:none;margin-top:8px">再想想</div></div></div>
 <canvas id="posterCanvas" width="750" height="1334" style="display:none"></canvas>
 
 <script>
@@ -1732,13 +1697,21 @@ function initState() {
 function updateTopBar() {
   var yl = document.getElementById('yearLabel');
   var ab = document.getElementById('attrBar');
+  var yp = document.getElementById('yearProgress');
+  var ui = document.getElementById('undoIndicator');
   if (state.year === 0) {
     yl.textContent = '准备开始';
     ab.style.display = 'none';
+    yp.style.display = 'none';
+    if (ui) ui.style.display = 'none';
     return;
   }
-  ab.style.display = 'flex';
-  yl.textContent = '第' + state.year + '年';
+  ab.style.display = 'grid';
+  yp.style.display = 'block';
+  yl.textContent = '第' + state.year + '年 / 10年';
+  if (ui) { ui.style.display = 'inline-block'; var uc = document.getElementById('undoCount'); if(uc) uc.textContent = Math.max(0, state._undoMax - state._undoUsed); }
+  var ypf = document.getElementById('yearProgressFill');
+  if (ypf) ypf.style.width = (state.year / 10 * 100) + '%';
   var track = CAREER_TRACKS[state.track];
   var rankLabel = track ? (track.ladderShort[state.rankIdx] || 'L1') : '—';
   document.getElementById('attrSalary').textContent = state.salary >= 10000 ? Math.round(state.salary/10000) + 'W' : state.salary + '';
@@ -1748,12 +1721,23 @@ function updateTopBar() {
   document.getElementById('attrHealth').textContent = state.health;
   document.getElementById('attrHappy').textContent = state.happy;
   var moneyEl = document.getElementById('attrMoney');
-  if (moneyEl) moneyEl.textContent = state.money >= 10000 ? Math.round(state.money/10000) + 'W' : state.money + '';
-  document.getElementById('barSalary').style.width = Math.min(100, state.salary / 25000) + '%';
+  if (moneyEl) moneyEl.textContent = state.money >= 10000 ? Math.round(state.money/10000) + '万' : '¥' + state.money.toLocaleString();
+  document.getElementById('barSalary').style.width = Math.min(100, state.salary / 100000 * 100) + '%';
   document.getElementById('barSkill').style.width = state.skill + '%';
   document.getElementById('barNetwork').style.width = state.network + '%';
-  document.getElementById('barHealth').style.width = state.health + '%';
+  var hb = document.getElementById('barHealth');
+  hb.style.width = state.health + '%';
+  hb.className = 'attr-bar-fill health' + (state.health < 30 ? ' danger' : '');
   document.getElementById('barHappy').style.width = state.happy + '%';
+  var tips = {tipSalary:'月薪: ¥'+state.salary.toLocaleString()+'/月', tipRank:'职级: '+rankLabel, tipSkill:'技能: '+state.skill+'/100', tipNetwork:'人脉: '+state.network+'/100', tipHealth:'健康: '+state.health+'/100'+(state.health<30?' ⚠️低!':''), tipHappy:'满足: '+state.happy+'/100', tipMoney:'存款: ¥'+state.money.toLocaleString()};
+  for(var k in tips){var el=document.getElementById(k);if(el)el.textContent=tips[k];}
+  var undoBtn = document.querySelector('.undo-btn');
+  if(undoBtn){
+    var remaining = state._undoMax - state._undoUsed;
+    undoBtn.textContent = '\u21a9\ufe0f 后悔药 \u00b7 撤回重选 (' + remaining + '/' + state._undoMax + ')';
+    if(remaining <= 0){ undoBtn.disabled = true; undoBtn.style.opacity = '0.4'; }
+    else { undoBtn.disabled = false; undoBtn.style.opacity = '1'; }
+  }
 }
 
 // ====== Setup Step 1: Choose Career Track ======
@@ -1883,20 +1867,22 @@ function selectPersona(dim, id, el) {
 // ====== Setup Step 3: Talent Draw ======
 function showTalentDraw() {
   var main = document.getElementById('mainContent');
-  // Draw 5 random talents
   var pool = shuffle(TALENT_POOL).slice(0, 5);
   window._drawnTalents = pool;
   _talentSelections = [];
+  var schoolNames = {work:'内卷',life:'佛系',invest:'投机',social:'社交',wild:'万金油'};
   var html = '<div class="talent-section"><div class="talent-header"><div class="talent-title">✨ 天赋抽卡</div><div class="talent-subtitle">从5张天赋卡中选择3张，它们将影响你的职场人生</div></div>';
   html += '<div class="talent-grid">';
   for (var i = 0; i < pool.length; i++) {
     var t = pool[i];
-    html += '<div class="talent-card" id="talent_' + t.id + '" onclick="toggleTalent(\'' + t.id + '\')">';
+    var rarity = t.cat === 'special' ? 'rarity-epic' : (t.effect && t.effect.promoBonus ? 'rarity-rare' : 'rarity-common');
+    html += '<div class="talent-card ' + rarity + '" id="talent_' + t.id + '" onclick="toggleTalent(\'' + t.id + '\')">';
     html += '<div class="tc-emoji">' + t.emoji + '</div>';
     html += '<div class="tc-info">';
     html += '<div class="tc-name">' + t.name + '</div>';
     html += '<div class="tc-desc">' + t.desc + '</div>';
-    html += '<div class="tc-tag ' + t.cat + '">' + (t.cat === 'work' ? '职场天赋' : t.cat === 'life' ? '生活天赋' : '✨ 稀有天赋') + '</div>';
+    if (t.debuff) html += '<div class="talent-debuff">' + t.debuff + '</div>';
+    html += '<div class="tc-tag ' + t.cat + '">' + (schoolNames[t.school] || '') + (t.cat === 'special' ? ' · 稀有' : '') + '</div>';
     html += '</div></div>';
   }
   html += '</div>';
@@ -2070,20 +2056,25 @@ function render() {
   state._shownEvents[event.title] = true;
   window._currentEvent = event;
 
-  // Build choices HTML
+  // Build choices HTML with 3 styles
   var choicesHtml = '';
+  var styleMap = ['safe', 'risky', 'dangerous'];
   for (var c = 0; c < event.opts.length; c++) {
     var opt = event.opts[c];
     var effectParts = [];
-    if (opt.skill) effectParts.push('🧠' + (opt.skill > 0 ? '+' : '') + opt.skill);
-    if (opt.network) effectParts.push('👥' + (opt.network > 0 ? '+' : '') + opt.network);
-    if (opt.health) effectParts.push('❤️' + (opt.health > 0 ? '+' : '') + opt.health);
-    if (opt.happy) effectParts.push('😊' + (opt.happy > 0 ? '+' : '') + opt.happy);
-    if (opt.money) effectParts.push('💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money));
-    choicesHtml += '<button class="choice-btn" onclick="chooseEvent(' + c + ')" id="eventOpt' + c + '">';
+    if (opt.skill) effectParts.push('<span class="' + (opt.skill > 0 ? 'eff-pos' : 'eff-neg') + '">🧠' + (opt.skill > 0 ? '+' : '') + opt.skill + '</span>');
+    if (opt.network) effectParts.push('<span class="' + (opt.network > 0 ? 'eff-pos' : 'eff-neg') + '">👥' + (opt.network > 0 ? '+' : '') + opt.network + '</span>');
+    if (opt.health) effectParts.push('<span class="' + (opt.health > 0 ? 'eff-pos' : 'eff-neg') + '">❤️' + (opt.health > 0 ? '+' : '') + opt.health + '</span>');
+    if (opt.happy) effectParts.push('<span class="' + (opt.happy > 0 ? 'eff-pos' : 'eff-neg') + '">😊' + (opt.happy > 0 ? '+' : '') + opt.happy + '</span>');
+    if (opt.money) effectParts.push('<span class="' + (opt.money > 0 ? 'eff-pos' : 'eff-neg') + '">💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money) + '</span>');
+    var btnStyle = styleMap[c] || styleMap[0];
+    choicesHtml += '<button class="choice-btn ' + btnStyle + '" onclick="chooseEvent(' + c + ')" id="eventOpt' + c + '">';
     choicesHtml += opt.text;
     if (effectParts.length > 0) {
       choicesHtml += '<div class="choice-effect">' + effectParts.join('  ') + '</div>';
+    }
+    if (opt.__buff) {
+      choicesHtml += '<div class="buff-marker">⚡ 持续效果</div>';
     }
     choicesHtml += '</button>';
   }
@@ -2101,6 +2092,16 @@ function render() {
   // Career switch button
   if (state.year >= 2 && state._switchCount < 2 && (state.year - state._lastSwitchYear) >= 3) {
     html += '<div class="undo-bar"><button class="undo-btn" onclick="showSwitchModal()" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">🔄 跳槽转行 (' + (2 - state._switchCount) + '/2)</button></div>';
+  }
+    // Bottom function bar
+  if (state.year > 0 && !state._playEnded) {
+    html += '<div class="entry-bar" style="margin-top:12px">';
+    html += '<button class="entry-btn" onclick="openShop(\'heal\')">🏥 体检</button>';
+    html += '<button class="entry-btn" onclick="openShop(\'train\')">📚 培训</button>';
+    html += '<button class="entry-btn" onclick="openShop(\'social\')">🤝 社交</button>';
+    html += '<button class="entry-btn" onclick="openShop(\'invest\')">📈 理财</button>';
+    html += '<button class="entry-btn" onclick="openShop(\'property\')">🏠 买房</button>';
+    html += '</div>';
   }
   html += '<div class="restart-link"><button onclick="showIntro()">🔄 重新开始</button></div>';
 
@@ -2635,11 +2636,22 @@ function showEnding() {
   html += '<div class="id-card-badge">平行人生 · 职场鉴定报告</div>';
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
   html += '<div class="id-card-ending">' + ending.name + '</div>';
-  html += '<div style="font-size:12px;color:#8b7355;margin:2px 0 6px">' + (function(){var p=getPersonality(state);return p?p.animal+(p.traits.length?' \xb7 '+p.traits.join(' \xb7 '):''):'';})() + '</div>';
+  html += '<div class="personality-tag">' + (function(){var p=getPersonality(state);return p?p.animal+(p.traits.length?' \xb7 '+p.traits.join(' \xb7 '):''):'';})() + '</div>';
   html += '<div class="id-card-desc">' + ending.desc + '</div>';
   if (hiddenEndings.length > 0) {
     html += '<div style="margin-top:8px;padding:6px 12px;background:linear-gradient(135deg,#ffd700,#ff6b35);border-radius:20px;display:inline-block;font-size:12px;color:#fff;font-weight:bold">🏆 隐藏结局解锁！' + hiddenEndings.map(function(e){ return e.emoji + ' ' + e.name; }).join(' · ') + '</div>';
   }
+  // Score bars (simplified radar)
+  var wealthScore = Math.min(100, Math.round(state.money / 5000));
+  var healthScore = state.health;
+  var careerScore = Math.min(100, Math.round(state.skill * 0.4 + state.rankIdx * 20 + state.salary / 1000));
+  var happyScore = state.happy;
+  html += '<div class="score-bars">';
+  html += '<div class="score-bar-row"><div class="score-bar-label">💰 财富</div><div class="score-bar-bg"><div class="score-bar-fill wealth" style="width:' + wealthScore + '%"></div></div><div class="score-bar-val">' + wealthScore + '</div></div>';
+  html += '<div class="score-bar-row"><div class="score-bar-label">❤️ 健康</div><div class="score-bar-bg"><div class="score-bar-fill health-bar" style="width:' + healthScore + '%"></div></div><div class="score-bar-val">' + healthScore + '</div></div>';
+  html += '<div class="score-bar-row"><div class="score-bar-label">📊 职场</div><div class="score-bar-bg"><div class="score-bar-fill career" style="width:' + careerScore + '%"></div></div><div class="score-bar-val">' + careerScore + '</div></div>';
+  html += '<div class="score-bar-row"><div class="score-bar-label">😊 幸福</div><div class="score-bar-bg"><div class="score-bar-fill happiness" style="width:' + happyScore + '%"></div></div><div class="score-bar-val">' + happyScore + '</div></div>';
+  html += '</div>';
   html += '<div class="id-dims">';
   html += '<div class="id-dim"><div class="id-dim-icon">📊</div><div class="id-dim-text"><div class="id-dim-label">职级：' + track.ladder[state.rankIdx] + '</div><div class="id-dim-desc">' + track.label + '</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">💰</div><div class="id-dim-text"><div class="id-dim-label">月薪：¥' + state.salary.toLocaleString() + '</div><div class="id-dim-desc">累计收入 ¥' + Math.round(state._yearlyRecords.reduce(function(a,r){ return a + (r.salary||0); }, 0)).toLocaleString() + '</div></div></div>';
@@ -2674,12 +2686,18 @@ function showEnding() {
   html += '<div style="display:flex;gap:0;overflow-x:auto;padding:8px 4px;-webkit-overflow-scrolling:touch" id="timelineContainer"></div></div>';
 
   // Action buttons
-  html += '<div class="entry-bar">';
+  // Copy moment button
+  html += '<div class="entry-bar" style="margin-top:16px">';
+  html += '<button class="entry-btn" onclick="copyMoments()" style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:#3b82f6">📋 一键复制文案</button>';
   html += '<button class="entry-btn" onclick="generatePoster()">📸 生成海报</button>';
-  html += '<button class="entry-btn" onclick="location.href=location.pathname">🔄 重新开始</button>';
-  html += '<button class="entry-btn" onclick="shareChallenge()" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff;border-color:#ff6b6b">🔥 挑战好友</button>';
   html += '</div>';
-  html += '<button class="entry-btn" onclick="unlockShareTalent()" style="background:linear-gradient(135deg,#00b894,#55efc4);color:#fff;border-color:#00b894">🎁 分享解锁天赋</button>';
+  html += '<div class="entry-bar" style="margin-top:8px">';
+  html += '<button class="entry-btn" onclick="unlockShareTalent()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#10b981">🎁 分享解锁天赋</button>';
+  html += '<button class="entry-btn" onclick="shareChallenge()" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border-color:#f97316">🔥 挑战好友</button>';
+  html += '</div>';
+  html += '<div class="entry-bar" style="margin-top:8px">';
+  html += '<button class="entry-btn" onclick="location.href=location.pathname">🔄 重新开始</button>';
+  html += '</div>';
   html += '<div class="entry-bar" style="margin-top:8px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴 (' + getUnlockedCount() + '/' + ENDINGS.length + ')</button>';
   html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
@@ -2836,58 +2854,62 @@ function openShop(type) {
     shopHtml = '<div class="modal-title">🏥 养生医疗</div>';
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 健康：' + state.health + '</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="switch-card" onclick="buyHeal(3000, 10)"><div class="sw-title">💊 基础体检</div><div class="sw-cost">¥3,000 → 健康+10</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyHeal(15000, 30)"><div class="sw-title">🏥 深度疗养</div><div class="sw-cost">¥15,000 → 健康+30</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyHeal(50000, 60)"><div class="sw-title">✨ 顶级康养</div><div class="sw-cost">¥50,000 → 健康+60</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyHeal(3000, 10)"><div class="sw-title">💊 基础体检</div><div class="sw-cost">¥3,000 → 健康+10</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyHeal(15000, 30)"><div class="sw-title">🏥 深度疗养</div><div class="sw-cost">¥15,000 → 健康+30</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyHeal(50000, 60)"><div class="sw-title">✨ 顶级康养</div><div class="sw-cost">¥50,000 → 健康+60</div></div>';
     shopHtml += '</div>';
   } else if (type === 'train') {
     shopHtml = '<div class="modal-title">📚 技能培训</div>';
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 技能：' + state.skill + '</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="switch-card" onclick="buyTrain(5000, 8)"><div class="sw-title">📖 在线课程</div><div class="sw-cost">¥5,000 → 技能+8</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyTrain(20000, 20)"><div class="sw-title">🎓 专业认证</div><div class="sw-cost">¥20,000 → 技能+20</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyTrain(60000, 40)"><div class="sw-title">🏫 EMBA进修</div><div class="sw-cost">¥60,000 → 技能+40</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyTrain(5000, 8)"><div class="sw-title">📖 在线课程</div><div class="sw-cost">¥5,000 → 技能+8</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyTrain(20000, 20)"><div class="sw-title">🎓 专业认证</div><div class="sw-cost">¥20,000 → 技能+20</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyTrain(60000, 40)"><div class="sw-title">🏫 EMBA进修</div><div class="sw-cost">¥60,000 → 技能+40</div></div>';
     shopHtml += '</div>';
   } else if (type === 'social') {
     shopHtml = '<div class="modal-title">🤝 社交投资</div>';
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 人脉：' + state.network + '</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="switch-card" onclick="buySocial(3000, 6)"><div class="sw-title">🍻 同事聚餐</div><div class="sw-cost">¥3,000 → 人脉+6</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buySocial(15000, 18)"><div class="sw-title">🎉 行业酒会</div><div class="sw-cost">¥15,000 → 人脉+18</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buySocial(50000, 40)"><div class="sw-title">🎁 高端人脉局</div><div class="sw-cost">¥50,000 → 人脉+40</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buySocial(3000, 6)"><div class="sw-title">🍻 同事聚餐</div><div class="sw-cost">¥3,000 → 人脉+6</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buySocial(15000, 18)"><div class="sw-title">🎉 行业酒会</div><div class="sw-cost">¥15,000 → 人脉+18</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buySocial(50000, 40)"><div class="sw-title">🎁 高端人脉局</div><div class="sw-cost">¥50,000 → 人脉+40</div></div>';
     shopHtml += '</div>';
   } else if (type === 'invest') {
     shopHtml = '<div class="modal-title">📈 理财投资</div>';
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="switch-card" onclick="buyInvest(10000, 0.03)"><div class="sw-title">🏦 定期存款</div><div class="sw-cost">投入¥1万 → 年收益3%，稳赚不赔</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyInvest(50000, 0.08)"><div class="sw-title">📊 基金定投</div><div class="sw-cost">投入¥5万 → 年收益8%，有小幅亏损风险</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyInvest(100000, 0.15)"><div class="sw-title">📉 股票炒</div><div class="sw-cost">投入¥10万 → 年收益15%，亏损概率高</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyInvest(10000, 0.03)"><div class="sw-title">🏦 定期存款</div><div class="sw-cost">投入¥1万 → 年收益3%，稳赚不赔</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyInvest(50000, 0.08)"><div class="sw-title">📊 基金定投</div><div class="sw-cost">投入¥5万 → 年收益8%，有小幅亏损风险</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyInvest(100000, 0.15)"><div class="sw-title">📉 股票炒</div><div class="sw-cost">投入¥10万 → 年收益15%，亏损概率高</div></div>';
     shopHtml += '</div>';
   } else if (type === 'property') {
     var owned = state._property || 0;
     shopHtml = '<div class="modal-title">🏠 房产置业</div>';
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">存款：¥' + (state.money/10000).toFixed(1) + '万 | 已购房：' + owned + '套</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="switch-card" onclick="buyProperty(200000, 5000)"><div class="sw-title">🏙️ 老破小</div><div class="sw-cost">¥200万首付 → 每年租金¥5,000</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyProperty(500000, 15000)"><div class="sw-title">🏢 学区房</div><div class="sw-cost">¥500万首付 → 每年租金¥15,000</div></div>';
-    shopHtml += '<div class="switch-card" onclick="buyProperty(1000000, 40000)"><div class="sw-title">🏰 豪宅</div><div class="sw-cost">¥1000万首付 → 每年租金¥40,000</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyProperty(200000, 5000)"><div class="sw-title">🏙️ 老破小</div><div class="sw-cost">¥200万首付 → 每年租金¥5,000</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyProperty(500000, 15000)"><div class="sw-title">🏢 学区房</div><div class="sw-cost">¥500万首付 → 每年租金¥15,000</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyProperty(1000000, 40000)"><div class="sw-title">🏰 豪宅</div><div class="sw-cost">¥1000万首付 → 每年租金¥40,000</div></div>';
     shopHtml += '</div>';
   }
-  shopHtml += '<div class="modal-btn" onclick="closeAllModals()">返回</div>';
+  shopHtml += '<div class="confirm-btn" onclick="closeShopPanel()">返回</div>';
   
-  // Create or update shop modal
-  var modal = document.getElementById('shopModal');
-  if (modal) {
-    modal.querySelector('.modal-content').innerHTML = shopHtml;
-  } else {
-    modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.id = 'shopModal';
-    modal.innerHTML = '<div class="modal-content">' + shopHtml + '</div>';
-    document.body.appendChild(modal);
-  }
-  modal.classList.add('show');
+  // Slide-in shop panel
+  var panel = document.getElementById('shopPanel');
+  var overlay = document.getElementById('shopOverlay');
+  panel.innerHTML = '<div class="modal-title">' + shopHtml.split('modal-title">')[1].split('</div>')[0] + '</div>' + shopHtml.split('</div>').slice(1).join('</div>');
+  // Just use the shopHtml directly
+  panel.innerHTML = shopHtml;
+  panel.innerHTML += '<div style="margin-top:12px"><div class="confirm-btn" onclick="closeShopPanel()" style="background:#f1f5f9;color:#64748b;box-shadow:none">关闭</div></div>';
+  overlay.classList.add('show');
+  setTimeout(function(){ panel.classList.add('open'); }, 10);
+}
+
+function closeShopPanel() {
+  var panel = document.getElementById('shopPanel');
+  var overlay = document.getElementById('shopOverlay');
+  panel.classList.remove('open');
+  setTimeout(function(){ overlay.classList.remove('show'); }, 300);
 }
 
 function buyHeal(cost, amount) {
@@ -2999,7 +3021,7 @@ function showPromoBranch() {
   html += '</div>';
   
   html += '</div>';
-  html += '<div class="modal-btn" onclick="closeAllModals()">再想想</div>';
+  html += '<div class="confirm-btn" onclick="closeAllModals()">再想想</div>';
   
   var modal = document.getElementById('branchModal');
   if (!modal) {
@@ -3008,7 +3030,7 @@ function showPromoBranch() {
     modal.id = 'branchModal';
     document.body.appendChild(modal);
   }
-  modal.innerHTML = '<div class="modal-content">' + html + '</div>';
+  modal.innerHTML = '<div class="modal-inner">' + html + '</div>';
   modal.classList.add('show');
 }
 
