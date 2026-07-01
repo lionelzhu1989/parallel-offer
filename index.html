@@ -293,30 +293,8 @@
 <div id="posterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:500;justify-content:center;align-items:center;flex-direction:column" onclick="closePosterModal()">
   <div style="position:relative;max-width:380px;width:90%">
     <img id="posterImage" style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5)" />
-    <div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8">📸 测测你是什么职场动物？我已经是' + ending.emoji + ending.name + '了</div>
-  <div class="attr-bar" id="attrBar" style="display:none">
-    <div class="attr-item"><span class="attr-icon">💰</span><span class="attr-val" id="attrSalary">5K</span><div class="attr-bar-bg"><div class="attr-bar-fill salary" id="barSalary" style="width:20%"></div></div></div>
-    <div class="attr-item"><span class="attr-icon">📊</span><span class="attr-val" id="attrRank">L1</span></div>
-    <div class="attr-item"><span class="attr-icon">🧠</span><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
-    <div class="attr-item"><span class="attr-icon">👥</span><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
-    <div class="attr-item"><span class="attr-icon">❤️</span><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
-    <div class="attr-item"><span class="attr-icon">😊</span><span class="attr-val" id="attrHappy">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
+    <div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8"></div>
   </div>
-</div>
-
-<div class="main-content" id="mainContent"></div>
-
-<!-- Gallery Modal -->
-<div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()">
-  <div class="modal-inner">
-    <button class="modal-close" onclick="closeGallery()">✕</button>
-    <div class="modal-title">📖 结局图鉴</div>
-    <div class="modal-sub">收集所有平行宇宙的结局</div>
-    <div class="gallery-grid" id="galleryGrid"></div>
-    <div class="gallery-count" id="galleryCount"></div>
-  </div>
-</div>
-
 </div>
 
 <canvas id="posterCanvas" width="750" height="1334" style="display:none"></canvas>
