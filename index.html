@@ -426,7 +426,7 @@ body {
 .timeline-section {
   background:var(--bg-card); border-radius:var(--radius-md);
   padding:12px; margin:6px 0;
-  border:1px solid var(--border); box-shadow:var(--shadow-sm);
+  border:1px solid var(--border); box-shadow:var(--shadow-sm); overflow:hidden;
 }
 .tl-header { text-align:center; font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; }
 .tl-track { display:flex; flex-direction:column; gap:0; }
@@ -445,17 +445,17 @@ body {
 .tl-year-label { font-size:9px; font-weight:700; color:var(--accent); }
 .tl-event { font-size:11px; font-weight:600; color:var(--text); line-height:1.3; }
 .tl-rank { font-size:9px; color:var(--text-muted); }
-.tl-stats { display:flex; gap:3px; flex-wrap:wrap; margin-top:1px; }
-.tl-stat { font-size:8px; color:var(--text-muted); background:var(--bg-secondary); padding:1px 3px; border-radius:3px; }
+.tl-stats { display:flex; gap:3px 4px; flex-wrap:wrap; margin-top:2px; }
+.tl-stat { font-size:8.5px; color:var(--text-muted); background:var(--bg-secondary); padding:2px 4px; border-radius:3px; white-space:nowrap; }
 .tl-stat .pos { color:var(--green); font-weight:700; }
 .tl-stat .neg { color:var(--danger); font-weight:700; }
-.tl-chart { margin-top:8px; padding:6px 8px; background:var(--bg-secondary); border-radius:var(--radius-sm); }
+.tl-chart { margin-top:8px; padding:6px 8px; background:var(--bg-secondary); border-radius:var(--radius-sm); overflow-x:auto; }
 .tl-chart-title { font-size:10px; color:var(--text-muted); margin-bottom:4px; text-align:center; }
-.tl-bars { display:flex; align-items:flex-end; gap:3px; height:28px; padding:0 2px; }
+.tl-bars { display:flex; align-items:flex-end; gap:3px; height:50px; padding:0 2px; overflow:visible; }
 .tl-bar { flex:1; border-radius:2px 2px 0 0; min-height:2px; position:relative; transition:height 0.3s; }
 .tl-bar:hover::after { content:attr(data-tip); position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--bg-card); color:var(--text); padding:2px 6px; border-radius:4px; font-size:9px; white-space:nowrap; box-shadow:var(--shadow-sm); z-index:10; }
 .tl-bar-labels { display:flex; gap:3px; padding:2px 0 0; }
-.tl-bar-label { flex:1; text-align:center; font-size:8px; color:var(--text-muted); }
+.tl-bar-label { flex:1; text-align:center; font-size:8px; color:var(--text-muted); line-height:1.2; }
 
 /* ===== Narrative Box ===== */
 .narrative-box {
@@ -3957,7 +3957,7 @@ function renderTimeline() {
     html += '<div class="tl-chart"><div class="tl-chart-title">💰 存款变化趋势</div><div class="tl-bars">';
     for (var i = 0; i < records.length; i++) {
       var r = records[i];
-      var h = Math.max(3, Math.round(Math.abs(r.money) / maxMoney * 44));
+      var h = Math.max(3, Math.round(Math.abs(r.money) / maxMoney * 40));
       var color = r.money < 0 ? '#ef4444' : r.money >= 200000 ? '#10b981' : r.money >= 50000 ? '#f59e0b' : '#8b7355';
       var tip = 'Y' + r.year + ' ¥' + (r.money >= 10000 ? Math.round(r.money/10000) + '万' : r.money);
       html += '<div class="tl-bar" style="height:' + h + 'px;background:' + color + '" data-tip="' + tip + '"></div>';
