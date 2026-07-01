@@ -1788,8 +1788,8 @@ function showIntro() {
     html += '<div class="tc-label">' + t.label + '</div>';
     html += '<div class="tc-desc">' + t.desc + '</div>';
 
-    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',social:'#fd79a8',zen:'#00b894',risk:'#e17055',neutral:'#dfe6e9'})[t.school] + ';margin-top:2px">🏷️ ' + ({tech:'内卷技术流',social:'人脉经商流',zen:'佛系躺平流',risk:'风险投机流',neutral:'万金油'})[t.school] + '</div>';
-    html += '<div style="font-size:10px;color:rgba(255,100,100,0.8);margin-top:1px">⚡ ' + (t.debuff || '无副作用') + '</div>';    html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
+    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',biz:'#fd79a8',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',biz:'商务路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
+    html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
     html += '</div>';
   }
   html += '</div>';
@@ -1871,7 +1871,7 @@ function showTalentDraw() {
   var pool = shuffle(TALENT_POOL).slice(0, 5);
   window._drawnTalents = pool;
   _talentSelections = [];
-  var schoolNames = {work:'内卷',life:'佛系',invest:'投机',social:'社交',wild:'万金油'};
+  var schoolNames = {tech:'内卷技术流',social:'人脉经商流',zen:'佛系躺平流',risk:'风险投机流',neutral:'万金油'};
   var html = '<div class="talent-section"><div class="talent-header"><div class="talent-title">✨ 天赋抽卡</div><div class="talent-subtitle">从5张天赋卡中选择3张，它们将影响你的职场人生</div></div>';
   html += '<div class="talent-grid">';
   for (var i = 0; i < pool.length; i++) {
