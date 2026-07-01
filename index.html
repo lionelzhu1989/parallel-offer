@@ -1412,7 +1412,62 @@ var ENDINGS = [
   // Combo endings (rare — talent synergy triggers)
   { id:'night_owl_boss', emoji:'🦉', name:'深夜CEO', track:null, desc:'你同时拥有了"夜猫子"和"卷王"天赋。白天开会，晚上写代码，凌晨复盘。你的日历App以为自己坏了。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('nightowl')>=0 && s.talents.indexOf('hardwork')>=0 && s.rankIdx>=3; }, hidden:true },
   { id:'cat_boss', emoji:'😼', name:'猫系老板', track:null, desc:'你有"猫奴"天赋，养了三只猫，开了家公司专门做猫粮。员工都是猫。KPI是喵喵叫的次数。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('catlovers')>=0 && s.talents.indexOf('geek')>=0; }, hidden:true },
-  { id:'social_butterfly', emoji:'🦋', name:'社交蝴蝶', track:null, desc:'你有"社牛"和"锦鲤"双重天赋。人脉是你的超能力，运气是你的护城河。别人投简历，你投微信。', theme:'gold', condition:function(s){ return s.talents && s.talents.indexOf('social')>=0 && s.talents.indexOf('lucky')>=0 && s.network>=70; }, hidden:true },
+  { id:'social_butterfly', emoji:'🦋', name:'社交蝴蝶', track:null, desc:'你有"社牛"和"锦鲤"双重天赋。人脉是你的超能力，运气是你的护城河。别人投简历，你投微信。', theme:'gold', condition:function(s){ return s.talents && s.talents.indexOf('social')>=0 && s.talents.indexOf('lucky')>=0 && s.network>=70; },
+  hidden:false
+},{
+  id:'thirty_five_layoff',
+  emoji:'📉',
+  name:'35岁の终局',
+  track:null,
+  desc:'35岁生日当天，HR约你"聊聊"。你早已预感到这一天——工位上的绿植都比你有安全感。但你手握 N+1 和十年积蓄，反而松了口气。',
+  theme:'orange',
+  condition:function(s){return s.year>=10&&s.health<=40&&s.money>=50000;},
+  hidden:false
+},{
+  id:'side_income_king',
+  emoji:'🦅',
+  name:'副业碾压主业',
+  track:null,
+  desc:'副业收入是工资的三倍。你终于在某个月底发现——上班才是你的副业。辞职信写了一半，你又删了，因为"五险一金还是要交的"。',
+  theme:'green',
+  condition:function(s){return s.money>=200000&&s.happy>=70;},
+  hidden:false
+},{
+  id:'rental_tycoon',
+  emoji:'🏠',
+  name:'收租退休',
+  track:null,
+  desc:'三套房，每月租金入账两万。你40岁提前退休，每天的生活是遛狗、喝茶、收租。前同事问你在做什么，你说"资产配置"。',
+  theme:'gold',
+  condition:function(s){return s.money>=300000&&s.year>=8;},
+  hidden:false
+},{
+  id:'ppt_master',
+  emoji:'📊',
+  name:'PPT治国大师',
+  track:null,
+  desc:'你已经三年没写过代码了。你的核心竞争力是：把5页能讲完的事做成50页PPT。老板说你是"战略性人才"，你知道这是夸你。一定是的。',
+  theme:'blue',
+  condition:function(s){return s.skill>=80&&s.network>=80&&s.happy>=60;},
+  hidden:false
+},{
+  id:'internet_old_fraud',
+  emoji:'👴',
+  name:'互联网老油条',
+  track:null,
+  desc:'十年工龄，开会永远最后发言，代码永远刚好够用。新人叫你"老师"，不是因为尊敬，是因为只有你能找到那个十年前的文档。你活成了自己最讨厌的样子，但你不在意了。',
+  theme:'purple',
+  condition:function(s){return s.year>=10&&s.happy>=50&&s.happy<=70;},
+  hidden:false
+},{
+  id:'fire_money_fast',
+  emoji:'🔥',
+  name:'FIRE运动践行者',
+  track:null,
+  desc:'极简生活，存款狂攒。你35岁存够了200万，正式宣布退休。朋友们震惊，你微微一笑："我只是把内卷的力气用在了算账上。"',
+  theme:'green',
+  condition:function(s){return s.money>=2000000;},
+  hidden:true },
 ];
 
 // ====== DATA: Achievements ======
@@ -1687,6 +1742,44 @@ function startGame() {
 }
 
 // ====== Render Main Game ======
+
+function copyMoments() {
+  var s = state;
+  var track = CAREER_TRACKS[s.trackIndex];
+  var trackName = track ? track.name : '未知';
+  var endName = s._endingName || '职场人';
+  var lines = [
+    '🎯 我的「平行Offer」人生模拟结果：',
+    '🏷️ ' + endName,
+    '💼 ' + trackName + ' · ' + (s.level > 0 ? 'Lv.' + s.level : '新人'),
+    '💰 月薪 ' + Math.round(s.salary) + ' | 存款 ' + Math.round(s.money),
+    '📅 工龄 ' + s.year + '年 | 健康 ' + s.health,
+    '',
+    '测测你的人生会平行到哪里 👇'
+  ];
+  var text = lines.join('\n');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      toast('✅ 已复制到剪贴板，去朋友圈粘贴吧！');
+    }).catch(function() {
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  toast('✅ 已复制到剪贴板！');
+}
+
 function render() {
   if (state.year > 10) {
     showEnding();
@@ -2158,6 +2251,32 @@ function promoChoice(choice) {
 }
 
 // ====== Ending ======
+
+function getPersonality(s) {
+  var traits = [];
+  if (s.talents && s.talents.indexOf('geek')>=0) traits.push('极客');
+  if (s.talents && s.talents.indexOf('fox')>=0) traits.push('狐狸');
+  if (s.talents && s.talents.indexOf('hardwork')>=0) traits.push('卷王');
+  if (s.talents && s.talents.indexOf('catlovers')>=0) traits.push('猫系');
+  if (s.talents && s.talents.indexOf('social')>=0) traits.push('社牛');
+  if (s.talents && s.talents.indexOf('shy')>=0) traits.push('社恐');
+  if (s.talents && s.talents.indexOf('lucky')>=0) traits.push('锦鲤');
+  if (s.talents && s.talents.indexOf('runner')>=0) traits.push('养生');
+  if (s.talents && s.talents.indexOf('artsy')>=0) traits.push('文青');
+  if (s.talents && s.talents.indexOf('gambler')>=0) traits.push('赌徒');
+
+  // Animal label
+  var animal = '🦥 摸鱼树懒';
+  if (s.money >= 200000) animal = '🦅 副业雄鹰';
+  else if (s.health >= 90) animal = '🦌 养生小鹿';
+  else if (s.skill >= 85) animal = '🧠 技术猫头鹰';
+  else if (s.network >= 85) animal = '🐺 社交狼';
+  else if (s.happy >= 80) animal = '😺 满足喵';
+  else if (s.happy <= 40) animal = '🦘 逃命袋鼠';
+
+  return { traits: traits, animal: animal };
+}
+
 function showEnding() {
   if (state._playEnded) return;
   state._playEnded = true;
