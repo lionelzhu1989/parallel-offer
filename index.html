@@ -397,6 +397,12 @@ body {
   z-index:500; align-items:center; justify-content:center;
 }
 .modal-overlay.show { display:flex; }
+
+/* Gallery modal needs more height */
+#galleryModal .modal-inner {
+  max-height: 85vh;
+  overflow-y: auto;
+}
 .modal-inner {
   background:var(--bg-card); border-radius:var(--radius-xl);
   padding:28px 22px; max-width:380px; width:90%;
@@ -990,41 +996,117 @@ body {
 .theme-dark .id-card { background: linear-gradient(145deg,#0f0f1a,#1a1a2e,#2d1b69); }
 
 
-/* ===== Gallery Modal ===== */
+/* ===== Gallery v2 - 结局图鉴 ===== */
+.gallery-progress {
+  text-align: center; margin-bottom: 16px;
+}
+.gallery-progress-bar {
+  width: 100%; height: 8px; background: rgba(99,102,241,0.1);
+  border-radius: 4px; overflow: hidden; margin: 8px 0;
+}
+.gallery-progress-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #f472b6);
+  transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.gallery-progress-text {
+  font-size: 13px; font-weight: 700; color: var(--text-primary);
+}
+.gallery-progress-tier {
+  font-size: 11px; color: var(--text-muted); margin-top: 4px;
+}
+.gallery-stats {
+  display: flex; justify-content: center; gap: 16px; margin: 12px 0;
+  padding: 10px; background: var(--bg-page); border-radius: 10px;
+}
+.gallery-stat { text-align: center; }
+.gallery-stat-num { font-size: 18px; font-weight: 800; color: var(--primary); }
+.gallery-stat-label { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.gallery-section { margin-bottom: 16px; }
+.gallery-section-title {
+  font-size: 13px; font-weight: 700; color: var(--text-secondary);
+  margin-bottom: 8px; padding-left: 4px;
+  display: flex; align-items: center; gap: 6px;
+}
+.gallery-section-count {
+  font-size: 10px; font-weight: 600; color: var(--text-muted);
+  background: var(--bg-page); padding: 1px 6px; border-radius: 8px;
+}
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 8px 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 .gallery-item {
   background: var(--bg-card);
   border-radius: 12px;
-  padding: 12px 8px;
+  padding: 12px 10px;
   text-align: center;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   box-shadow: var(--shadow-sm);
-  transition: transform 0.2s;
+  transition: all 0.25s ease;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
 }
 .gallery-item.locked {
-  opacity: 0.45;
-  filter: grayscale(0.6);
+  opacity: 0.5;
+  filter: grayscale(0.5);
 }
 .gallery-item.unlocked {
-  border-color: var(--primary);
-  box-shadow: 0 2px 12px rgba(99,102,241,0.15);
+  border-color: rgba(99,102,241,0.3);
+  box-shadow: 0 2px 12px rgba(99,102,241,0.1);
 }
-.gallery-item .g-emoji { font-size: 28px; margin-bottom: 4px; }
-.gallery-item .g-name { font-size: 11px; font-weight: 700; color: var(--text); line-height: 1.3; }
-.gallery-item .g-track { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+.gallery-item.unlocked.rare {
+  border-color: rgba(245,158,11,0.4);
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  box-shadow: 0 2px 12px rgba(245,158,11,0.15);
+}
+.gallery-item.unlocked.hidden-ending {
+  border-color: rgba(168,85,247,0.4);
+  background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+  box-shadow: 0 2px 12px rgba(168,85,247,0.15);
+}
+.gallery-item .g-emoji { font-size: 32px; margin-bottom: 4px; }
+.gallery-item .g-name {
+  font-size: 12px; font-weight: 700; color: var(--text-primary);
+  line-height: 1.3; margin-bottom: 2px;
+}
+.gallery-item .g-desc {
+  font-size: 10px; color: var(--text-muted); line-height: 1.4;
+  margin-top: 4px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.gallery-item .g-track {
+  font-size: 9px; color: var(--text-muted); margin-top: 3px;
+}
+.gallery-item .g-rarity {
+  position: absolute; top: 6px; right: 6px;
+  font-size: 8px; font-weight: 700; padding: 1px 5px;
+  border-radius: 6px; letter-spacing: 0.3px;
+}
+.gallery-item .g-rarity.r-normal { background: rgba(148,163,184,0.15); color: #64748b; }
+.gallery-item .g-rarity.r-rare { background: rgba(245,158,11,0.15); color: #d97706; }
+.gallery-item .g-rarity.r-hidden { background: rgba(168,85,247,0.15); color: #7c3aed; }
+.gallery-item.locked .g-hint {
+  font-size: 9px; color: var(--text-muted); margin-top: 4px;
+  font-style: italic;
+}
 .gallery-count {
   text-align: center;
   font-size: 12px;
   color: var(--text-muted);
-  margin-top: 8px;
-  padding-top: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
   border-top: 1px solid var(--border);
 }
+.gallery-scroll {
+  max-height: 60vh; overflow-y: auto; padding-right: 4px;
+  scrollbar-width: thin; scrollbar-color: rgba(99,102,241,0.2) transparent;
+}
+.gallery-scroll::-webkit-scrollbar { width: 3px; }
+.gallery-scroll::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.2); border-radius: 3px; }
 
 /* ===== Achievement List ===== */
 .achieve-list {
@@ -1334,7 +1416,7 @@ body.dark-mode .entry-btn {
   </div>
 </div>
 <div class="main-content" id="mainContent"></div>
-<div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()"><div class="modal-inner"><button class="modal-close" onclick="closeGallery()">✕</button><div class="modal-title">📖 结局图鉴</div><div class="modal-sub">收集所有平行宇宙的结局</div><div class="gallery-grid" id="galleryGrid"></div><div class="gallery-count" id="galleryCount"></div></div></div>
+<div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()"><div class="modal-inner"><button class="modal-close" onclick="closeGallery()">✕</button><div class="modal-title">📖 结局图鉴</div><div class="modal-sub">收集所有平行宇宙的结局</div><div id="galleryGrid"></div><div class="gallery-count" id="galleryCount"></div></div></div>
 <div class="modal-overlay" id="achieveModal" onclick="if(event.target===this)closeAchievements()"><div class="modal-inner"><button class="modal-close" onclick="closeAchievements()">✕</button><div class="modal-title">🏆 成就殿堂</div><div class="modal-sub" id="achieveSub"></div><div class="achieve-list" id="achieveList"></div><div class="achieve-progress" id="achieveProgress"></div></div></div>
 <div id="posterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:500;justify-content:center;align-items:center;flex-direction:column" onclick="closePosterModal()"><div style="position:relative;max-width:380px;width:90%"><img id="posterImage" style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5)" /><div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8"></div></div></div>
 <div class="modal-overlay" id="switchModal"><div class="modal-inner"><div class="modal-title">🔄 跳槽转行</div><div class="switch-warn">⚠️ 跳槽将重置职级和起薪，整活力大幅下降。每局限 <b>2次</b>，跳槽后 <b>3年冷却</b>。</div><div class="switch-grid" id="switchGrid"></div><div class="confirm-btn" onclick="closeAllModals()" style="background:#f1f5f9;color:#64748b;box-shadow:none">再想想</div></div></div>
@@ -4607,22 +4689,148 @@ function getUnlockedCount() {
 function showGallery() {
   var saved = {};
   try { saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}'); } catch(e) {}
-  var grid = document.getElementById('galleryGrid');
-  var html = '';
+  
+  // Categorize endings
+  var cats = {
+    universal: { title: '🎯 通用结局', endings: [], icon: '🎯' },
+    tech: { title: '💻 技术路线', endings: [], icon: '💻' },
+    biz: { title: '📊 市场路线', endings: [], icon: '📊' },
+    state: { title: '🏛️ 体制路线', endings: [], icon: '🏛️' },
+    mnc: { title: '🌐 外企路线', endings: [], icon: '🌐' },
+    startup: { title: '🚀 创业路线', endings: [], icon: '🚀' },
+    gig: { title: '🎨 自由职业', endings: [], icon: '🎨' },
+    hidden: { title: '✨ 隐藏结局', endings: [], icon: '✨' }
+  };
+  
   var count = 0;
+  var totalPlays = 0;
+  try { totalPlays = parseInt(localStorage.getItem('parallel_offer_plays') || '0'); } catch(e) {}
+  
   for (var i = 0; i < ENDINGS.length; i++) {
     var e = ENDINGS[i];
     var unlocked = saved[e.id];
     if (unlocked) count++;
-    var locked = !unlocked;
-    html += '<div class="gallery-item ' + (locked ? 'locked' : 'unlocked') + '">';
-    html += '<div class="g-emoji">' + (locked ? '❓' : e.emoji) + '</div>';
-    html += '<div class="g-name">' + (locked ? '???' : e.name) + '</div>';
-    if (!locked && e.track) html += '<div class="g-track">' + (CAREER_TRACKS[e.track] ? CAREER_TRACKS[e.track].label : '') + '</div>';
-    html += '</div>';
+    
+    // Determine category
+    var catKey = 'universal';
+    if (e.hidden || (e.id.indexOf('night_owl') >= 0) || (e.id.indexOf('cat_boss') >= 0) || (e.id.indexOf('social_butterfly') >= 0) || (e.id.indexOf('combo') >= 0)) {
+      catKey = 'hidden';
+    } else if (e.track === 'tech') catKey = 'tech';
+    else if (e.track === 'biz') catKey = 'biz';
+    else if (e.track === 'state') catKey = 'state';
+    else if (e.track === 'mnc') catKey = 'mnc';
+    else if (e.track === 'startup') catKey = 'startup';
+    else if (e.track === 'gig') catKey = 'gig';
+    
+    cats[catKey].endings.push({ data: e, unlocked: unlocked });
   }
-  grid.innerHTML = html;
-  document.getElementById('galleryCount').textContent = '已解锁 ' + count + '/' + ENDINGS.length + ' 个结局';
+  
+  // Progress tier
+  var pct = ENDINGS.length > 0 ? Math.round(count / ENDINGS.length * 100) : 0;
+  var tier = '🌱 职场新人';
+  if (pct >= 90) tier = '🏆 结局大师';
+  else if (pct >= 70) tier = '📖 人生观察家';
+  else if (pct >= 50) tier = '🔀 平行宇宙探索者';
+  else if (pct >= 30) tier = '🗺️ 初出茅庐';
+  
+  // Build HTML
+  var html = '';
+  
+  // Progress section
+  html += '<div class="gallery-progress">';
+  html += '<div class="gallery-progress-bar"><div class="gallery-progress-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="gallery-progress-text">' + count + ' / ' + ENDINGS.length + ' 个结局已解锁</div>';
+  html += '<div class="gallery-progress-tier">' + tier + ' · ' + pct + '%</div>';
+  html += '</div>';
+  
+  // Stats
+  html += '<div class="gallery-stats">';
+  html += '<div class="gallery-stat"><div class="gallery-stat-num">' + count + '</div><div class="gallery-stat-label">已解锁</div></div>';
+  html += '<div class="gallery-stat"><div class="gallery-stat-num">' + (ENDINGS.length - count) + '</div><div class="gallery-stat-label">待发现</div></div>';
+  html += '<div class="gallery-stat"><div class="gallery-stat-num">' + totalPlays + '</div><div class="gallery-stat-label">总场次</div></div>';
+  html += '</div>';
+  
+  // Scrollable sections
+  html += '<div class="gallery-scroll">';
+  
+  var catOrder = ['universal', 'tech', 'biz', 'state', 'mnc', 'startup', 'gig', 'hidden'];
+  for (var ci = 0; ci < catOrder.length; ci++) {
+    var cat = cats[catOrder[ci]];
+    if (cat.endings.length === 0) continue;
+    
+    var unlockedInCat = 0;
+    for (var j = 0; j < cat.endings.length; j++) {
+      if (cat.endings[j].unlocked) unlockedInCat++;
+    }
+    
+    html += '<div class="gallery-section">';
+    html += '<div class="gallery-section-title">' + cat.title + ' <span class="gallery-section-count">' + unlockedInCat + '/' + cat.endings.length + '</span></div>';
+    html += '<div class="gallery-grid">';
+    
+    for (var k = 0; k < cat.endings.length; k++) {
+      var item = cat.endings[k];
+      var e = item.data;
+      var isUnlocked = item.unlocked;
+      
+      var itemCls = 'gallery-item ' + (isUnlocked ? 'unlocked' : 'locked');
+      if (isUnlocked && e.hidden) itemCls += ' hidden-ending';
+      else if (isUnlocked && e.rarity) itemCls += ' rare';
+      
+      html += '<div class="' + itemCls + '">';
+      
+      // Rarity badge
+      if (isUnlocked && e.hidden) {
+        html += '<div class="g-rarity r-hidden">隐藏</div>';
+      } else if (isUnlocked && e.rarity) {
+        html += '<div class="g-rarity r-rare">稀有</div>';
+      } else if (isUnlocked) {
+        html += '<div class="g-rarity r-normal">普通</div>';
+      }
+      
+      // Emoji
+      html += '<div class="g-emoji">' + (isUnlocked ? e.emoji : '❓') + '</div>';
+      
+      // Name
+      html += '<div class="g-name">' + (isUnlocked ? e.name : '???') + '</div>';
+      
+      // Description (only for unlocked)
+      if (isUnlocked) {
+        var shortDesc = e.desc;
+        if (shortDesc.length > 40) shortDesc = shortDesc.substring(0, 40) + '...';
+        html += '<div class="g-desc">' + shortDesc + '</div>';
+      } else {
+        // Hint for locked
+        var hint = '完成游戏解锁';
+        if (e.hidden) hint = '隐藏结局 · 特殊条件';
+        else if (e.track) hint = (CAREER_TRACKS[e.track] ? CAREER_TRACKS[e.track].label : '') + '路线';
+        html += '<div class="g-hint">' + hint + '</div>';
+      }
+      
+      // Track badge for unlocked
+      if (isUnlocked && e.track) {
+        html += '<div class="g-track">' + (CAREER_TRACKS[e.track] ? CAREER_TRACKS[e.track].label : '') + '</div>';
+      }
+      
+      // Rarity percentage
+      if (isUnlocked && e.rarity) {
+        html += '<div class="g-track" style="color:#d97706">解锁率 ' + e.rarity + '</div>';
+      }
+      
+      html += '</div>';
+    }
+    
+    html += '</div></div>';
+  }
+  
+  html += '</div>'; // close scroll
+  
+  // Count display
+  html += '<div class="gallery-count">收集进度 ' + count + '/' + ENDINGS.length;
+  if (count === ENDINGS.length) html += ' · 🎉 全结局达成！';
+  html += '</div>';
+  
+  document.getElementById('galleryGrid').innerHTML = html;
+  document.getElementById('galleryCount').textContent = '';
   document.getElementById('galleryModal').classList.add('show');
 }
 function closeGallery() { document.getElementById('galleryModal').classList.remove('show'); }
@@ -4660,6 +4868,9 @@ function saveEnding(ending) {
     var saved = JSON.parse(localStorage.getItem('parallel_offer_endings') || '{}');
     saved[ending.id] = { name: ending.name, emoji: ending.emoji, track: state.track, date: Date.now() };
     localStorage.setItem('parallel_offer_endings', JSON.stringify(saved));
+    // Increment play counter
+    var plays = parseInt(localStorage.getItem('parallel_offer_plays') || '0');
+    localStorage.setItem('parallel_offer_plays', String(plays + 1));
   } catch(e) {}
 }
 
