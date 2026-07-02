@@ -1073,6 +1073,16 @@ body {
 }
 
 /* ===== Responsive ===== */
+/* ===== Weekly Challenge ===== */
+.challenge-badge { display:inline-block; background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; margin-bottom:12px; }
+.challenge-list { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0; }
+.challenge-item { background:var(--bg-card); border:1.5px solid var(--border); border-radius:12px; padding:12px 8px; text-align:center; cursor:pointer; transition:all 0.2s; }
+.challenge-item:active { transform:scale(0.97); }
+.challenge-item.active { border-color:#f59e0b; background:linear-gradient(135deg,#fffbeb,#fef3c7); box-shadow:0 0 0 3px rgba(245,158,11,0.15); }
+.challenge-item .ch-emoji { font-size:24px; margin-bottom:4px; }
+.challenge-item .ch-name { font-size:12px; font-weight:700; color:var(--text-primary); }
+.challenge-item .ch-desc { font-size:10px; color:var(--text-muted); margin-top:2px; }
+
 @media (max-width: 360px) {
   .attr-bar { gap:4px 3px; }
   .attr-item { padding:3px 3px; min-width:38px; max-width:52px; }
@@ -2725,7 +2735,11 @@ var ENDINGS = [
   theme:'purple',
   condition:function(s){return s.year>=10&&s.hair>=50&&s.hair<=70;},
   hidden:false
-},{
+},{ id:'ceo_emperor', emoji:'👔', name:'打工皇帝·CEO', track:null, desc:'从码农到CEO，你用十年走完了别人三十年的路。现在你最大的烦恼是：年会上表演什么节目。', theme:'gold', condition:function(s){ return s.rankIdx>=4 && s.salary>=20000 && s.network>=80 && s.skill>=80 && s.year>=8; }, hidden:true },
+  { id:'unicorn_founder', emoji:'🦄', name:'独角兽创始人', track:'startup', desc:'你的公司估值超过十亿。投资人排队请你吃饭，但你最怀念的还是当年那个在车库写代码的自己。', theme:'purple', condition:function(s){ return s.track==='startup' && s.rankIdx>=5 && s.money>=500000 && s.network>=60; }, hidden:true },
+  { id:'top_kol', emoji:'📱', name:'顶流KOL', track:null, desc:'你的粉丝比公司员工还多。一条广告报价五万，老板想开除你又不敢——怕你发微博。', theme:'pink', condition:function(s){ return s.network>=90 && s.hair>=70 && s.skill>=60 && s.year>=6; }, hidden:true },
+  { id:'fire_early', emoji:'🔥', name:'FIRE提前退休', track:null, desc:'35岁存款300万，你正式宣布退休。前同事问你靠什么生活，你说：靠利息和愤怒。', theme:'green', condition:function(s){ return s.money>=3000000 && s.health>=70 && s.hair>=70 && s.year>=8; }, hidden:true },
+  {
   id:'fire_money_fast',
   emoji:'🔥',
   name:'FIRE运动践行者',
@@ -2931,8 +2945,9 @@ function showIntro() {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v17 · 2026.07.02</div>';
-  html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
+  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v18 · 2026.07.02</div>';
+  html += '<div style="text-align:center;margin:8px 0"><button onclick="showChallengeModal()" style="background:linear-gradient(135deg,#f59e0b,#f97316);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(245,158,11,0.3)">🏆 本周挑战</button></div>
+<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
   html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
@@ -2956,6 +2971,65 @@ function selectTrack(id, el) {
   }
   document.getElementById('step1Btn').disabled = false;
 }
+
+
+// ====== Weekly Challenges ======
+var WEEKLY_CHALLENGES = [
+  { id:'no_social', emoji:'🔇', name:'零社交挑战', desc:'人脉不增长', mod:function(s){ s._challengeNoSocial=true; } },
+  { id:'grind', emoji:'🔥', name:'卷王挑战', desc:'技能翻倍增长', mod:function(s){ s._challengeGrind=true; } },
+  { id:'zen', emoji:'🧘', name:'佛系挑战', desc:'幸福优先', mod:function(s){ s._challengeZen=true; } },
+  { id:'startup', emoji:'🚀', name:'创业挑战', desc:'从零开始创业', mod:function(s){ s._challengeStartup=true; } }
+];
+var _activeChallenge = null;
+
+function showChallengeModal() {
+  var html = '<div class="char-creator-overlay" onclick="if(event.target===this)this.remove()">';
+  html += '<div class="char-creator-box" style="max-width:360px">';
+  html += '<div class="challenge-badge">🏆 本周挑战</div>';
+  html += '<div style="text-align:center;font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:8px">选一个挑战模式</div>';
+  html += '<div style="text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:12px">挑战会改变游戏规则，完成后解锁专属结局</div>';
+  html += '<div class="challenge-list">';
+  for (var i = 0; i < WEEKLY_CHALLENGES.length; i++) {
+    var ch = WEEKLY_CHALLENGES[i];
+    var sel = _activeChallenge === ch.id ? ' active' : '';
+    html += '<div class="challenge-item' + sel + '" onclick="selectChallenge(\'' + ch.id + '\', this)">';
+    html += '<div class="ch-emoji">' + ch.emoji + '</div>';
+    html += '<div class="ch-name">' + ch.name + '</div>';
+    html += '<div class="ch-desc">' + ch.desc + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<button class="confirm-btn" onclick="applyChallenge()" style="margin-top:8px">' + (_activeChallenge ? '✅ 已选择，开始游戏' : '">不挑战，直接开始') + '</button>';
+  html += '</div></div>';
+  document.getElementById('mainContent').innerHTML = document.getElementById('mainContent').innerHTML;
+  var overlay = document.createElement('div');
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay.firstElementChild);
+}
+
+function selectChallenge(id, el) {
+  _activeChallenge = (_activeChallenge === id) ? null : id;
+  var items = el.parentElement.querySelectorAll('.challenge-item');
+  items.forEach(function(c){ c.classList.remove('active'); });
+  if (_activeChallenge === id) el.classList.add('active');
+  var btn = el.parentElement.parentElement.querySelector('.confirm-btn');
+  if (btn) {
+    btn.textContent = _activeChallenge ? '✅ 已选择，开始游戏' : '不挑战，直接开始';
+  }
+}
+
+function applyChallenge() {
+  var overlay = document.querySelector('.char-creator-overlay');
+  if (overlay) overlay.remove();
+  // Apply challenge modifiers will be called during game init
+  showSetupStep(2);
+}
+
+// Patch selectTrack to optionally show challenge
+var _origSelectTrack = window.selectTrack;
+window.selectTrack = function(id, el) {
+  _origSelectTrack(id, el);
+};
 
 // ====== Setup Step 2: Persona ======
 function showSetupStep(step) {
@@ -4782,8 +4856,18 @@ function generatePoster() {
     }
   }
 
+  // Track badge + year count
+  py = lineY + 16;
+  var track = CAREER_TRACKS[state.track];
+  if (track) {
+    ctx.font = '20px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fillText(track.emoji + ' ' + track.label + ' · ' + (state.year || 10) + '年', w/2, py);
+    py += 28;
+  }
+
   // Score bars section
-  var barY = lineY + 30;
+  var barY = py + 10;
   // Semi-transparent background
   ctx.fillStyle = 'rgba(255,255,255,0.04)';
   roundRect(ctx, 60, barY, w - 120, 280, 16);
