@@ -4003,7 +4003,7 @@ function chooseRandom(optIdx) {
   applyYearlyIncome();
   if (state.talents.indexOf('foodie') >= 0) state.hair += 3;
     // healthCap removed (health merged into hair)
-  state.health = clamp(state.health, 0, healthMax);
+  state.health = clamp(state.health, 0, state._healthMax || 100);
   state.hair = clamp(state.hair, 0, 100);
 
   state.year++;
