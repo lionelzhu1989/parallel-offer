@@ -325,6 +325,38 @@ body {
 /* Fix potential z-index stacking issues */
 .persona-options, .talent-grid { position: relative; z-index: 1; }
 
+
+/* ===== Talent Impact Preview (v26) ===== */
+.tc-impact {
+  display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;
+  padding-top:8px; border-top:1px solid rgba(0,0,0,0.06);
+}
+.tc-impact-item {
+  font-size:11px; font-weight:600; padding:3px 8px;
+  border-radius:20px; white-space:nowrap; line-height:1.3;
+  display:inline-flex; align-items:center; gap:3px;
+}
+.tc-impact-pos {
+  background:rgba(34,197,94,0.1); color:#16a34a;
+}
+.tc-impact-neg {
+  background:rgba(239,68,68,0.1); color:#dc2626;
+}
+.tc-impact-special {
+  background:rgba(251,191,36,0.12); color:#d97706;
+}
+.tc-impact-neutral {
+  background:rgba(148,163,184,0.12); color:#64748b;
+}
+.tc-difficulty {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-weight:700; margin-top:6px;
+  padding:2px 8px; border-radius:10px;
+}
+.tc-difficulty.easy { background:rgba(34,197,94,0.1); color:#16a34a; }
+.tc-difficulty.medium { background:rgba(251,191,36,0.12); color:#d97706; }
+.tc-difficulty.hard { background:rgba(239,68,68,0.1); color:#dc2626; }
+
 /* ===== Gallery & Modals ===== */
 .modal-overlay {
   display:none; position:fixed; top:0; left:0; right:0; bottom:0;
@@ -1472,7 +1504,7 @@ var TALENT_POOL = [
     promoBonus:0.3 },
   { id:'marathon', name:'铁人马拉松', emoji:'🏃', school:'tech',
     desc:'连续通宵不在话下。整活力拉满，但发际线也拉满了。',
-    talentEffect:{skillBonus:1.3}, debuff:'每年发量-10（健康+发量双扣）',
+    talentEffect:{skillBonus:1.3}, debuff:'每年发量-10',
     yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.hair=clamp(s.hair-5,0,100); },
     promoBonus:0.2 },
   { id:'geek', name:'极客之魂', emoji:'🤖', school:'tech',
@@ -1484,7 +1516,7 @@ var TALENT_POOL = [
   // ====== 人脉经商流 ======
   { id:'social', name:'社交蝴蝶', emoji:'🦋', school:'social',
     desc:'人脉就是钱脉。整活力翻倍，但另一半天赋停滞。',
-    talentEffect:{networkBonus:1.8}, debuff:'整活力另一半增长-50%，晋升基础概率-25%',
+    talentEffect:{networkBonus:1.8}, debuff:'整活力增长减半，晋升概率-25%',
     yearlyEffect:function(s){ s.skill=Math.max(0,s.skill-1); },
     promoBonus:-0.25 },
   { id:'artist', name:'文艺青年', emoji:'🎨', school:'social',
@@ -1528,24 +1560,24 @@ var TALENT_POOL = [
     promoBonus:0 },
   { id:'hustler', name:'搞钱达人', emoji:'💰', school:'risk',
     desc:'赚钱不要命。副业翻倍，但发量暴跌。',
-    talentEffect:{sideIncome:2.5}, debuff:'每年发量-13（健康+发量双扣）',
+    talentEffect:{sideIncome:2.5}, debuff:'每年发量-13',
     yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.hair=clamp(s.hair-8,0,100); },
     promoBonus:0 },
 
   // ====== 万金油（无流派） ======
   { id:'fox', name:'职场狐狸', emoji:'🦊', school:'neutral',
     desc:'精于算计。整活力微增，但大家觉得你油滑。',
-    talentEffect:{}, debuff:'每年人脉-1，被人看穿',
+    talentEffect:{}, debuff:'整活力每年-1，被人看穿',
     yearlyEffect:function(s){ s.network=Math.max(0,s.network-1); },
     promoBonus:0 },
   { id:'newbie', name:'职场小白', emoji:'🐣', school:'neutral',
-    desc:'什么都不懂。所有属性+2起步，但没有加成。',
-    talentEffect:{startBonus:true}, debuff:'无特殊加成',
+    desc:'什么都不懂。整活力、发量各+2起步，但没有额外加成。',
+    talentEffect:{startBonus:true}, debuff:'无额外加成',
     yearlyEffect:function(s){},
     promoBonus:0 },
   { id:'resilient', name:'打不死的小强', emoji:'🪳', school:'neutral',
     desc:'命硬。发量下限30，打不死就是赢。',
-    talentEffect:{healthFloor:30}, debuff:'无特殊加成',
+    talentEffect:{healthFloor:30}, debuff:'无额外加成',
     yearlyEffect:function(s){ s.health=Math.max(30, s.health); },
     promoBonus:0 },
 ];
@@ -3271,24 +3303,70 @@ function showTalentDraw() {
     html += '<div class="tc-info">';
     html += '<div class="tc-name">' + t.name + '</div>';
     html += '<div class="tc-desc">' + t.desc + '</div>';
-    // Show buff effects
-    var buffTexts = [];
+    // === Impact Preview (v26) ===
+    var impacts = [];
     var te = t.talentEffect || {};
-    if (te.skillBonus) buffTexts.push('🎪 整活力增长×' + te.skillBonus);
-    if (te.networkBonus) buffTexts.push('🎪 整活力增长×' + te.networkBonus);
-    if (te.sideIncome) buffTexts.push('💰 副业收入×' + te.sideIncome);
-    if (te.investMultiplier) buffTexts.push('📈 投资收益×' + te.investMultiplier);
-    if (te.promoBonus > 0 || (t.promoBonus && t.promoBonus > 0)) buffTexts.push('🎯 晋升概率+' + Math.round((te.promoBonus || t.promoBonus || 0) * 100) + '%');
-    if (te.healthFloor) buffTexts.push('😊 发量下限' + te.healthFloor);
-    if (te.healthDecayHalf) buffTexts.push('😊 发量衰减减半');
-    if (te.hairBonus) buffTexts.push('😊 发量每年+2');
-    if (te.lucky) buffTexts.push('🍀 幸运加成');
-    if (te.startBonus) buffTexts.push('📊 整活力+2、发量+2起步');
-    if (te.startupDiscount) buffTexts.push('🚀 创业门槛降低');
-    if (buffTexts.length > 0) {
-      html += '<div class="talent-buff">' + buffTexts.join(' / ') + '</div>';
+    var promo = te.promoBonus || t.promoBonus || 0;
+    // 整活力 impact
+    if (te.skillBonus || te.networkBonus) {
+      var mult = te.skillBonus || te.networkBonus || 1;
+      var pct = Math.round((mult - 1) * 100);
+      impacts.push({text: '🎪 整活力 ' + (pct >= 0 ? '+' : '') + pct + '%', cls: pct >= 0 ? 'pos' : 'neg'});
     }
-    if (t.debuff) html += '<div class="talent-debuff">' + t.debuff + '</div>';
+    if (te.startBonus) impacts.push({text: '📊 整活力+2 发量+2', cls: 'pos'});
+    // 发量 impact
+    if (te.healthFloor) impacts.push({text: '💇 发量保底' + te.healthFloor, cls: 'special'});
+    if (te.healthDecayHalf) impacts.push({text: '💇 发量衰减↓', cls: 'pos'});
+    if (te.hairBonus) impacts.push({text: '💇 发量每年+2', cls: 'pos'});
+    // 晋升 impact
+    if (promo !== 0) {
+      var pPct = Math.round(promo * 100);
+      impacts.push({text: '📈 晋升 ' + (pPct >= 0 ? '+' : '') + pPct + '%', cls: promo > 0 ? 'pos' : 'neg'});
+    }
+    // 收入/投资 impact
+    if (te.sideIncome) impacts.push({text: '💰 副业 ×' + te.sideIncome, cls: 'pos'});
+    if (te.investMultiplier) impacts.push({text: '📈 投资 ×' + te.investMultiplier, cls: te.investMultiplier > 1 ? 'pos' : 'neg'});
+    if (te.lucky) impacts.push({text: '🍀 幸运加成', cls: 'special'});
+    if (te.startupDiscount) impacts.push({text: '🚀 创业门槛↓', cls: 'pos'});
+    // Yearly stat drain from yearlyEffect
+    if (t.yearlyEffect) {
+      var drain = [];
+      try {
+        var probe = {skill:10, network:10, health:50, hair:50, money:10000, salary:10000};
+        var before = JSON.stringify(probe);
+        t.yearlyEffect(probe);
+        var after = JSON.stringify(probe);
+        if (before === after) {}
+        else {
+          if (probe.skill < 10) impacts.push({text: '🎪 整活力增长受阻', cls: 'neg'});
+          if (probe.network < 10 && !(probe.skill < 10)) impacts.push({text: '🎪 整活力增长受阻', cls: 'neg'});
+          if (probe.health < 50) impacts.push({text: '💇 发量逐年下降', cls: 'neg'});
+          if (probe.hair < 50 && !(probe.health < 50)) impacts.push({text: '💇 发量逐年下降', cls: 'neg'});
+          if (probe.money < 10000) impacts.push({text: '💸 每年烧钱', cls: 'neg'});
+          if (probe.salary < 10000) impacts.push({text: '💰 薪资涨幅受限', cls: 'neg'});
+        }
+      } catch(e) {}
+    }
+    // Deduplicate impacts
+    var seen = {};
+    var uniqueImpacts = [];
+    for (var ii = 0; ii < impacts.length; ii++) {
+      if (!seen[impacts[ii].text]) { seen[impacts[ii].text] = true; uniqueImpacts.push(impacts[ii]); }
+    }
+    // Render impact pills
+    if (uniqueImpacts.length > 0) {
+      html += '<div class="tc-impact">';
+      for (var ii = 0; ii < uniqueImpacts.length; ii++) {
+        var imp = uniqueImpacts[ii];
+        html += '<span class="tc-impact-item tc-impact-' + imp.cls + '">' + imp.text + '</span>';
+      }
+      html += '</div>';
+    }
+    // Difficulty tag
+    var negCount = uniqueImpacts.filter(function(x){return x.cls==='neg';}).length;
+    var diffLabel = negCount === 0 ? '🌟 轻松' : (negCount <= 1 ? '⚡ 中等' : '🔥 高难');
+    var diffCls = negCount === 0 ? 'easy' : (negCount <= 1 ? 'medium' : 'hard');
+    html += '<div class="tc-difficulty ' + diffCls + '">' + diffLabel + '</div>';
     html += '<div class="tc-tag ' + t.cat + '">' + (schoolNames[t.school] || '') + (t.cat === 'special' ? ' · 稀有' : '') + '</div>';
     html += '</div></div>';
   }
