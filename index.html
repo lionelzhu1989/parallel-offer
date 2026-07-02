@@ -1467,76 +1467,76 @@ var CAREER_TRACKS = {
 var TALENT_POOL = [
   // ====== 内卷技术流 ======
   { id:'hardwork', name:'996战神', emoji:'⌨️', school:'tech',
-    desc:'加班就是我的信仰。技能飙升，但身体在燃烧。',
-    talentEffect:{skillBonus:1.5}, debuff:'每年健康-8，人脉增长-40%',
+    desc:'加班就是我的信仰。整活力飙升，但精力在燃烧。',
+    talentEffect:{skillBonus:1.5}, debuff:'每年发量-8，整活力增长-40%',
     yearlyEffect:function(s){ s.health=clamp(s.health-8,0,100); s.network=Math.max(0,s.network-2); },
     promoBonus:0.3 },
   { id:'marathon', name:'铁人马拉松', emoji:'🏃', school:'tech',
-    desc:'连续通宵不在话下。技能拉满，但发际线也拉满了。',
-    talentEffect:{skillBonus:1.3}, debuff:'每年健康-5，发量-5',
+    desc:'连续通宵不在话下。整活力拉满，但发际线也拉满了。',
+    talentEffect:{skillBonus:1.3}, debuff:'每年发量-10（健康+发量双扣）',
     yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.hair=clamp(s.hair-5,0,100); },
     promoBonus:0.2 },
   { id:'geek', name:'极客之魂', emoji:'🤖', school:'tech',
-    desc:'代码就是浪漫。技术暴涨，社交为零。',
-    talentEffect:{skillBonus:1.4}, debuff:'人脉增长-50%，每年发量-3',
+    desc:'代码就是浪漫。整活力暴涨，但社交为零。',
+    talentEffect:{skillBonus:1.4}, debuff:'整活力增长-50%，每年发量-3',
     yearlyEffect:function(s){ s.network=Math.max(0,s.network-1); s.hair=clamp(s.hair-3,0,100); },
     promoBonus:0.25 },
 
   // ====== 人脉经商流 ======
   { id:'social', name:'社交蝴蝶', emoji:'🦋', school:'social',
-    desc:'人脉就是钱脉。社交翻倍，但技术停滞。',
-    talentEffect:{networkBonus:1.8}, debuff:'技能增长-50%，晋升基础概率-25%',
+    desc:'人脉就是钱脉。整活力翻倍，但另一半天赋停滞。',
+    talentEffect:{networkBonus:1.8}, debuff:'整活力另一半增长-50%，晋升基础概率-25%',
     yearlyEffect:function(s){ s.skill=Math.max(0,s.skill-1); },
     promoBonus:-0.25 },
   { id:'artist', name:'文艺青年', emoji:'🎨', school:'social',
     desc:'靠才华吃饭。副业翻倍，但大厂不认。',
-    talentEffect:{sideIncome:2.0}, debuff:'晋升概率-30%，每年社交开销扣存款¥5000',
+    talentEffect:{sideIncome:2.0}, debuff:'晋升概率-30%，每年社交开销¥5000',
     yearlyEffect:function(s){ s.money-=5000; },
     promoBonus:-0.3 },
   { id:'connector', name:'人脉之王', emoji:'🤝', school:'social',
-    desc:'认识所有人。创业门槛降低，但技术为零。',
-    talentEffect:{networkBonus:1.6, startupDiscount:true}, debuff:'技能上限降至60',
+    desc:'认识所有人。创业门槛降低，但整活力上限受限。',
+    talentEffect:{networkBonus:1.6, startupDiscount:true}, debuff:'整活力上限降至60',
     yearlyEffect:function(s){ s.skill=Math.min(s.skill, 60); },
     promoBonus:-0.2 },
 
   // ====== 佛系躺平流 ======
   { id:'lucky', name:'锦鲤本鲤', emoji:'🐟', school:'zen',
-    desc:'运气就是实力。健康长寿，但薪资涨幅减半。',
+    desc:'运气就是实力。发量保底，但薪资涨幅减半。',
     talentEffect:{lucky:true}, debuff:'薪资涨幅减半，晋升机会-30%',
     yearlyEffect:function(s){ s.salary=Math.round(s.salary*1.01); },
     promoBonus:-0.3 },
   { id:'chill', name:'佛系青年', emoji:'🧘', school:'zen',
-    desc:'一切随缘。健康衰减减半，但很难升职。',
+    desc:'一切随缘。发量衰减减半，但很难升职。',
     talentEffect:{healthDecayHalf:true}, debuff:'晋升概率-40%，薪资涨幅-30%',
     yearlyEffect:function(s){},
     promoBonus:-0.4 },
   { id:'optimist', name:'乐天派', emoji:'☀️', school:'zen',
-    desc:'开心就好。发量永远高，但没什么野心。',
-    talentEffect:{hairBonus:true}, debuff:'技能增长-30%，不会主动触发贵人事件',
+    desc:'开心就好。发量每年自动回复，但没什么野心。',
+    talentEffect:{hairBonus:true}, debuff:'整活力增长-30%，不会主动触发贵人事件',
     yearlyEffect:function(s){ s.hair=Math.min(100, s.hair+2); },
     promoBonus:-0.2 },
 
   // ====== 风险投机流 ======
   { id:'gambler', name:'赌狗附体', emoji:'🎰', school:'risk',
     desc:'梭哈就完事了。投资最高3倍，亏损也3倍。',
-    talentEffect:{investMultiplier:3.0}, debuff:'亏损同步放大3倍，健康随机暴跌',
+    talentEffect:{investMultiplier:3.0}, debuff:'亏损同步放大3倍，发量随机暴跌',
     yearlyEffect:function(s){ if(Math.random()<0.3) s.health=clamp(s.health-Math.floor(Math.random()*20),0,100); },
     promoBonus:0 },
   { id:'insider', name:'消息灵通', emoji:'📱', school:'risk',
     desc:'总有小道消息。投资收益高，但容易踩雷。',
-    talentEffect:{investMultiplier:2.0}, debuff:'20%概率投资暴亏，健康-3',
+    talentEffect:{investMultiplier:2.0}, debuff:'20%概率投资暴亏，发量-3',
     yearlyEffect:function(s){ s.health=clamp(s.health-3,0,100); if(Math.random()<0.2) s.money-=50000; },
     promoBonus:0 },
   { id:'hustler', name:'搞钱达人', emoji:'💰', school:'risk',
-    desc:'赚钱不要命。副业翻倍，但健康和发量暴跌。',
-    talentEffect:{sideIncome:2.5}, debuff:'每年健康-5，发量-8',
+    desc:'赚钱不要命。副业翻倍，但发量暴跌。',
+    talentEffect:{sideIncome:2.5}, debuff:'每年发量-13（健康+发量双扣）',
     yearlyEffect:function(s){ s.health=clamp(s.health-5,0,100); s.hair=clamp(s.hair-8,0,100); },
     promoBonus:0 },
 
   // ====== 万金油（无流派） ======
   { id:'fox', name:'职场狐狸', emoji:'🦊', school:'neutral',
-    desc:'精于算计。人脉微增，但大家觉得你油滑。',
-    talentEffect:{}, debuff:'每年人脉-1（被人看穿）',
+    desc:'精于算计。整活力微增，但大家觉得你油滑。',
+    talentEffect:{}, debuff:'每年人脉-1，被人看穿',
     yearlyEffect:function(s){ s.network=Math.max(0,s.network-1); },
     promoBonus:0 },
   { id:'newbie', name:'职场小白', emoji:'🐣', school:'neutral',
@@ -1545,7 +1545,7 @@ var TALENT_POOL = [
     yearlyEffect:function(s){},
     promoBonus:0 },
   { id:'resilient', name:'打不死的小强', emoji:'🪳', school:'neutral',
-    desc:'命硬。健康下限30，但也就这样了。',
+    desc:'命硬。发量下限30，打不死就是赢。',
     talentEffect:{healthFloor:30}, debuff:'无特殊加成',
     yearlyEffect:function(s){ s.health=Math.max(30, s.health); },
     promoBonus:0 },
@@ -1555,7 +1555,7 @@ var TALENT_POOL = [
 var CAREER_EVENTS = {
   tech: [
     { year:[1,2], title:'需求又变了', desc:'产品经理第三次改需求。上一版的代码白写了。你开始怀疑"敏捷开发"是不是"赶快重写"的意思。', opts:[
-      {text:'默默重写，毕竟工资照发', skill:5, health:-3, hair:-5, __buff:{id:'overtime',name:'加班模式',desc:'健康小幅下降',dur:2,fx:{health:-3}}},
+      {text:'默默重写，毕竟工资照发', skill:5, health:-3, hair:-5, __buff:{id:'overtime',name:'加班模式',desc:'发量小幅下降',dur:2,fx:{health:-3}}},
       {text:'跟产品经理battle一下', skill:3, network:5, hair:-2},
       {text:'截图留证，下次甩锅用', skill:2, network:-3, hair:3}
     ]},
@@ -1565,7 +1565,7 @@ var CAREER_EVENTS = {
       {text:'偷偷去学了设计模式', skill:10, hair:-5}
     ]},
     { year:[2,3], title:'线上事故！', desc:'凌晨3点，你写的代码在生产环境炸了。告警群炸锅，你开始思考人生的意义。', opts:[
-      {text:'爬起来修复，通宵达旦', skill:8, health:-10, hair:-8, __buff:{id:'overwork',name:'过劳状态',desc:'健康持续下降',dur:3,fx:{health:-5,skill:2}}},
+      {text:'爬起来修复，通宵达旦', skill:8, health:-10, hair:-8, __buff:{id:'overwork',name:'过劳状态',desc:'发量持续下降',dur:3,fx:{health:-5,skill:2}}},
       {text:'假装没看到，等早上再说', health:-3, hair:5, network:-5},
       {text:'发了个"正在排查"的消息，然后继续睡', hair:3, network:-3}
     ]},
@@ -2613,11 +2613,11 @@ var RANDOM_EVENTS = [
     {text:'写了一篇人生感悟，获得共鸣', hair:8, network:5}
   ]}
   ,{ emoji:'🏋️', title:'健身房冲动', desc:'办了年卡后你去了3次。再不去就过期了。', weight:2, opts:[
-    {text:'开始每周坚持锻炼', health:15, hair:5, skill:-3, __buff:{id:'fitness',name:'健身达人',desc:'坚持锻炼恢复健康',dur:2,fx:{health:5}}},
+    {text:'开始每周坚持锻炼', health:15, hair:5, skill:-3, __buff:{id:'fitness',name:'健身达人',desc:'坚持锻炼恢复发量',dur:2,fx:{health:5}}},
     {text:'找了个私教带练', money:-5000, health:10, hair:-2},
     {text:'算了，卡过期就过期吧', hair:-3}
   ]}
-  ,{ emoji:'📱', title:'副业灵感', desc:'你发现可以把技能变现，接点私活。', weight:2, opts:[
+  ,{ emoji:'📱', title:'副业灵感', desc:'你发现可以把整活力变现，接点私活。', weight:2, opts:[
     {text:'周末加班接私活', money:15000, health:-10, hair:-5, skill:3},
     {text:'认真调研市场需求', skill:5, hair:-2, money:-500},
     {text:'算了，周末要休息', health:5, hair:5}
@@ -2657,7 +2657,7 @@ var RANDOM_EVENTS = [
 // ====== DATA: Endings ======
 var ENDINGS = [
   // Self-deprecating endings (Impact boosters - the sharing engine)
-  { id:'pie_master', emoji:'🫓', name:'画饼大师', track:null, desc:'你职级很高但人脉为零。年终述职时，台下只有HR在打哈欠。你画的饼，连自己都不信了。', theme:'red', condition:function(s){ return s.rankIdx >= 2 && s.network <= 40; } },
+  { id:'pie_master', emoji:'🫓', name:'画饼大师', track:null, desc:'你职级很高但整活力为零。年终述职时，台下只有HR在打哈欠。你画的饼，连自己都不信了。', theme:'red', condition:function(s){ return s.rankIdx >= 2 && s.network <= 40; } },
   { id:'corporate_slave', emoji:'🦥', name:'社畜の日常', track:null, desc:'你用十年证明了一件事：你的存在感还不如公司饮水机。每天加班到十点，老板说你\"不够努力\"。', theme:'gray', condition:function(s){ return s.health <= 25 && s.year >= 5; } },
   { id:'leek', emoji:'🥬', name:'韭菜本菜', track:null, desc:'你在朋友圈发了句\"还行\"。没人点赞。十年存款不够买一平米。但你学会了割自己。', theme:'green', condition:function(s){ return (s.money <= 0 || (s.money < 8000 && s.hair < 50)) && s.year >= 5; } },
   // Tech endings
@@ -2757,7 +2757,7 @@ var ACHIEVEMENTS = [
   { id:'five_years', emoji:'⭐', name:'五年之痒', desc:'完成五年', check:function(s){ return s.year>=5; } },
   { id:'ten_years', emoji:'🏆', name:'十年老兵', desc:'完成十年', check:function(s){ return s.year>=10; } },
   { id:'high_skill', emoji:'🎪', name:'整活天花板', desc:'整活力达到90', check:function(s){ return Math.round((s.skill+s.network)/2)>=90; } },
-  { id:'network_king', emoji:'🤝', name:'社牛之王', desc:'人脉达到90', check:function(s){ return s.network>=90; } },
+  { id:'network_king', emoji:'🤝', name:'社牛之王', desc:'整活力达到90', check:function(s){ return s.network>=90; } },
   { id:'health_hero', emoji:'💪', name:'铁人', desc:'发量始终80+', check:function(s){ return Math.round((s.health+s.hair)/2)>=80 && s.year>=5; } },
   { id:'burnout_badge', emoji:'💀', name:'赛博植物人', desc:'发量降到10以下', check:function(s){ return s.hair<=10; } },
   { id:'hospital_survivor', emoji:'🏥', name:'病房钉子户', desc:'住院超过3年', check:function(s){ return s._isHospitalized && (s.year - s._hospitalYear) >= 3; } },
@@ -2981,8 +2981,8 @@ function selectTrack(id, el) {
 
 // ====== Weekly Challenges ======
 var WEEKLY_CHALLENGES = [
-  { id:'no_social', emoji:'🔇', name:'零社交挑战', desc:'人脉不增长', mod:function(s){ s._challengeNoSocial=true; } },
-  { id:'grind', emoji:'🔥', name:'卷王挑战', desc:'技能翻倍增长', mod:function(s){ s._challengeGrind=true; } },
+  { id:'no_social', emoji:'🔇', name:'零社交挑战', desc:'整活力不增长', mod:function(s){ s._challengeNoSocial=true; } },
+  { id:'grind', emoji:'🔥', name:'卷王挑战', desc:'整活力翻倍增长', mod:function(s){ s._challengeGrind=true; } },
   { id:'zen', emoji:'🧘', name:'佛系挑战', desc:'幸福优先', mod:function(s){ s._challengeZen=true; } },
   { id:'startup', emoji:'🚀', name:'创业挑战', desc:'从零开始创业', mod:function(s){ s._challengeStartup=true; } }
 ];
@@ -3286,10 +3286,10 @@ function showTalentDraw() {
     if (te.investMultiplier) buffTexts.push('📈 投资收益×' + te.investMultiplier);
     if (te.promoBonus > 0 || (t.promoBonus && t.promoBonus > 0)) buffTexts.push('🎯 晋升概率+' + Math.round((te.promoBonus || t.promoBonus || 0) * 100) + '%');
     if (te.healthFloor) buffTexts.push('😊 发量下限' + te.healthFloor);
-    if (te.healthDecayHalf) buffTexts.push('❤️ 健康衰减减半');
+    if (te.healthDecayHalf) buffTexts.push('😊 发量衰减减半');
     if (te.hairBonus) buffTexts.push('😊 发量每年+2');
     if (te.lucky) buffTexts.push('🍀 幸运加成');
-    if (te.startBonus) buffTexts.push('📊 全属性+2起步');
+    if (te.startBonus) buffTexts.push('📊 整活力+2、发量+2起步');
     if (te.startupDiscount) buffTexts.push('🚀 创业门槛降低');
     if (buffTexts.length > 0) {
       html += '<div class="talent-buff">' + buffTexts.join(' / ') + '</div>';
@@ -4335,7 +4335,7 @@ function showEnding() {
   html += '<div class="id-dim"><div class="id-dim-icon">📊</div><div class="id-dim-text"><div class="id-dim-label">职级：' + track.ladder[state.rankIdx] + '</div><div class="id-dim-desc">' + track.label + '</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">💰</div><div class="id-dim-text"><div class="id-dim-label">月薪：¥' + state.salary.toLocaleString() + '</div><div class="id-dim-desc">累计收入 ¥' + cumIncome.toLocaleString() + '</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">🎪</div><div class="id-dim-text"><div class="id-dim-label">整活力：' + getCharm() + '</div><div class="id-dim-desc">技能+人脉的综合能力</div></div></div>';
-  html += '<div class="id-dim"><div class="id-dim-icon">😊</div><div class="id-dim-text"><div class="id-dim-label">发量：' + getHairDisplay() + '</div><div class="id-dim-desc">健康+发量的综合状态</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">😊</div><div class="id-dim-text"><div class="id-dim-label">发量：' + getHairDisplay() + '</div><div class="id-dim-desc">健康与发量的综合状态</div></div></div>';
   html += '</div>';
   // Show talents
   html += '<div class="id-talents">';
@@ -4579,23 +4579,23 @@ function openShop(type) {
     shopHtml += '<div class="switch-grid">';
     shopHtml += '<div class="shop-card" onclick="buyHeal(3000, 10)"><div class="sw-title">💊 基础体检</div><div class="sw-cost">¥3,000 → 发量+10</div></div>';
     shopHtml += '<div class="shop-card" onclick="buyHeal(15000, 30)"><div class="sw-title">🏥 深度疗养</div><div class="sw-cost">¥15,000 → 发量+30</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buyHeal(50000, 60)"><div class="sw-title">✨ 顶级康养</div><div class="sw-cost">¥50,000 → 健康+60</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyHeal(50000, 60)"><div class="sw-title">✨ 顶级康养</div><div class="sw-cost">¥50,000 → 发量+60</div></div>';
     shopHtml += '</div>';
   } else if (type === 'train') {
     shopHtml = '<div class="modal-title">📚 技能培训</div>';
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 技能：' + state.skill + '</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="shop-card" onclick="buyTrain(5000, 8)"><div class="sw-title">📖 在线课程</div><div class="sw-cost">¥5,000 → 技能+8</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buyTrain(20000, 20)"><div class="sw-title">🎓 专业认证</div><div class="sw-cost">¥20,000 → 技能+20</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buyTrain(60000, 40)"><div class="sw-title">🏫 EMBA进修</div><div class="sw-cost">¥60,000 → 技能+40</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyTrain(5000, 8)"><div class="sw-title">📖 在线课程</div><div class="sw-cost">¥5,000 → 整活力+8</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyTrain(20000, 20)"><div class="sw-title">🎓 专业认证</div><div class="sw-cost">¥20,000 → 整活力+20</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyTrain(60000, 40)"><div class="sw-title">🏫 EMBA进修</div><div class="sw-cost">¥60,000 → 整活力+40</div></div>';
     shopHtml += '</div>';
   } else if (type === 'social') {
     shopHtml = '<div class="modal-title">🤝 社交投资</div>';
     shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 人脉：' + state.network + '</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="shop-card" onclick="buySocial(3000, 6)"><div class="sw-title">🍻 同事聚餐</div><div class="sw-cost">¥3,000 → 人脉+6</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buySocial(15000, 18)"><div class="sw-title">🎉 行业酒会</div><div class="sw-cost">¥15,000 → 人脉+18</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buySocial(50000, 40)"><div class="sw-title">🎁 高端人脉局</div><div class="sw-cost">¥50,000 → 人脉+40</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buySocial(3000, 6)"><div class="sw-title">🍻 同事聚餐</div><div class="sw-cost">¥3,000 → 整活力+6</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buySocial(15000, 18)"><div class="sw-title">🎉 行业酒会</div><div class="sw-cost">¥15,000 → 整活力+18</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buySocial(50000, 40)"><div class="sw-title">🎁 高端社交局</div><div class="sw-cost">¥50,000 → 整活力+40</div></div>';
     shopHtml += '</div>';
   } else if (type === 'invest') {
     shopHtml = '<div class="modal-title">📈 理财投资</div>';
@@ -4658,7 +4658,7 @@ function buyHeal(cost, amount) {
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
   state.health = clamp(state.health + amount, 0, 100);
-  toast('🏥 健康+' + amount);
+  toast('🏥 发量+' + amount);
   closeAllModals();
   render();
 }
@@ -4668,7 +4668,7 @@ function buyTrain(cost, amount) {
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
   state.skill = clamp(state.skill + amount, 0, 100);
-  toast('📚 技能+' + amount);
+  toast('📚 整活力+' + amount);
   closeAllModals();
   render();
 }
@@ -4678,7 +4678,7 @@ function buySocial(cost, amount) {
   if (state.money < cost) { toast('💸 存款不足'); return; }
   state.money -= cost;
   state.network = clamp(state.network + amount, 0, 100);
-  toast('🤝 人脉+' + amount);
+  toast('🤝 整活力+' + amount);
   closeAllModals();
   render();
 }
@@ -4774,13 +4774,13 @@ function showPromoBranch() {
   var techCard = document.createElement('div');
   techCard.className = 'branch-card';
   techCard.onclick = function(){ choosePromoBranch('tech'); };
-  techCard.innerHTML = '<div class="bc-icon">🔬</div><div class="bc-title">技术专家线</div><div class="bc-desc">深耕技术，成为领域权威</div><div class="bc-pros">✅ 技能+20 · 底薪+' + (salaryBoost/1000) + 'K</div><div class="bc-cons">⚡ 代价：人脉-10 · 每年健康额外-3</div>';
+  techCard.innerHTML = '<div class="bc-icon">🔬</div><div class="bc-title">技术专家线</div><div class="bc-desc">深耕技术，成为领域权威</div><div class="bc-pros">✅ 整活力+20 · 底薪+' + (salaryBoost/1000) + 'K</div><div class="bc-cons">⚡ 代价：人脉-10 · 每年健康额外-3</div>';
   grid.appendChild(techCard);
   // Leader branch
   var leaderCard = document.createElement('div');
   leaderCard.className = 'branch-card';
   leaderCard.onclick = function(){ choosePromoBranch('leader'); };
-  leaderCard.innerHTML = '<div class="bc-icon">👔</div><div class="bc-title">管理领导线</div><div class="bc-desc">带团队，走仕途</div><div class="bc-pros">✅ 人脉+20 · 解锁团队分红</div><div class="bc-cons">⚡ 代价：技能增长停滞 · 晋升门槛持续抬高</div>';
+  leaderCard.innerHTML = '<div class="bc-icon">👔</div><div class="bc-title">管理领导线</div><div class="bc-desc">带团队，走仕途</div><div class="bc-pros">✅ 整活力+20 · 解锁团队分红</div><div class="bc-cons">⚡ 代价：整活力增长停滞 · 晋升门槛持续抬高</div>';
   grid.appendChild(leaderCard);
   document.getElementById('promoBranchModal').classList.add('show');
 }
@@ -4795,13 +4795,13 @@ function choosePromoBranch(branch) {
     state.network = clamp(state.network - 10, 0, 100);
     state._promoBranch = 'tech';
     addBuff('tech_branch', '技术专家路线', '每年健康额外-3', 99, {health:-3});
-    toast('🔬 选择技术专家路线！技能+20，底薪+' + (salaryBoost/1000) + 'K');
+    toast('🔬 选择技术专家路线！整活力+20，底薪+' + (salaryBoost/1000) + 'K');
   } else {
     state.network = clamp(state.network + 20, 0, 100);
     state._promoBranch = 'leader';
     state._teamBonus = Math.round(state.salary * 0.15); // Team bonus
     addBuff('leader_branch', '管理领导路线', '团队分红+¥' + (state._teamBonus/1000) + 'K/年', 99, {skill:-1});
-    toast('👔 选择管理领导路线！人脉+20，解锁团队分红');
+    toast('👔 选择管理领导路线！整活力+20，解锁团队分红');
   }
   
   closeAllModals();
@@ -4820,7 +4820,7 @@ function showSwitchModal() {
     if (t === state.track) {
       html += '<div class="switch-card current"><div class="sw-title">' + tk.emoji + ' ' + tk.label + ' (当前)</div></div>';
     } else {
-      var penalty = '技能-10 · 人脉-15 · 健康-5 · 发量-10 · 薪资重置为' + (tk.salary/1000) + 'K';
+      var penalty = '整活力-12 · 发量-10 · 薪资重置为' + (tk.salary/1000) + 'K';
       html += '<div class="switch-card" onclick="switchTrack(\'' + t + '\')"><div class="sw-title">' + tk.emoji + ' ' + tk.label + '</div><div class="sw-cost">' + penalty + '</div></div>';
     }
   }
