@@ -234,7 +234,7 @@ body {
 
 /* ===== Restart Link ===== */
 .restart-link { text-align:center; margin:4px 0; }
-.restart-link button { background:none; border:none; color:var(--text-muted); font-size:13px; cursor:pointer; padding:6px 12px; border-radius:8px; }
+.restart-link button { background:none; border:none; color:var(--text-secondary); font-size:13px; cursor:pointer; padding:6px 12px; border-radius:8px; }
 .restart-link button:active { background:#f1f5f9; color:var(--text-secondary); }
 
 /* ===== Setup Section ===== */
@@ -267,7 +267,7 @@ body {
 .track-card .tc-emoji { font-size:28px; margin-bottom:4px; }
 .track-card .tc-label { font-size:14px; font-weight:600; color:var(--text-primary); }
 .track-card .tc-desc { font-size:11px; color:var(--text-muted); margin-top:3px; }
-.track-card .tc-ladder { font-size:10px; color:#cbd5e1; margin-top:6px; line-height:1.4; }
+.track-card .tc-ladder { font-size:10px; color:var(--text-muted); margin-top:6px; line-height:1.4; }
 
 /* ===== Persona Section ===== */
 .persona-section { }
@@ -703,7 +703,7 @@ body {
 @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
 
 /* ===== Track Card Preview ===== */
-.tc-preview { font-size:11px; color:rgba(255,255,255,0.45); margin-top:4px; line-height:1.4; font-style:italic; }
+.tc-preview { font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.4; font-style:italic; }
 
 /* ===== Replay Prompt ===== */
 .replay-prompt {
@@ -3026,7 +3026,7 @@ function showIntro() {
     html += '<div style="padding:4px 8px;background:rgba(255,150,50,0.1);border-radius:8px;margin:4px 8px">';
     for (var bi = 0; bi < state._buffs.length; bi++) {
       var bf = state._buffs[bi];
-      html += '<div style="font-size:11px;color:rgba(255,255,255,0.7)">⏱ ' + bf.name + ' (' + bf.remaining + '年) - ' + bf.desc + '</div>';
+      html += '<div style="font-size:11px;color:var(--text-secondary)">⏱ ' + bf.name + ' (' + bf.remaining + '年) - ' + bf.desc + '</div>';
     }
     html += '</div>';
   }
@@ -4718,7 +4718,7 @@ function openShop(type) {
   var shopHtml = '';
   if (type === 'heal') {
     shopHtml = '<div class="modal-title">🏥 养生医疗</div>';
-    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 发量：' + getHairDisplay() + '</div>';
+    shopHtml += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 发量：' + getHairDisplay() + '</div>';
     shopHtml += '<div class="switch-grid">';
     shopHtml += '<div class="shop-card" onclick="buyHeal(3000, 10)"><div class="sw-title">💊 基础体检</div><div class="sw-cost">¥3,000 → 发量+10</div></div>';
     shopHtml += '<div class="shop-card" onclick="buyHeal(15000, 30)"><div class="sw-title">🏥 深度疗养</div><div class="sw-cost">¥15,000 → 发量+30</div></div>';
@@ -4726,7 +4726,7 @@ function openShop(type) {
     shopHtml += '</div>';
   } else if (type === 'train') {
     shopHtml = '<div class="modal-title">📚 技能培训</div>';
-    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 技能：' + state.skill + '</div>';
+    shopHtml += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 技能：' + state.skill + '</div>';
     shopHtml += '<div class="switch-grid">';
     shopHtml += '<div class="shop-card" onclick="buyTrain(5000, 8)"><div class="sw-title">📖 在线课程</div><div class="sw-cost">¥5,000 → 整活力+8</div></div>';
     shopHtml += '<div class="shop-card" onclick="buyTrain(20000, 20)"><div class="sw-title">🎓 专业认证</div><div class="sw-cost">¥20,000 → 整活力+20</div></div>';
@@ -4734,7 +4734,7 @@ function openShop(type) {
     shopHtml += '</div>';
   } else if (type === 'social') {
     shopHtml = '<div class="modal-title">🤝 社交投资</div>';
-    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 人脉：' + state.network + '</div>';
+    shopHtml += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 人脉：' + state.network + '</div>';
     shopHtml += '<div class="switch-grid">';
     shopHtml += '<div class="shop-card" onclick="buySocial(3000, 6)"><div class="sw-title">🍻 同事聚餐</div><div class="sw-cost">¥3,000 → 整活力+6</div></div>';
     shopHtml += '<div class="shop-card" onclick="buySocial(15000, 18)"><div class="sw-title">🎉 行业酒会</div><div class="sw-cost">¥15,000 → 整活力+18</div></div>';
@@ -4760,7 +4760,7 @@ function openShop(type) {
     shopHtml += '<div style="font-size:11px;color:#166534;font-weight:600;margin-top:4px">总投入: ¥' + (totalInvested/10000).toFixed(0) + '万</div>';
     shopHtml += '</div>';
   }
-    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万</div>';
+    shopHtml += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万</div>';
     shopHtml += '<div class="switch-grid">';
     shopHtml += '<div class="shop-card" onclick="buyInvest(10000, 0.03)"><div class="sw-title">🏦 定期存款</div><div class="sw-cost">投入¥1万 → 年化3%，每年自动复利不赔</div></div>';
     shopHtml += '<div class="shop-card" onclick="buyInvest(50000, 0.08)"><div class="sw-title">📊 基金定投</div><div class="sw-cost">投入¥5万 → 年化8%，每年自动复利幅亏损风险</div></div>';
@@ -4769,7 +4769,7 @@ function openShop(type) {
   } else if (type === 'property') {
     var owned = state._property || 0;
     shopHtml = '<div class="modal-title">🏠 房产置业</div>';
-    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">存款：¥' + (state.money/10000).toFixed(1) + '万 | 已购房：' + owned + '套</div>';
+    shopHtml += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">存款：¥' + (state.money/10000).toFixed(1) + '万 | 已购房：' + owned + '套</div>';
     shopHtml += '<div class="switch-grid">';
     shopHtml += '<div class="shop-card" onclick="buyProperty(200000, 5000)"><div class="sw-title">🏙️ 老破小</div><div class="sw-cost">¥200万首付 → 每年租金¥5,000</div></div>';
     shopHtml += '<div class="shop-card" onclick="buyProperty(500000, 15000)"><div class="sw-title">🏢 学区房</div><div class="sw-cost">¥500万首付 → 每年租金¥15,000</div></div>';
