@@ -5201,8 +5201,8 @@ function buildPKCardHtml(rival, me) {
   var html = '<div class="pk-card">';
   html += '<div class="pk-title">⚔️ ' + rivalName + ' VS 你</div>';
   html += '<div style="display:flex;justify-content:space-between;padding:0 8px;margin-bottom:12px">';
-  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center">👤 ' + rivalName + '</div>';
-  html += '<div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center">👤 我</div>';
+  html += '<div style="font-size:12px;color:var(--text-muted);text-align:center">👤 ' + rivalName + '</div>';
+  html += '<div style="font-size:12px;color:var(--text-muted);text-align:center">👤 我</div>';
   html += '</div>';
   html += row('🧠', '技能', rival.skill, me.skill);
   html += row('👥', '人脉', rival.network, me.network);
@@ -5432,7 +5432,7 @@ function showYearReview(event, opt, before) {
   html += '<div class="yr-event"><em>' + event.title + '</em></div>';
   html += '<div class="yr-choice">▸ ' + opt.text + '</div>';
   html += '<div class="yr-changes">' + changesHtml + '</div>';
-  html += '<div style="text-align:center;font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px">' + rankEmoji + ' 同龄人排名：' + rank + '</div>';
+  html += '<div style="text-align:center;font-size:13px;color:var(--text-secondary);margin-bottom:16px">' + rankEmoji + ' 同龄人排名：' + rank + '</div>';
   html += '<button class="yr-continue" onclick="closeYearReview()">下一年 →</button>';
   html += '</div></div>';
 
@@ -5594,7 +5594,7 @@ function showFinale() {
   var summaryLines = '';
   for (var i = 0; i < records.length; i++) {
     var r = records[i];
-    summaryLines += '<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:12px;color:rgba(255,255,255,0.5)"><span>第'+r.year+'年</span><span>'+r.event+'</span><span>'+r.rank+'</span></div>';
+    summaryLines += '<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:12px;color:var(--text-secondary)"><span>第'+r.year+'年</span><span>'+r.event+'</span><span>'+r.rank+'</span></div>';
   }
 
   var totalScore = state.skill + state.network + state.health + state.hair + Math.min(state.rankIdx*15,90);
@@ -5609,14 +5609,14 @@ function showFinale() {
 
   // Decade timeline
   if (summaryLines) {
-    html += '<div style="margin:12px 0;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px;max-height:160px;overflow-y:auto">';
+    html += '<div style="margin:12px 0;padding:10px;background:var(--bg-page);border-radius:8px;max-height:160px;overflow-y:auto">';
     html += '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px">📖 十年回顾</div>';
     html += summaryLines;
     html += '</div>';
   } else {
-    html += '<div style="margin:12px 0;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px">';
+    html += '<div style="margin:12px 0;padding:10px;background:var(--bg-page);border-radius:8px">';
     html += '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px">📖 十年回顾</div>';
-    html += '<div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center;padding:8px 0">这十年，你一路走来，每一步都算数。</div>';
+    html += '<div style="font-size:12px;color:var(--text-muted);text-align:center;padding:8px 0">这十年，你一路走来，每一步都算数。</div>';
     html += '</div>';
   }
 
