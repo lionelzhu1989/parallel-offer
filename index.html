@@ -1236,13 +1236,14 @@ body.dark-mode .entry-btn {
 <div class="modal-overlay" id="galleryModal" onclick="if(event.target===this)closeGallery()"><div class="modal-inner"><button class="modal-close" onclick="closeGallery()">✕</button><div class="modal-title">📖 结局图鉴</div><div class="modal-sub">收集所有平行宇宙的结局</div><div class="gallery-grid" id="galleryGrid"></div><div class="gallery-count" id="galleryCount"></div></div></div>
 <div class="modal-overlay" id="achieveModal" onclick="if(event.target===this)closeAchievements()"><div class="modal-inner"><button class="modal-close" onclick="closeAchievements()">✕</button><div class="modal-title">🏆 成就殿堂</div><div class="modal-sub" id="achieveSub"></div><div class="achieve-list" id="achieveList"></div><div class="achieve-progress" id="achieveProgress"></div></div></div>
 <div id="posterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:500;justify-content:center;align-items:center;flex-direction:column" onclick="closePosterModal()"><div style="position:relative;max-width:380px;width:90%"><img id="posterImage" style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5)" /><div id="posterCaption" style="text-align:center;color:#fff;font-size:13px;margin-top:12px;opacity:0.8"></div></div></div>
-<div class="modal-overlay" id="switchModal"><div class="modal-inner"><div class="modal-title">🔄 跳槽转行</div><div class="switch-warn">⚠️ 跳槽将重置职级和起薪，人脉大幅下降。每局限 <b>2次</b>，跳槽后 <b>3年冷却</b>。</div><div class="switch-grid" id="switchGrid"></div><div class="confirm-btn" onclick="closeAllModals()" style="background:#f1f5f9;color:#64748b;box-shadow:none">再想想</div></div></div>
+<div class="modal-overlay" id="switchModal"><div class="modal-inner"><div class="modal-title">🔄 跳槽转行</div><div class="switch-warn">⚠️ 跳槽将重置职级和起薪，整活力大幅下降。每局限 <b>2次</b>，跳槽后 <b>3年冷却</b>。</div><div class="switch-grid" id="switchGrid"></div><div class="confirm-btn" onclick="closeAllModals()" style="background:#f1f5f9;color:#64748b;box-shadow:none">再想想</div></div></div>
 <div class="shop-panel-overlay" id="shopOverlay" onclick="closeShopPanel()"></div>
 <div class="shop-panel" id="shopPanel"></div>
 <div class="modal-overlay" id="promoBranchModal"><div class="modal-inner"><div class="modal-title">🔀 选择发展方向</div><div class="modal-sub" id="promoBranchSub"></div><div class="branch-grid" id="promoBranchGrid"></div><div class="confirm-btn" onclick="closeAllModals()" style="background:#f1f5f9;color:#64748b;box-shadow:none;margin-top:8px">再想想</div></div></div>
 <canvas id="posterCanvas" width="750" height="1334" style="display:none"></canvas>
 
 <script>
+
 // ================================================================
 //  平行offer v2 · 职场天赋RPG
 //  删除投资/资产/贷款系统 → 天赋抽卡+独立职业路线+6维属性+搞笑事件+多结局
@@ -1373,19 +1374,19 @@ function _getTalentEffectSummary(talent) {
   var e = talent.talentEffect;
   // Also check top-level promoBonus
   if (talent.promoBonus) e = Object.assign({}, e, {promoBonus: talent.promoBonus});
-  if (e.skillBonus) parts.push('<span class="eff-pos">🧠技能+' + Math.round(e.skillBonus * 100) + '%</span>');
-  if (e.skillPenalty) parts.push('<span class="eff-neg">🧠技能' + Math.round(e.skillPenalty * 100) + '%</span>');
-  if (e.networkBonus) parts.push('<span class="eff-pos">👥人脉+' + Math.round(e.networkBonus * 100) + '%</span>');
+  if (e.skillBonus) parts.push('<span class="eff-pos">🎪整活力+' + Math.round(e.skillBonus * 100) + '%</span>');
+  if (e.skillPenalty) parts.push('<span class="eff-neg">🎪整活力' + Math.round(e.skillPenalty * 100) + '%</span>');
+  if (e.networkBonus) parts.push('<span class="eff-pos">🎪整活力+' + Math.round(e.networkBonus * 100) + '%</span>');
   if (e.networkPenalty) {
     if (typeof e.networkPenalty === 'number' && e.networkPenalty > 1) {
-      parts.push('<span class="eff-neg">👥人脉' + e.networkPenalty + '</span>');
+      parts.push('<span class="eff-neg">🎪整活力' + e.networkPenalty + '</span>');
     } else {
-      parts.push('<span class="eff-neg">👥人脉' + Math.round(e.networkPenalty * 100) + '%</span>');
+      parts.push('<span class="eff-neg">🎪整活力' + Math.round(e.networkPenalty * 100) + '%</span>');
     }
   }
-  if (e.healthPenalty) parts.push('<span class="eff-neg">❤️健康' + e.healthPenalty + '</span>');
-  if (e.healthRecovery) parts.push('<span class="eff-pos">❤️恢复+' + Math.round(e.healthRecovery * 100) + '%</span>');
-  if (e.healthCap) parts.push('<span class="eff-pos">❤️上限+' + (e.healthCap - 100) + '</span>');
+  if (e.healthPenalty) parts.push('<span class="eff-neg">😊发量' + e.healthPenalty + '</span>');
+  if (e.healthRecovery) parts.push('<span class="eff-pos">😊发量恢复+' + Math.round(e.healthRecovery * 100) + '%</span>');
+  if (e.healthCap) parts.push('<span class="eff-pos">😊发量上限+' + (e.healthCap - 100) + '</span>');
   if (e.hairBonus) parts.push('<span class="eff-pos">😊发量+' + e.hairBonus + '</span>');
   if (e.promoBonus) parts.push('<span class="eff-pos">📈晋升+' + Math.round(e.promoBonus * 100) + '%</span>');
   if (e.promoPenalty) parts.push('<span class="eff-neg">📈晋升' + Math.round(e.promoPenalty * 100) + '%</span>');
@@ -2755,10 +2756,10 @@ var ACHIEVEMENTS = [
   { id:'first_year', emoji:'🎓', name:'职场新人', desc:'完成第一年', check:function(s){ return s.year>=1; } },
   { id:'five_years', emoji:'⭐', name:'五年之痒', desc:'完成五年', check:function(s){ return s.year>=5; } },
   { id:'ten_years', emoji:'🏆', name:'十年老兵', desc:'完成十年', check:function(s){ return s.year>=10; } },
-  { id:'high_skill', emoji:'🧠', name:'技能天花板', desc:'技能达到90', check:function(s){ return s.skill>=90; } },
-  { id:'network_king', emoji:'👥', name:'社交天花板', desc:'人脉达到90', check:function(s){ return s.network>=90; } },
-  { id:'health_hero', emoji:'💪', name:'铁人', desc:'健康始终80+', check:function(s){ return s.health>=80 && s.year>=5; } },
-  { id:'burnout_badge', emoji:'💀', name:'赛博植物人', desc:'健康降到10以下', check:function(s){ return s.health<=10; } },
+  { id:'high_skill', emoji:'🎪', name:'整活天花板', desc:'整活力达到90', check:function(s){ return Math.round((s.skill+s.network)/2)>=90; } },
+  { id:'network_king', emoji:'🤝', name:'社牛之王', desc:'人脉达到90', check:function(s){ return s.network>=90; } },
+  { id:'health_hero', emoji:'💪', name:'铁人', desc:'发量始终80+', check:function(s){ return Math.round((s.health+s.hair)/2)>=80 && s.year>=5; } },
+  { id:'burnout_badge', emoji:'💀', name:'赛博植物人', desc:'发量降到10以下', check:function(s){ return s.hair<=10; } },
   { id:'hospital_survivor', emoji:'🏥', name:'病房钉子户', desc:'住院超过3年', check:function(s){ return s._isHospitalized && (s.year - s._hospitalYear) >= 3; } },
   { id:'bald_hero', emoji:'🧑‍🦲', name:'聪明绝顶', desc:'发量降到10以下', check:function(s){ return s.hair<=10; } },
   { id:'hair_king', emoji:'💇', name:'发量王者', desc:'发量保持80+到结局', check:function(s){ return s.hair>=80 && s._playEnded; } },
@@ -3279,12 +3280,12 @@ function showTalentDraw() {
     // Show buff effects
     var buffTexts = [];
     var te = t.talentEffect || {};
-    if (te.skillBonus) buffTexts.push('🧠 技能增长×' + te.skillBonus);
-    if (te.networkBonus) buffTexts.push('👥 人脉增长×' + te.networkBonus);
+    if (te.skillBonus) buffTexts.push('🎪 整活力增长×' + te.skillBonus);
+    if (te.networkBonus) buffTexts.push('🎪 整活力增长×' + te.networkBonus);
     if (te.sideIncome) buffTexts.push('💰 副业收入×' + te.sideIncome);
     if (te.investMultiplier) buffTexts.push('📈 投资收益×' + te.investMultiplier);
     if (te.promoBonus > 0 || (t.promoBonus && t.promoBonus > 0)) buffTexts.push('🎯 晋升概率+' + Math.round((te.promoBonus || t.promoBonus || 0) * 100) + '%');
-    if (te.healthFloor) buffTexts.push('❤️ 健康下限' + te.healthFloor);
+    if (te.healthFloor) buffTexts.push('😊 发量下限' + te.healthFloor);
     if (te.healthDecayHalf) buffTexts.push('❤️ 健康衰减减半');
     if (te.hairBonus) buffTexts.push('😊 发量每年+2');
     if (te.lucky) buffTexts.push('🍀 幸运加成');
@@ -3853,7 +3854,7 @@ function applyYearlyEffects() {
     state.money -= 5000;
     state.hair = clamp(state.hair + 8, 0, 100);
     state.health -= 5; // transplant is tiring
-    toast('💇 被迫植发！花费¥5000，健康-5');
+    toast('💇 被迫植发！花费¥5000，发量-5');
   }
 
   // Hospitalization trigger
@@ -4574,10 +4575,10 @@ function openShop(type) {
   var shopHtml = '';
   if (type === 'heal') {
     shopHtml = '<div class="modal-title">🏥 养生医疗</div>';
-    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 健康：' + state.health + '</div>';
+    shopHtml += '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px">当前存款：¥' + (state.money/10000).toFixed(1) + '万 | 发量：' + getHairDisplay() + '</div>';
     shopHtml += '<div class="switch-grid">';
-    shopHtml += '<div class="shop-card" onclick="buyHeal(3000, 10)"><div class="sw-title">💊 基础体检</div><div class="sw-cost">¥3,000 → 健康+10</div></div>';
-    shopHtml += '<div class="shop-card" onclick="buyHeal(15000, 30)"><div class="sw-title">🏥 深度疗养</div><div class="sw-cost">¥15,000 → 健康+30</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyHeal(3000, 10)"><div class="sw-title">💊 基础体检</div><div class="sw-cost">¥3,000 → 发量+10</div></div>';
+    shopHtml += '<div class="shop-card" onclick="buyHeal(15000, 30)"><div class="sw-title">🏥 深度疗养</div><div class="sw-cost">¥15,000 → 发量+30</div></div>';
     shopHtml += '<div class="shop-card" onclick="buyHeal(50000, 60)"><div class="sw-title">✨ 顶级康养</div><div class="sw-cost">¥50,000 → 健康+60</div></div>';
     shopHtml += '</div>';
   } else if (type === 'train') {
@@ -5187,9 +5188,84 @@ function shareChallenge() {
   // Inner values URI-encoded; rv itself NOT double-encoded in URL
   var safeTalents = state.talents.map(function(t){ return (typeof t === 'object' ? t.id : t) || ''; }).join('|');
   var rv = state.skill + ',' + state.network + ',' + state.health + ',' + state.hair + ',' + state.salary + ',' + encodeURIComponent(emoji) + ',' + encodeURIComponent(name) + ',' + encodeURIComponent(safeTalents);
-  var baseUrl = window.location.href.split('?')[0];
+  var baseUrl = window.location.href.split('?')[0,{emoji:'🤖', title:'AI写周报翻车', desc:'你让AI帮你写周报，结果AI把"本季度业绩优秀"写成了"本季度摸鱼优秀"，还自动发给了全组。', weight:3, opts:[
+    {text:'赶紧撤回说是AI的锅', skill:3, network:-5, hair:-5},
+    {text:'将错就错，反正领导也没看', hair:8},
+    {text:'私信领导说这是幽默感测试', skill:5, network:3}
+  ]}
+  ,{emoji:'🎭', title:'工位上的秘密', desc:'你发现隔壁工位的同事在偷偷面试，但他桌上还摆着"公司是我家"的牌子。', weight:2, opts:[
+    {text:'假装没看见', hair:3},
+    {text:'悄悄问他要不要一起跳', network:10, skill:3},
+    {text:'在他牌子下面加一行"所以我准备搬走了"', hair:10}
+  ]}
+  ,{emoji:'🎰', title:'年会抽奖', desc:'公司年会抽奖，你抽到了"与CEO共进午餐"。问题是CEO已经离职了。', weight:3, opts:[
+    {text:'要求折现', money:5000},
+    {text:'问问新CEO行不行', network:8, skill:3},
+    {text:'自己请自己吃，假装是CEO', hair:12}
+  ]}
+  ,{emoji:'🐛', title:'线上事故', desc:'凌晨3点，线上服务崩了。你打开电脑发现是自己上周提交的代码。', weight:3, opts:[
+    {text:'紧急回滚，假装不知道', skill:5, hair:-8},
+    {text:'主动承认，连夜修复', skill:10, network:5, hair:-10},
+    {text:'把Git blame指向实习生', network:-8, hair:5}
+  ]}
+  ,{emoji:'📱', title:'朋友圈社死', desc:'你发了一条"今天加班到凌晨"的朋友圈，配图是电脑屏幕。结果有人发现屏幕上反射出你在打游戏。', weight:3, opts:[
+    {text:'秒删，说是P图', network:-3, hair:-3},
+    {text:'硬说是加班间隙放松', skill:3, hair:-2},
+    {text:'大方承认，反正加班是真的', hair:8}
+  ]}
+  ,{emoji:'🎪', title:'团建噩梦', desc:'公司团建去爬山，结果CEO在山顶提议大家合唱司歌。问题是司歌是你去年喝醉后写的，歌词里有"摸鱼使我快乐"。', weight:2, opts:[
+    {text:'硬着头皮唱', hair:5, network:5},
+    {text:'说嗓子不舒服', hair:3},
+    {text:'提议改词，当场重写', skill:8, hair:-3}
+  ]}
+  ,{emoji:'🏃', title:'迟到的艺术', desc:'你迟到了15分钟，但发现全组都迟到了。原来公司楼下新开了一家奶茶店，大家都在排队。', weight:3, opts:[
+    {text:'跟着大家一起喝，假装没迟到', hair:8, money:-15},
+    {text:'准点到工位拍照发群里', skill:5, network:-3},
+    {text:'提议公司采购奶茶机放茶水间', network:8, skill:3}
+  ]}
+  ,{emoji:'💌', title:'匿名吐槽', desc:'公司匿名论坛上有人吐槽"某产品经理需求天天变"。虽然没指名，但所有人都知道说的是你。', weight:3, opts:[
+    {text:'在下面回复"说得好"', hair:10},
+    {text:'发一条"需求变更也是敏捷的一部分"', skill:5, network:-5},
+    {text:'私信发帖人聊聊', network:8}
+  ]}
+  ,{emoji:'🍕', title:'深夜外卖', desc:'加班到晚上10点，你点了一份外卖。外卖小哥送到时说："你们公司是不是有病？每次都这个点点餐。"', weight:2, opts:[
+    {text:'给外卖小哥好评，附赠打赏', money:-20, network:5},
+    {text:'告诉他我也不想加班', hair:5},
+    {text:'问他要不要一起干', network:10}
+  ]}
+  ,{emoji:'🎭', title:'会议室争夺战', desc:'你提前预约了会议室，但市场部已经占了。双方僵持不下，最后决定石头剪刀布。', weight:2, opts:[
+    {text:'出石头（永远的神）', skill:5, hair:3},
+    {text:'直接去CEO办公室开会', skill:8, network:-5},
+    {text:'提议合用，顺便蹭他们的零食', hair:8, money:10}
+  ]}
+  ,{emoji:'🧪', title:'技术选型之争', desc:'技术评审会上，你主张用新框架，CTO坚持用老方案。吵了两小时后，CTO说"听你的，出了问题你负责"。', weight:3, opts:[
+    {text:'立军令状，放手一搏', skill:10, hair:-8},
+    {text:'建议先做POC验证', skill:5, network:3},
+    {text:'默默换成老方案，假装忘了新框架', hair:5}
+  ]}
+  ,{emoji:'🎪', title:'实习生的逆袭', desc:'你带的实习生做了一个demo，效果比你做的产品还好。老板问："这是谁做的？"实习生举起了手。', weight:3, opts:[
+    {text:'大方夸奖实习生', network:10, skill:3},
+    {text:'说这是你指导的成果', skill:5, network:-5},
+    {text:'当场收徒，以后让他带你', hair:10, skill:8}
+  ]}
+  ,{emoji:'💼', title:'竞对挖角', desc:'猎头给你打电话，开价是现在的两倍。但要求明天就入职，而且要带走三个同事。', weight:2, opts:[
+    {text:'只谈自己的offer，不带人', money:10000, network:-5},
+    {text:'告诉现公司，要求加薪', money:5000, skill:5},
+    {text:'假装考虑，趁机抬价', hair:8, network:3}
+  ]}
+  ,{emoji:'🎂', title:'生日惊喜', desc:'你生日那天，同事送了你一个蛋糕。蛋糕上写着"祝你早日不加班"。问题是领导也在场。', weight:2, opts:[
+    {text:'笑着说"这蛋糕寓意深刻"', hair:10},
+    {text:'赶紧解释说这是反讽', skill:3, hair:-3},
+    {text:'当场许愿"希望领导看到"', network:5, hair:8}
+  ]}
+  ,{emoji:'🏃', title:'地铁偶遇', desc:'你在地铁上偶遇了隔壁组的同事。你们对视了三秒，然后同时低头假装在看手机。', weight:2, opts:[
+    {text:'主动打招呼', network:8},
+    {text:'到站就走，假装没看见', hair:3},
+    {text:'发消息给他"刚才那个人是你吗"', hair:5, network:3}
+  ]}
+];
   // Single encoding at URL level
-  var challengeUrl = baseUrl + '?from=' + encodeURIComponent(name) + '&rv=' + rv;
+  var challengeUrl = baseUrl + '?from=' + encodeURIComponent(name) + '\u0026rv=' + rv;
   var text = '📸 我已经是' + emoji + name + '了！\n敢来和我PK吗？\n👉 ' + challengeUrl;
   if (navigator.share) {
     navigator.share({ title: '平行offer · 职场天赋RPG', text: text });
@@ -5807,6 +5883,7 @@ function loadDarkMode() {
 // ====== Initialize ======
 loadDarkMode();
 render();
+
 </script>
 </body>
 <!-- v15 - poster fix + char creator fix -->
