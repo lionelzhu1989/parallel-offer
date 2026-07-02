@@ -4468,23 +4468,6 @@ function renderTimeline() {
     html += '</div></div></div>';
   }
 
-  // Money chart at bottom
-  if (records.length > 1) {
-    html += '<div class="tl-chart"><div class="tl-chart-title">💰 存款变化趋势</div><div class="tl-bars">';
-    for (var i = 0; i < records.length; i++) {
-      var r = records[i];
-      var h = Math.max(3, Math.round(Math.abs(r.money) / maxMoney * 40));
-      var color = r.money < 0 ? '#ef4444' : r.money >= 200000 ? '#10b981' : r.money >= 50000 ? '#f59e0b' : '#8b7355';
-      var tip = 'Y' + r.year + ' ¥' + (r.money >= 10000 ? Math.round(r.money/10000) + '万' : r.money);
-      html += '<div class="tl-bar" style="height:' + h + 'px;background:' + color + '" data-tip="' + tip + '"></div>';
-    }
-    html += '</div><div class="tl-bar-labels">';
-    for (var i = 0; i < records.length; i++) {
-      html += '<div class="tl-bar-label">Y' + records[i].year + '</div>';
-    }
-    html += '</div></div>';
-  }
-
   c.innerHTML = html;
 }
 
