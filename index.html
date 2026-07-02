@@ -1218,7 +1218,7 @@ body.dark-mode .entry-btn {
 <div class="top-bar" id="topBar">
   <div class="main-row">
     <span class="year-label" id="yearLabel">准备开始</span>
-    <span class="player-info" id="playerInfo" style="display:none;font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;background:rgba(255,255,255,0.12);padding:3px 10px;border-radius:16px;"></span>
+    <span class="player-info" id="playerInfo" style="display:none;font-size:12px;color:rgba(255,255,255,0.9);font-weight:700;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:16px;"></span>
     <div id="undoIndicator" style="display:none;font-size:11px;color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:12px">↩️ <span id="undoCount">3</span>/3</div>
   </div>
   <div class="year-progress-wrap" id="yearProgress" style="display:none">
@@ -1226,13 +1226,10 @@ body.dark-mode .entry-btn {
     <div class="year-progress-text"><span>第1年</span><span>第10年</span></div>
   </div>
   <div class="attr-bar" id="attrBar" style="display:none">
-    <div class="attr-item"><div class="attr-tooltip" id="tipSalary">月薪: 5K/月</div><div class="attr-top"><span class="attr-icon">💰</span><span class="attr-label">月薪</span></div><span class="attr-val" id="attrSalary">5K</span><div class="attr-bar-bg"><div class="attr-bar-fill salary" id="barSalary" style="width:5%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipRank">职级: L1</div><div class="attr-top"><span class="attr-icon">📊</span><span class="attr-label">职级</span></div><span class="attr-val" id="attrRank">L1</span></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipSkill">技能: 30/100</div><div class="attr-top"><span class="attr-icon">🧠</span><span class="attr-label">技能</span></div><span class="attr-val" id="attrSkill">30</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barSkill" style="width:30%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipNetwork">人脉: 20/100</div><div class="attr-top"><span class="attr-icon">👥</span><span class="attr-label">人脉</span></div><span class="attr-val" id="attrNetwork">20</span><div class="attr-bar-bg"><div class="attr-bar-fill network" id="barNetwork" style="width:20%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipHealth">健康: 80/100</div><div class="attr-top"><span class="attr-icon">❤️</span><span class="attr-label">健康</span></div><span class="attr-val" id="attrHealth">80</span><div class="attr-bar-bg"><div class="attr-bar-fill health" id="barHealth" style="width:80%"></div></div></div>
-    <div class="attr-item"><div class="attr-tooltip" id="tipHair">发量: 60/100</div><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">发量</span></div><span class="attr-val" id="attrHair">60</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHappy" style="width:60%"></div></div></div>
-    <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">🏦</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span><span class="attr-sub" id="attrTotalAsset" style="font-size:9px;color:#b45309;margin-top:1px"></span></div>    <div class="attr-item" id="propItem" style="display:none"><div class="attr-top"><span class="attr-icon">🏠</span><span class="attr-label">房产</span></div><span class="attr-val" id="attrProp">0</span></div>
+    <div class="attr-item" style="flex:1"><div class="attr-top"><span class="attr-icon">🎪</span><span class="attr-label">整活力</span></div><span class="attr-val" id="attrCharm">50</span><div class="attr-bar-bg"><div class="attr-bar-fill skill" id="barCharm" style="width:50%"></div></div></div>
+    <div class="attr-item" style="flex:1"><div class="attr-top"><span class="attr-icon">😊</span><span class="attr-label">发量</span></div><span class="attr-val" id="attrHairDisplay">70</span><div class="attr-bar-bg"><div class="attr-bar-fill satisfaction" id="barHairDisplay" style="width:70%"></div></div></div>
+    <div class="attr-item money-card"><div class="attr-tooltip" id="tipMoney">存款: ¥0</div><div class="attr-top"><span class="attr-icon">💰</span><span class="attr-label">存款</span></div><span class="attr-val" id="attrMoney">¥0</span></div>
+    <div class="attr-item" id="propItem" style="display:none"><div class="attr-top"><span class="attr-icon">🏠</span><span class="attr-label">房产</span></div><span class="attr-val" id="attrProp">0</span></div>
   </div>
 </div>
 <div class="main-content" id="mainContent"></div>
@@ -2790,6 +2787,9 @@ var _usedSceneEvents = {};
 var _yearlyRecords = [];
 var _shownRandomEvents = [];
 
+function getCharm() { return Math.min(100, Math.round((state.skill + state.network) / 2)); }
+function getHairDisplay() { return Math.min(100, Math.round((state.health + state.hair) / 2)); }
+
 function initState() {
   state = {
     track: null, year: 0, salary: 0, rankIdx: 0, playerName: '', playerAvatar: '', playerMotto: '', playerType: '',
@@ -2836,29 +2836,25 @@ function updateTopBar() {
   ab.style.display = 'flex';
   yp.style.display = 'block';
   yl.textContent = '第' + state.year + '年 / 10年';
-  // Show player avatar + name
-  var pi = document.getElementById('playerInfo');
-  if (pi) {
-    if (state.playerName) {
-      pi.innerHTML = state.playerAvatar + ' ' + state.playerName;
-      pi.style.display = '';
-    } else {
-      pi.style.display = 'none';
-    }
-  }
+  // playerInfo now shown with rank in the stat section above
   if (ui) { ui.style.display = 'inline-block'; var uc = document.getElementById('undoCount'); if(uc) uc.textContent = Math.max(0, state._undoMax - state._undoUsed); }
   var ypf = document.getElementById('yearProgressFill');
   if (ypf) ypf.style.width = (state.year / 10 * 100) + '%';
   var track = CAREER_TRACKS[state.track];
   var rankLabel = track ? (track.ladderShort[state.rankIdx] || 'L1') : '—';
-  document.getElementById('attrSalary').textContent = state.salary >= 10000 ? Math.round(state.salary/10000) + 'W' : state.salary + '';
-  document.getElementById('attrRank').textContent = rankLabel;
-  document.getElementById('attrSkill').textContent = state.skill;
-  document.getElementById('attrNetwork').textContent = state.network;
-  document.getElementById('attrHealth').textContent = state.health;
-  var _ht = document.getElementById('healthTier'); if(_ht){var _t=getHealthTier(state.health); _ht.textContent=_t.text; _ht.className='health-tier '+_t.cls;}
-  document.getElementById('attrHair').textContent = state.hair;
-  var _he = document.getElementById('hairEmoji'); if(_he) _he.textContent = getHairEmoji(state.hair);
+  // Show name + rank together
+  var pi = document.getElementById('playerInfo');
+  if (pi && state.playerName) {
+    pi.innerHTML = state.playerAvatar + ' ' + state.playerName + ' · ' + rankLabel;
+    pi.style.display = '';
+  }
+  // Merged stats
+  var charm = getCharm();
+  var hairDisp = getHairDisplay();
+  document.getElementById('attrCharm').textContent = charm;
+  document.getElementById('barCharm').style.width = charm + '%';
+  document.getElementById('attrHairDisplay').textContent = hairDisp;
+  document.getElementById('barHairDisplay').style.width = hairDisp + '%';
   var moneyEl = document.getElementById('attrMoney');
   if (moneyEl) moneyEl.textContent = state.money >= 10000 ? Math.round(state.money/10000) + '万' : '¥' + state.money.toLocaleString();
   // Calculate total assets: cash + investments + property
@@ -2876,10 +2872,9 @@ function updateTopBar() {
   document.getElementById('barSkill').style.width = state.skill + '%';
   document.getElementById('barNetwork').style.width = state.network + '%';
   var hb = document.getElementById('barHealth');
-  hb.style.width = state.health + '%';
-  hb.className = 'attr-bar-fill health' + (state.health <= 20 ? ' danger' : '');
+
   document.getElementById('barHappy').style.width = state.hair + '%';
-  var tips = {tipSalary:'月薪: ¥'+state.salary.toLocaleString()+'/月', tipRank:'职级: '+rankLabel, tipSkill:'技能: '+state.skill+'/100', tipNetwork:'人脉: '+state.network+'/100', tipHealth:'健康: '+state.health+'/100 '+getHealthTier(state.health).emoji+' '+getHealthTier(state.health).text, tipHappy:'发量: '+state.hair+'/100 '+getHairEmoji(state.hair), tipMoney:'存款: ¥'+state.money.toLocaleString()};
+  var tips = {tipMoney:'存款: ¥'+state.money.toLocaleString()};
   for(var k in tips){var el=document.getElementById(k);if(el)el.textContent=tips[k];}
   var undoBtn = document.querySelector('.undo-btn');
   if(undoBtn){
@@ -3513,15 +3508,16 @@ function startGame() {
 
 function copyMoments() {
   var s = state;
-  var track = CAREER_TRACKS[s.trackIndex];
-  var trackName = track ? track.name : '未知';
+  var track = CAREER_TRACKS[s.track];
+  var trackName = track ? track.label : '职场人';
+  var rankName = track ? (track.ladderShort[s.rankIdx] || '新人') : '新人';
   var endName = s._endingName || '职场人';
   var lines = [
     '🎯 我的「平行Offer」人生模拟结果：',
     '🏷️ ' + endName,
-    '💼 ' + trackName + ' · ' + (s.level > 0 ? 'Lv.' + s.level : '新人'),
-    '💰 月薪 ' + Math.round(s.salary) + ' | 存款 ' + Math.round(s.money),
-    '📅 工龄 ' + s.year + '年 | 健康 ' + s.health,
+    '💼 ' + trackName + ' · ' + rankName,
+    '🎪 整活力 ' + getCharm() + ' | 😊 发量 ' + getHairDisplay(),
+    '💰 月薪 ¥' + Math.round(s.salary) + ' | 存款 ¥' + Math.round(s.money),
     '',
     '测测你的人生会平行到哪里 👇'
   ];
@@ -3599,10 +3595,8 @@ function render() {
       var copt = _chainResult.opts[cc];
       var _chCls = 'choice-btn safe'; if(isSubHealth() && cc > 0) _chCls += ' subhealth-disabled'; html += '<button class="' + _chCls + '" onclick="chooseEvent(' + cc + ')" id="eventOpt' + cc + '">' + copt.text;
       var ce = [];
-      if (copt.skill) ce.push((copt.skill>0?'+':'') + copt.skill + '🧠');
-      if (copt.network) ce.push((copt.network>0?'+':'') + copt.network + '👥');
-      if (copt.health) ce.push((copt.health>0?'+':'') + copt.health + '❤️');
-      if (copt.hair) ce.push((copt.hair>0?'+':'') + copt.hair + '😊');
+      var _cc = (copt.skill||0)+(copt.network||0); if(_cc) ce.push((_cc>0?'+':'') + _cc + '🎪');
+      var _hh = (copt.health||0)+(copt.hair||0); if(_hh) ce.push((_hh>0?'+':'') + _hh + '😊');
       if (copt.money) ce.push((copt.money>0?'+':'') + copt.money + '💰');
       if (ce.length) html += '<div class="choice-effect">' + ce.join(' ') + '</div>';
       html += '</button>';
@@ -3651,15 +3645,24 @@ function render() {
   for (var c = 0; c < event.opts.length; c++) {
     var opt = event.opts[c];
         var effectParts = [];
-    var _dims = [['skill','🧠','技能'],['network','👥','人脉'],['health','❤️','健康'],['hair','😊','发量']];
-    for (var d = 0; d < _dims.length; d++) {
-      var dk = _dims[d][0], emoji = _dims[d][1], label = _dims[d][2];
-      if (opt[dk]) {
-        var before = state[dk], after = clamp(before + getModifiedBonus(opt[dk], dk), 0, 100);
-        var cls = opt[dk] > 0 ? 'eff-pos' : 'eff-neg';
-        var sign = opt[dk] > 0 ? '+' : '';
-        effectParts.push('<span class="' + cls + '">' + emoji + ' ' + before + '→' + after + '(' + sign + opt[dk] + ')</span>');
-      }
+    // Merged display: skill/network→整活力, health/hair→发量
+    var charmBefore = getCharm(), hairBefore = getHairDisplay();
+    var charmDelta = 0, hairDelta = 0;
+    if (opt.skill) charmDelta += getModifiedBonus(opt.skill, 'skill');
+    if (opt.network) charmDelta += getModifiedBonus(opt.network, 'network');
+    if (opt.health) hairDelta += getModifiedBonus(opt.health, 'health');
+    if (opt.hair) hairDelta += getModifiedBonus(opt.hair, 'hair');
+    if (charmDelta !== 0) {
+      var charmAfter = clamp(charmBefore + charmDelta, 0, 100);
+      var cls = charmDelta > 0 ? 'eff-pos' : 'eff-neg';
+      var sign = charmDelta > 0 ? '+' : '';
+      effectParts.push('<span class="' + cls + '">🎪 ' + charmBefore + '→' + charmAfter + '(' + sign + Math.round(charmDelta) + ')</span>');
+    }
+    if (hairDelta !== 0) {
+      var hairAfter = clamp(hairBefore + hairDelta, 0, 100);
+      var cls = hairDelta > 0 ? 'eff-pos' : 'eff-neg';
+      var sign = hairDelta > 0 ? '+' : '';
+      effectParts.push('<span class="' + cls + '">😊 ' + hairBefore + '→' + hairAfter + '(' + sign + Math.round(hairDelta) + ')</span>');
     }
     if (opt.money) {
       var mBefore = state.money, mAfter = mBefore + opt.money;
@@ -3738,10 +3741,10 @@ function chooseEvent(optIdx) {
   // Snapshot before effects (for year review)
   var _before = {skill:state.skill, network:state.network, health:state.health, hair:state.hair, money:state.money, salary:state.salary};
 
-  // Apply effects
+  // Apply effects (merged: health→hair, network→skill)
   if (opt.skill) state.skill = clamp(state.skill + getModifiedBonus(opt.skill, 'skill'), 0, 100);
-  if (opt.network) state.network = clamp(state.network + getModifiedBonus(opt.network, 'network'), 0, 100);
-  if (opt.health) state.health = clamp(state.health + getModifiedBonus(opt.health, 'health'), 0, 100);
+  if (opt.network) state.skill = clamp(state.skill + getModifiedBonus(opt.network, 'network'), 0, 100);
+  if (opt.health) state.hair = clamp(state.hair + getModifiedBonus(opt.health, 'health'), 0, 100);
   if (opt.hair) state.hair = clamp(state.hair + getModifiedBonus(opt.hair, 'hair'), 0, 100);
   if (opt.money) {
     state.money += opt.money;
@@ -3754,10 +3757,8 @@ function chooseEvent(optIdx) {
 
   // Spawn floating numbers for value changes
   var _floatChanges = {};
-  if (opt.skill) _floatChanges.skill = opt.skill + (state.talents.indexOf('chosen') >= 0 ? 1 : 0);
-  if (opt.network) _floatChanges.network = opt.network;
-  if (opt.health) _floatChanges.health = opt.health + (state.talents.indexOf('runner') >= 0 ? 3 : 0);
-  if (opt.hair) _floatChanges.hair = opt.hair;
+  if (opt.skill || opt.network) _floatChanges.charm = (opt.skill||0) + (opt.network||0) + (state.talents.indexOf('chosen') >= 0 ? 1 : 0);
+  if (opt.health || opt.hair) _floatChanges.hairDisplay = (opt.health||0) + (opt.hair||0) + (state.talents.indexOf('runner') >= 0 ? 3 : 0);
   if (opt.money) _floatChanges.money = opt.money;
   spawnFloatingNumbers(_floatChanges);
 
@@ -3766,7 +3767,7 @@ function chooseEvent(optIdx) {
   applyYearlyIncome();
   if (state.talents.indexOf('foodie') >= 0) state.hair += 3;
   // runner: health recovery + cap boost
-  if (state.talents.indexOf('runner') >= 0) state.health = clamp(state.health + 3, 0, 120);
+  if (state.talents.indexOf('runner') >= 0) state.hair = clamp(state.hair + 3, 0, 100);
   // lucky: small random bonus to any event
   if (state.talents.indexOf('lucky') >= 0) { var lb = randInt(1,5); state.hair += lb; }
   // gambler: money outcomes amplified
@@ -3779,19 +3780,14 @@ function chooseEvent(optIdx) {
   if (state.talents.indexOf('drama') >= 0 && opt.hair > 0) state.hair += 2;
   // indecisive: slightly reduce negative effects
   if (state.talents.indexOf('indecisive') >= 0) {
-    if (opt.health && opt.health < 0) state.health -= Math.round(opt.health * 0.5);
+    if (opt.health && opt.health < 0) state.hair -= Math.round(opt.health * 0.5);
     if (opt.hair && opt.hair < 0) state.hair -= Math.round(opt.hair * 0.5);
   }
   // phone: chance of random phone distraction event (skill penalty)
   if (state.talents.indexOf('phone') >= 0 && Math.random() < 0.15) state.skill -= 1;
 
-    // Apply healthCap from talents (runner: +20)
-  var healthMax = 100;
-  for (var _ti = 0; _ti < state.talents.length; _ti++) {
-    var _tp = TALENT_POOL.find(function(t){ return t.id === state.talents[_ti]; });
-    if (_tp && _tp.talentEffect && _tp.talentEffect.healthCap) healthMax += _tp.talentEffect.healthCap;
-  }
-  state.health = clamp(state.health, 0, healthMax);
+    // healthCap removed (health merged into hair)
+  state.health = clamp(state.health, 0, 100);
   state.hair = clamp(state.hair, 0, 100);
   state.skill = clamp(state.skill, 0, 100);
   state.network = clamp(state.network, 0, 100);
@@ -3948,10 +3944,8 @@ function showRandomEvent() {
     var opt = event.opts[c];
     var parts = [];
     if (opt.money) parts.push('<span class="' + (opt.money > 0 ? 'eff-pos' : 'eff-neg') + '">💰' + (opt.money > 0 ? '+' : '') + Math.abs(opt.money) + '</span>');
-    if (opt.skill) parts.push('<span class="' + (opt.skill > 0 ? 'eff-pos' : 'eff-neg') + '">🧠' + (opt.skill > 0 ? '+' : '') + opt.skill + '</span>');
-    if (opt.network) parts.push('<span class="' + (opt.network > 0 ? 'eff-pos' : 'eff-neg') + '">👥' + (opt.network > 0 ? '+' : '') + opt.network + '</span>');
-    if (opt.health) parts.push('<span class="' + (opt.health > 0 ? 'eff-pos' : 'eff-neg') + '">❤️' + (opt.health > 0 ? '+' : '') + opt.health + '</span>');
-    if (opt.hair) parts.push('<span class="' + (opt.hair > 0 ? 'eff-pos' : 'eff-neg') + '">😊' + (opt.hair > 0 ? '+' : '') + opt.hair + '</span>');
+    var _rc = (opt.skill||0)+(opt.network||0); if(_rc) parts.push('<span class="' + (_rc > 0 ? 'eff-pos' : 'eff-neg') + '">🎪' + (_rc > 0 ? '+' : '') + _rc + '</span>');
+    var _rh = (opt.health||0)+(opt.hair||0); if(_rh) parts.push('<span class="' + (_rh > 0 ? 'eff-pos' : 'eff-neg') + '">😊' + (_rh > 0 ? '+' : '') + _rh + '</span>');
     var rBtnStyle = rStyleMap[c] || rStyleMap[0];
     html += '<button class="choice-btn ' + rBtnStyle + '" onclick="chooseRandom(' + c + ')" id="randOpt' + c + '">';
     html += opt.text;
@@ -3985,8 +3979,8 @@ function chooseRandom(optIdx) {
     if (state.money < -50000) { state.money = -50000; toast('💸 负债累累！信用破产了...'); }
   }
   if (opt.skill) state.skill = clamp(state.skill + opt.skill, 0, 100);
-  if (opt.network) state.network = clamp(state.network + opt.network, 0, 100);
-  if (opt.health) state.health = clamp(state.health + opt.health, 0, 100);
+  if (opt.network) state.skill = clamp(state.skill + opt.network, 0, 100);
+  if (opt.health) state.hair = clamp(state.hair + opt.health, 0, 100);
   if (opt.hair) state.hair = clamp(state.hair + opt.hair, 0, 100);
 
   // Record year for timeline
@@ -4012,12 +4006,7 @@ function chooseRandom(optIdx) {
   applyBuffs();
   applyYearlyIncome();
   if (state.talents.indexOf('foodie') >= 0) state.hair += 3;
-    // Apply healthCap from talents (runner: +20)
-  var healthMax = 100;
-  for (var _ti = 0; _ti < state.talents.length; _ti++) {
-    var _tp = TALENT_POOL.find(function(t){ return t.id === state.talents[_ti]; });
-    if (_tp && _tp.talentEffect && _tp.talentEffect.healthCap) healthMax += _tp.talentEffect.healthCap;
-  }
+    // healthCap removed (health merged into hair)
   state.health = clamp(state.health, 0, healthMax);
   state.hair = clamp(state.hair, 0, 100);
 
@@ -4244,7 +4233,7 @@ function showEnding() {
   var track = CAREER_TRACKS[state.track];
 
   // Calculate total score
-  var totalScore = state.skill + state.network + state.health + state.hair + Math.min(state.rankIdx * 15, 90) + Math.min(state.salary / 1000, 50);
+  var totalScore = getCharm() + getHairDisplay() + Math.min(state.rankIdx * 15, 90) + Math.min(state.salary / 1000, 50);
 
   // Find matching ending (priority: track-specific > general, hidden always included)
   var ending = null;
@@ -4332,22 +4321,20 @@ function showEnding() {
   html += '\u003c/div\u003e';
   // Score bars (simplified radar)
   var wealthScore = Math.min(100, Math.round(state.money / 5000));
-  var healthScore = state.health;
-  var careerScore = Math.min(100, Math.round(state.skill * 0.4 + state.rankIdx * 20 + state.salary / 1000));
-  var hairScore = state.hair;
+  var healthScore = getHairDisplay();
+  var careerScore = Math.min(100, Math.round(getCharm() * 0.6 + state.rankIdx * 20 + state.salary / 1000));
+  var hairScore = getHairDisplay();
   html += '<div class="score-bars">';
   html += '<div class="score-bar-row"><div class="score-bar-label">💰 财富</div><div class="score-bar-bg"><div class="score-bar-fill wealth" style="width:' + wealthScore + '%"></div></div><div class="score-bar-val">' + wealthScore + '</div></div>';
-  html += '<div class="score-bar-row"><div class="score-bar-label">❤️ 健康</div><div class="score-bar-bg"><div class="score-bar-fill health-bar" style="width:' + healthScore + '%"></div></div><div class="score-bar-val">' + healthScore + '</div></div>';
+  html += '<div class="score-bar-row"><div class="score-bar-label">😊 发量</div><div class="score-bar-bg"><div class="score-bar-fill health-bar" style="width:' + healthScore + '%"></div></div><div class="score-bar-val">' + healthScore + '</div></div>';
   html += '<div class="score-bar-row"><div class="score-bar-label">📊 职场</div><div class="score-bar-bg"><div class="score-bar-fill career" style="width:' + careerScore + '%"></div></div><div class="score-bar-val">' + careerScore + '</div></div>';
   html += '<div class="score-bar-row"><div class="score-bar-label">😊 幸福</div><div class="score-bar-bg"><div class="score-bar-fill happiness" style="width:' + hairScore + '%"></div></div><div class="score-bar-val">' + hairScore + '</div></div>';
   html += '</div>';
   html += '<div class="id-dims">';
   html += '<div class="id-dim"><div class="id-dim-icon">📊</div><div class="id-dim-text"><div class="id-dim-label">职级：' + track.ladder[state.rankIdx] + '</div><div class="id-dim-desc">' + track.label + '</div></div></div>';
   html += '<div class="id-dim"><div class="id-dim-icon">💰</div><div class="id-dim-text"><div class="id-dim-label">月薪：¥' + state.salary.toLocaleString() + '</div><div class="id-dim-desc">累计收入 ¥' + cumIncome.toLocaleString() + '</div></div></div>';
-  html += '<div class="id-dim"><div class="id-dim-icon">🧠</div><div class="id-dim-text"><div class="id-dim-label">技能：' + state.skill + '</div><div class="id-dim-desc">专业能力指数</div></div></div>';
-  html += '<div class="id-dim"><div class="id-dim-icon">👥</div><div class="id-dim-text"><div class="id-dim-label">人脉：' + state.network + '</div><div class="id-dim-desc">社会关系网络</div></div></div>';
-  html += '<div class="id-dim"><div class="id-dim-icon">❤️</div><div class="id-dim-text"><div class="id-dim-label">健康：' + state.health + '</div><div class="id-dim-desc">身体是革命的本钱</div></div></div>';
-  html += '<div class="id-dim"><div class="id-dim-icon">😊</div><div class="id-dim-text"><div class="id-dim-label">发量：' + state.hair + '</div><div class="id-dim-desc">人生幸福感指数</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">🎪</div><div class="id-dim-text"><div class="id-dim-label">整活力：' + getCharm() + '</div><div class="id-dim-desc">技能+人脉的综合能力</div></div></div>';
+  html += '<div class="id-dim"><div class="id-dim-icon">😊</div><div class="id-dim-text"><div class="id-dim-label">发量：' + getHairDisplay() + '</div><div class="id-dim-desc">健康+发量的综合状态</div></div></div>';
   html += '</div>';
   // Show talents
   html += '<div class="id-talents">';
@@ -4406,7 +4393,7 @@ function showEnding() {
 
   // Show PK card ABOVE ending card if there's a rival
   if (state._rival) {
-    var pkData = {skill:state.skill, network:state.network, health:state.health, hair:state.hair, salary:state.salary, emoji:(ending?ending.emoji:''), endingName:(ending?ending.name:''), talents:state.talents};
+    var pkData = {skill:getCharm(), network:0, health:getHairDisplay(), hair:0, salary:state.salary, emoji:(ending?ending.emoji:''), endingName:(ending?ending.name:''), talents:state.talents};
     var pkHtml = buildPKCardHtml(state._rival, pkData);
     if (pkHtml) {
       var main = document.getElementById('mainContent');
@@ -5307,11 +5294,9 @@ function renderHospital() {
       var hopt = evt.opts[hi];
       html += '<button class="choice-btn safe" onclick="hospitalAction(\'evt_' + hi + '\')">' + hopt.text;
       var effs = [];
-      if (hopt.health) effs.push((hopt.health>0?'+':'') + hopt.health + '❤️');
-      if (hopt.hair) effs.push((hopt.hair>0?'+':'') + hopt.hair + '💇');
+      var _hc = (hopt.skill||0)+(hopt.network||0); if(_hc) effs.push((_hc>0?'+':'') + _hc + '🎪');
+      var _hh = (hopt.health||0)+(hopt.hair||0); if(_hh) effs.push((_hh>0?'+':'') + _hh + '😊');
       if (hopt.money) effs.push((hopt.money>0?'+':'') + hopt.money + '💰');
-      if (hopt.skill) effs.push((hopt.skill>0?'+':'') + hopt.skill + '🧠');
-      if (hopt.network) effs.push((hopt.network>0?'+':'') + hopt.network + '👥');
       if (effs.length) html += '<div class="choice-effect">' + effs.join(' ') + '</div>';
       html += '</button>';
     }
@@ -5332,20 +5317,20 @@ function renderHospital() {
 function hospitalAction(action) {
   if (!debounce('hospital', 400)) return;
   var days = state.year - state._hospitalYear;
-  if (action === 'buy_heal') { state.money -= 30000; state.health = clamp(state.health + 25, 0, 100); toast('💊 进口药效果显著！'); }
-  else if (action === 'buy_basic') { state.money -= 10000; state.health = clamp(state.health + 10, 0, 100); toast('💊 基础治疗完成'); }
-  else if (action === 'endure') { var r = randInt(3, 12); state.health = clamp(state.health + r, 0, 100); toast('😰 硬抗了...健康+' + r, r >= 8 ? 'success' : 'warning'); }
-  else if (action === 'wait') { state.health = clamp(state.health + randInt(2, 8), 0, 100); toast('💤 躺了一天...'); }
+  if (action === 'buy_heal') { state.money -= 30000; state.hair = clamp(state.hair + 25, 0, 100); toast('💊 进口药效果显著！'); }
+  else if (action === 'buy_basic') { state.money -= 10000; state.hair = clamp(state.hair + 10, 0, 100); toast('💊 基础治疗完成'); }
+  else if (action === 'endure') { var r = randInt(3, 12); state.hair = clamp(state.hair + r, 0, 100); toast('😰 硬抗了...发量+' + r, r >= 8 ? 'success' : 'warning'); }
+  else if (action === 'wait') { state.hair = clamp(state.hair + randInt(2, 8), 0, 100); toast('💤 躺了一天...'); }
   else if (action.startsWith('evt_')) {
     var oi = parseInt(action.replace('evt_', ''));
     var evt = HOSPITAL_EVENTS[days % HOSPITAL_EVENTS.length];
     var o = evt && evt.opts ? evt.opts[oi] : null;
     if (o) {
-      if (o.health) state.health = clamp(state.health + o.health, 0, 100);
+      if (o.health) state.hair = clamp(state.hair + o.health, 0, 100);
       if (o.hair) state.hair = clamp(state.hair + o.hair, 0, 100);
       if (o.money) state.money += o.money;
       if (o.skill) state.skill = clamp(state.skill + o.skill, 0, 100);
-      if (o.network) state.network = clamp(state.network + o.network, 0, 100);
+      if (o.network) state.skill = clamp(state.skill + o.network, 0, 100);
     }
   }
   state.year++;
@@ -5359,14 +5344,14 @@ function hospitalAction(action) {
 function showYearReview(event, opt, before) {
   // Calculate deltas
   var changes = [];
-  var dims = [['skill','🧠','技能'],['network','👥','人脉'],['health','❤️','健康'],['hair','😊','发量']];
-  for (var d = 0; d < dims.length; d++) {
-    var dk = dims[d][0], emoji = dims[d][1], label = dims[d][2];
-    var delta = (state[dk]||0) - (before[dk]||0);
-    if (delta !== 0) {
-      changes.push({emoji:emoji, label:label, before:before[dk], after:state[dk], delta:delta});
-    }
-  }
+  // Merged stats for year review
+  var charmBefore = 0, charmAfter = 0, hairB = 0, hairA = 0;
+  try { charmBefore = Math.round(((before.skill||0)+(before.network||0))/2); charmAfter = getCharm(); } catch(e) {}
+  try { hairB = Math.round(((before.health||0)+(before.hair||0))/2); hairA = getHairDisplay(); } catch(e) {}
+  var charmDelta = charmAfter - charmBefore;
+  var hairDelta = hairA - hairB;
+  if (charmDelta !== 0) changes.push({emoji:'🎪', label:'整活力', before:charmBefore, after:charmAfter, delta:charmDelta});
+  if (hairDelta !== 0) changes.push({emoji:'😊', label:'发量', before:hairB, after:hairA, delta:hairDelta});
   if (opt.money) {
     var md = state.money - before.money;
     changes.push({emoji:'💰', label:'存款', before:before.money, after:state.money, delta:md});
@@ -5398,7 +5383,7 @@ function showYearReview(event, opt, before) {
   if (changes.length === 0) changesHtml = '<div class="yr-change"><span class="emoji">✨</span><span class="label">平稳度过这一年</span></div>';
 
   // Ranking (simple heuristic based on total score)
-  var totalScore = state.skill + state.network + state.health + state.hair + Math.min(state.rankIdx*15,90);
+  var totalScore = getCharm() + getHairDisplay() + Math.min(state.rankIdx*15,90);
   var rank = totalScore > 250 ? '前10%' : totalScore > 200 ? '前30%' : totalScore > 150 ? '中游' : '后30%';
   var rankEmoji = totalScore > 250 ? '🏆' : totalScore > 200 ? '📈' : totalScore > 150 ? '➡️' : '📉';
 
@@ -5566,7 +5551,7 @@ function showFinale() {
   var main = document.getElementById('mainContent');
   updateTopBar();
 
-  var totalScore = state.skill + state.network + state.health + state.hair + Math.min(state.rankIdx*15,90);
+  var totalScore = getCharm() + getHairDisplay() + Math.min(state.rankIdx*15,90);
 
   // Build decade summary
   var records = state._yearlyRecords || [];
@@ -5646,8 +5631,8 @@ function chooseFinale(idx) {
   if (!opt) return;
   // Apply finale effects
   if (opt.skill) state.skill = clamp(state.skill + opt.skill, 0, 100);
-  if (opt.network) state.network = clamp(state.network + opt.network, 0, 100);
-  if (opt.health) state.health = clamp(state.health + opt.health, 0, 100);
+  if (opt.network) state.skill = clamp(state.skill + opt.network, 0, 100);
+  if (opt.health) state.hair = clamp(state.hair + opt.health, 0, 100);
   if (opt.hair) state.hair = clamp(state.hair + opt.hair, 0, 100);
   if (opt.money) state.money += opt.money;
   if (opt.salary) state.salary = Math.round(state.salary * (1 + opt.salary * 0.1));
