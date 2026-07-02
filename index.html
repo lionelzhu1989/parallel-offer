@@ -2949,8 +2949,8 @@ function showIntro() {
   }
   html += '</div>';
   html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v19 · 2026.07.02</div>';
-  html += '<div style="text-align:center;margin:8px 0"><button onclick="showChallengeModal()" style="background:linear-gradient(135deg,#f59e0b,#f97316);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(245,158,11,0.3)">🏆 本周挑战</button></div>
-<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
+  html += '<div style="text-align:center;margin:8px 0"><button onclick="showChallengeModal()" style="background:linear-gradient(135deg,#f59e0b,#f97316);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(245,158,11,0.3)">🏆 本周挑战</button></div>';
+  html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
   html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
   html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
@@ -3139,7 +3139,7 @@ function showInviteModal() {
   html += '<div style="font-size:28px;font-weight:900;color:var(--primary);letter-spacing:6px">' + code + '</div>';
   html += '</div>';
   html += '<div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">已邀请 ' + count + '/3 人' + (count >= 3 ? ' (已满)' : '') + '</div>';
-  html += '<button class="confirm-btn" onclick="navigator.clipboard&&navigator.clipboard.writeText('' + code + '').then(function(){toast(\'邀请码已复制！\')})">复制邀请码</button>';
+  html += '<button class="confirm-btn" onclick="navigator.clipboard&&navigator.clipboard.writeText(code).then(function(){toast(\'邀请码已复制！\')})">复制邀请码</button>';
   html += '</div></div>';
   var overlay = document.createElement('div');
   overlay.innerHTML = html;
