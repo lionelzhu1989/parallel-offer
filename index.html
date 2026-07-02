@@ -2686,8 +2686,8 @@ var ENDINGS = [
   { id:'winner', emoji:'🎭', name:'人生赢家', track:null, desc:'你做到了大多数人做不到的事：有钱，有闲，还有朋友。', theme:'gold', condition:function(s){ return s.skill>=70 && s.network>=70 && s.health>=70 && s.hair>=70; } },
   { id:'parallel', emoji:'💫', name:'平行宇宙的你', track:null, desc:'你活成了最普通的自己。但也许，这就是最好的结局。', theme:'blue', condition:function(s){ return s.skill>=35 && s.skill<=65 && s.network>=35 && s.network<=65 && s.health>=35 && s.health<=65; } },
   // Hidden endings
-  { id:'cat_life', emoji:'🐱', name:'猫奴人生', track:null, desc:'你最大的成就是在工位上养了一只猫。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('catlovers')>=0 && s.hair>=70; }, hidden:true },
-  { id:'social_legend', emoji:'👻', name:'社恐传奇', track:null, desc:'你从来不和同事说话，但你的代码替你说了所有。', theme:'blue', condition:function(s){ return s.talents && s.talents.indexOf('shy')>=0 && s.skill>=85; }, hidden:true },
+  { id:'cat_life', emoji:'🐱', name:'猫奴人生', track:null, desc:'你最大的成就是在工位上养了一只猫。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('catlovers')>=0 && s.hair>=70; }, hidden:true, rarity:'3.0%' },
+  { id:'social_legend', emoji:'👻', name:'社恐传奇', track:null, desc:'你从来不和同事说话，但你的代码替你说了所有。', theme:'blue', condition:function(s){ return s.talents && s.talents.indexOf('shy')>=0 && s.skill>=85; }, hidden:true, rarity:'3.0%' },
   // Combo endings (rare — talent synergy triggers)
   { id:'night_owl_boss', emoji:'🦉', name:'深夜CEO', track:null, desc:'你同时拥有了"夜猫子"和"卷王"天赋。白天开会，晚上写代码，凌晨复盘。你的日历App以为自己坏了。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('nightowl')>=0 && s.talents.indexOf('hardwork')>=0 && s.rankIdx>=3; }, hidden:true },
   { id:'cat_boss', emoji:'😼', name:'猫系老板', track:null, desc:'你有"猫奴"天赋，养了三只猫，开了家公司专门做猫粮。员工都是猫。KPI是喵喵叫的次数。', theme:'purple', condition:function(s){ return s.talents && s.talents.indexOf('catlovers')>=0 && s.talents.indexOf('geek')>=0; }, hidden:true },
@@ -2738,10 +2738,10 @@ var ENDINGS = [
   theme:'purple',
   condition:function(s){return s.year>=10&&s.hair>=50&&s.hair<=70;},
   hidden:false
-},{ id:'ceo_emperor', emoji:'👔', name:'打工皇帝·CEO', track:null, desc:'从码农到CEO，你用十年走完了别人三十年的路。现在你最大的烦恼是：年会上表演什么节目。', theme:'gold', condition:function(s){ return s.rankIdx>=4 && s.salary>=20000 && s.network>=80 && s.skill>=80 && s.year>=8; }, hidden:true },
-  { id:'unicorn_founder', emoji:'🦄', name:'独角兽创始人', track:'startup', desc:'你的公司估值超过十亿。投资人排队请你吃饭，但你最怀念的还是当年那个在车库写代码的自己。', theme:'purple', condition:function(s){ return s.track==='startup' && s.rankIdx>=5 && s.money>=500000 && s.network>=60; }, hidden:true },
-  { id:'top_kol', emoji:'📱', name:'顶流KOL', track:null, desc:'你的粉丝比公司员工还多。一条广告报价五万，老板想开除你又不敢——怕你发微博。', theme:'pink', condition:function(s){ return s.network>=90 && s.hair>=70 && s.skill>=60 && s.year>=6; }, hidden:true },
-  { id:'fire_early', emoji:'🔥', name:'FIRE提前退休', track:null, desc:'35岁存款300万，你正式宣布退休。前同事问你靠什么生活，你说：靠利息和愤怒。', theme:'green', condition:function(s){ return s.money>=3000000 && s.health>=70 && s.hair>=70 && s.year>=8; }, hidden:true },
+},{ id:'ceo_emperor', emoji:'👔', name:'打工皇帝·CEO', track:null, desc:'从码农到CEO，你用十年走完了别人三十年的路。现在你最大的烦恼是：年会上表演什么节目。', theme:'gold', condition:function(s){ return s.rankIdx>=4 && s.salary>=20000 && s.network>=80 && s.skill>=80 && s.year>=8; }, hidden:true, rarity:'2.3%' },
+  { id:'unicorn_founder', emoji:'🦄', name:'独角兽创始人', track:'startup', desc:'你的公司估值超过十亿。投资人排队请你吃饭，但你最怀念的还是当年那个在车库写代码的自己。', theme:'purple', condition:function(s){ return s.track==='startup' && s.rankIdx>=5 && s.money>=500000 && s.network>=60; }, hidden:true, rarity:'1.8%' },
+  { id:'top_kol', emoji:'📱', name:'顶流KOL', track:null, desc:'你的粉丝比公司员工还多。一条广告报价五万，老板想开除你又不敢——怕你发微博。', theme:'pink', condition:function(s){ return s.network>=90 && s.hair>=70 && s.skill>=60 && s.year>=6; }, hidden:true, rarity:'1.2%' },
+  { id:'fire_early', emoji:'🔥', name:'FIRE提前退休', track:null, desc:'35岁存款300万，你正式宣布退休。前同事问你靠什么生活，你说：靠利息和愤怒。', theme:'green', condition:function(s){ return s.money>=3000000 && s.health>=70 && s.hair>=70 && s.year>=8; }, hidden:true, rarity:'0.8%' },
   {
   id:'fire_money_fast',
   emoji:'🔥',
@@ -2750,7 +2750,7 @@ var ENDINGS = [
   desc:'极简生活，存款狂攒。你35岁存够了200万，正式宣布退休。朋友们震惊，你微微一笑："我只是把内卷的力气用在了算账上。"',
   theme:'green',
   condition:function(s){return s.money>=2000000;},
-  hidden:true },
+  hidden:true, rarity:'3.0%' },
 ];
 
 // ====== DATA: Achievements ======
@@ -2774,7 +2774,12 @@ var ACHIEVEMENTS = [
   { id:'landlord', emoji:'🏠', name:'包租公', desc:'拥有3套以上房产', check:function(s){ return (s._property || 0) >= 3; } },
   { id:'millionaire', emoji:'💎', name:'百万富翁', desc:'存款超过100万', check:function(s){ return s.money >= 1000000; } },
   { id:'bankrupt', emoji:'💸', name:'破产专业户', desc:'触发破产结局', check:function(s){ return s.money <= -50000; } }
-];
+,
+  { id:'rare_ceo', emoji:'👔', name:'打工皇帝', desc:'解锁稀有结局：打工皇帝·CEO', check:function(s){ try { var e=JSON.parse(localStorage.getItem('parallel_offer_endings')||'{}'); return e.ceo_emperor; } catch(x){return false;} } },
+  { id:'rare_unicorn', emoji:'🦄', name:'独角兽之光', desc:'解锁稀有结局：独角兽创始人', check:function(s){ try { var e=JSON.parse(localStorage.getItem('parallel_offer_endings')||'{}'); return e.unicorn_founder; } catch(x){return false;} } },
+  { id:'rare_kol', emoji:'📱', name:'顶流网红', desc:'解锁稀有结局：顶流KOL', check:function(s){ try { var e=JSON.parse(localStorage.getItem('parallel_offer_endings')||'{}'); return e.top_kol; } catch(x){return false;} } },
+  { id:'rare_fire', emoji:'🔥', name:'财务自由', desc:'解锁稀有结局：FIRE提前退休', check:function(s){ try { var e=JSON.parse(localStorage.getItem('parallel_offer_endings')||'{}'); return e.fire_early; } catch(x){return false;} } },
+  { id:'all_hidden', emoji:'🌟', name:'传说收集者', desc:'解锁全部4个隐藏结局', check:function(s){ try { var e=JSON.parse(localStorage.getItem('parallel_offer_endings')||'{}'); return e.ceo_emperor && e.unicorn_founder && e.top_kol && e.fire_early; } catch(x){return false;} } }];
 
 // ====== Game State ======
 var state = {};
@@ -2948,7 +2953,7 @@ function showIntro() {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v19 · 2026.07.02</div>';
+  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v20 · 2026.07.02</div>';
   html += '<div style="text-align:center;margin:8px 0"><button onclick="showChallengeModal()" style="background:linear-gradient(135deg,#f59e0b,#f97316);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(245,158,11,0.3)">🏆 本周挑战</button></div>';
   html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
   html += '<div class="entry-bar" style="margin-top:12px">';
@@ -3148,32 +3153,64 @@ function showInviteModal() {
 
 
 function showLeaderboard() {
-  var lb = getLeaderboard();
-  var ranks = ['🥇','🥈','🥉'];
+  var lb = JSON.parse(localStorage.getItem('po_leaderboard') || '[]').sort(function(a,b){ return b.score - a.score; });
+  var ranks = ['\ud83e\udd47','\ud83e\udd48','\ud83e\udd49'];
+  // Classify into school tiers
+  var tiers = [
+    { name:'S级·天才班', emoji:'🎓', min:8000, color:'#f59e0b', players:[] },
+    { name:'A级·精英班', emoji:'⭐', min:5000, color:'#6366f1', players:[] },
+    { name:'B级·潜力班', emoji:'📚', min:3000, color:'#10b981', players:[] },
+    { name:'C级·成长班', emoji:'🌱', min:0, color:'#94a3b8', players:[] }
+  ];
+  for (var si = 0; si < lb.length; si++) {
+    for (var ti = 0; ti < tiers.length; ti++) {
+      if (lb[si].score >= tiers[ti].min) { tiers[ti].players.push(lb[si]); break; }
+    }
+  }
+  // Find current player's tier
+  var myName = state.playerName || '';
+  var myTier = -1;
+  for (var ti = 0; ti < tiers.length; ti++) {
+    for (var pi = 0; pi < tiers[ti].players.length; pi++) {
+      if (tiers[ti].players[pi].name === myName) { myTier = ti; break; }
+    }
+    if (myTier >= 0) break;
+  }
   var html = '<div class="char-creator-overlay" onclick="if(event.target===this)this.remove()">';
-  html += '<div class="char-creator-box" style="max-width:360px">';
-  html += '<div style="text-align:center;font-size:18px;font-weight:700;margin-bottom:12px">🏆 排行榜</div>';
+  html += '<div class="char-creator-box" style="max-width:360px;max-height:80vh;overflow-y:auto">';
+  html += '<div style="text-align:center;font-size:18px;font-weight:700;margin-bottom:4px">🏆 排行榜</div>';
+  html += '<div style="text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:12px">按得分分班 · 班级内部排名</div>';
   if (lb.length === 0) {
     html += '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:24px">还没有人上榜<br>完成一局游戏即可上榜</div>';
   } else {
-    for (var i = 0; i < lb.length; i++) {
-      var item = lb[i];
-      html += '<div style="display:flex;align-items:center;padding:10px 0;' + (i < lb.length-1 ? 'border-bottom:1px solid var(--border);' : '') + '">';
-      html += '<div style="width:32px;font-size:18px;text-align:center">' + (i < 3 ? ranks[i] : (i+1)) + '</div>';
-      html += '<div style="flex:1;margin-left:8px"><div style="font-size:13px;font-weight:600">' + item.name + '</div>';
-      html += '<div style="font-size:11px;color:var(--text-muted)">' + item.ending + '</div></div>';
-      html += '<div style="font-weight:700;color:var(--primary);font-size:15px">' + item.score + '</div>';
+    for (var ti = 0; ti < tiers.length; ti++) {
+      var t = tiers[ti];
+      if (t.players.length === 0) continue;
+      var highlight = (ti === myTier);
+      html += '<div style="margin-bottom:12px">';
+      html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;padding:4px 8px;background:' + t.color + '15;border-radius:8px;border-left:3px solid ' + t.color + '">';
+      html += '<span style="font-size:14px">' + t.emoji + '</span>';
+      html += '<span style="font-size:13px;font-weight:700;color:' + t.color + '">' + t.name + '</span>';
+      html += '<span style="font-size:10px;color:var(--text-muted);margin-left:auto">' + t.players.length + '人</span>';
+      html += '</div>';
+      for (var pi = 0; pi < t.players.length; pi++) {
+        var item = t.players[pi];
+        var isMe = (item.name === myName);
+        var bgColor = isMe ? 'background:rgba(99,102,241,0.1);border-radius:8px;' : '';
+        html += '<div style="display:flex;align-items:center;padding:6px 8px;' + bgColor + (pi < t.players.length-1 ? 'border-bottom:1px solid var(--border);' : '') + '">';
+        html += '<div style="width:24px;font-size:14px;text-align:center">' + (pi < 3 ? ranks[pi] : (pi+1)) + '</div>';
+        html += '<div style="flex:1;margin-left:6px"><div style="font-size:12px;font-weight:600' + (isMe ? ';color:var(--primary)' : '') + '">' + item.name + (isMe ? ' (我)' : '') + '</div>';
+        html += '<div style="font-size:10px;color:var(--text-muted)">' + (item.ending || '') + '</div></div>';
+        html += '<div style="font-size:12px;font-weight:700;color:' + t.color + '">' + item.score + '分</div>';
+        html += '</div>';
+      }
       html += '</div>';
     }
   }
-  html += '<button class="confirm-btn" style="margin-top:16px" onclick="this.closest(\'.char-creator-overlay\').remove()">关闭</button>';
+  html += '<div style="text-align:center;margin-top:8px"><button onclick="this.closest(\'.char-creator-overlay\').remove()" style="background:var(--primary);color:#fff;border:none;padding:8px 24px;border-radius:20px;font-size:13px;cursor:pointer">关闭</button></div>';
   html += '</div></div>';
-  var overlay = document.createElement('div');
-  overlay.innerHTML = html;
-  document.body.appendChild(overlay.firstElementChild);
+  document.body.insertAdjacentHTML('beforeend', html);
 }
-
-// ====== Setup Step 2: Persona ======
 function showSetupStep(step) {
   var main = document.getElementById('mainContent');
   if (step === 2) {
@@ -4271,7 +4308,7 @@ function showEnding() {
     if (state.playerType) html += '<div style="font-size:10px;color:rgba(99,102,241,0.8);margin-bottom:4px;font-weight:600">' + state.playerType + '</div>';
   }
   html += '<div class="id-card-emoji">' + ending.emoji + '</div>';
-  html += '<div class="id-card-ending">' + ending.name + '</div>';
+  html += '<div class="id-card-ending">' + ending.name + '</div>'; if(ending.rarity){ html += '<div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px">✨ 解锁率 ' + ending.rarity + '</div>'; }
   html += '<div class="personality-tag">' + (function(){if(state.persona&&state.persona.personality){var _d=window._personaDims||[];var _o=_d[0]?_d[0].options:[];var _s=_o.find(function(x){return x.id===state.persona.personality});if(_s)return _s.label;}var p=getPersonality(state);return p?p.animal+(p.traits.length?' \xb7 '+p.traits.join(' \xb7 '):''):'';})() + '</div>';
   html += '<div class="id-card-desc">' + ending.desc + '</div>';
   if (hiddenEndings.length > 0) {
@@ -5171,7 +5208,7 @@ function buildPKCardHtml(rival, me) {
   html += row('❤️', '健康', rival.health, me.health);
   html += row('😊', '发量', rival.hair, me.hair);
   html += '<div class="pk-result"><div class="pk-result-text">' + resultText + '</div></div>';
-  html += '<div class="pk-subtitle">你和 ' + rivalName + ' 的十年对比 ↑</div>';
+  html += '<div class="pk-subtitle">你和 ' + rivalName + ' 的十年对比 ↑</div>'; html += '<div style="text-align:center;margin-top:12px"><button onclick="shareChallenge()" style="background:linear-gradient(135deg,#f97316,#ea580c);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(249,115,22,0.3)">📤 邀请好友对比</button></div>';
   html += '</div>';
   return html;
 }
