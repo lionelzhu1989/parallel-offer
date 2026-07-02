@@ -4359,10 +4359,6 @@ function showEnding() {
   html += '<div class="id-share-hint">📸 测测你是什么职场动物？我已经是' + ending.emoji + ending.name + '了</div>';
   html += '</div>';
 
-    // Narrative summary removed per user request
-// Timeline
-  html += '<div class="timeline-section"><div class="tl-header">📍 十年生命线</div><div class="tl-track" id="tlTrack"></div></div>';
-
   // Action buttons
   // Copy moment button
   html += '<div class="entry-bar" style="margin-top:10px">';
@@ -4407,8 +4403,6 @@ function showEnding() {
 
   updateTopBar();
 
-  // Render timeline
-  renderTimeline();
 
   // Show PK card ABOVE ending card if there's a rival
   if (state._rival) {
@@ -5574,6 +5568,14 @@ function showFinale() {
 
   var totalScore = state.skill + state.network + state.health + state.hair + Math.min(state.rankIdx*15,90);
 
+  // Build decade summary
+  var records = state._yearlyRecords || [];
+  var summaryLines = '';
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    summaryLines += '<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:12px;color:var(--text-secondary)"><span>第'+r.year+'年</span><span>'+r.event+'</span><span>'+r.rank+'</span></div>';
+  }
+
   var html = '<div class="scenario-card" style="border:2px solid #fbbf24">';
   html += '<span class="year-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff">🏁 第十年</span>';
   html += '<div class="scenario-title">终局抉择</div>';
@@ -5581,6 +5583,14 @@ function showFinale() {
   html += '技能 '+state.skill+' · 人脉 '+state.network+' · 健康 '+state.health+' · 发量 '+state.hair+'<br>';
   html += '存款 ¥'+(state.money>=10000?Math.round(state.money/10000)+'万':state.money.toLocaleString());
   html += '</div>';
+
+  // Decade timeline
+  if (summaryLines) {
+    html += '<div style="margin:12px 0;padding:10px;background:var(--bg-page);border-radius:8px;max-height:160px;overflow-y:auto">';
+    html += '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px">📖 十年回顾</div>';
+    html += summaryLines;
+    html += '</div>';
+  }
 
   // Finale choices - different per track
   html += '<div class="choices">';
