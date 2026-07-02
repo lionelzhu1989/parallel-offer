@@ -5589,14 +5589,6 @@ function showFinale() {
   var main = document.getElementById('mainContent');
   updateTopBar();
 
-  // Build decade summary
-  var records = state._yearlyRecords || [];
-  var summaryLines = '';
-  for (var i = 0; i < records.length; i++) {
-    var r = records[i];
-    summaryLines += '<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:12px;color:var(--text-secondary)"><span>第'+r.year+'年</span><span>'+r.event+'</span><span>'+r.rank+'</span></div>';
-  }
-
   var totalScore = state.skill + state.network + state.health + state.hair + Math.min(state.rankIdx*15,90);
 
   var html = '<div class="scenario-card" style="border:2px solid #fbbf24">';
@@ -5606,19 +5598,6 @@ function showFinale() {
   html += '技能 '+state.skill+' · 人脉 '+state.network+' · 健康 '+state.health+' · 发量 '+state.hair+'<br>';
   html += '存款 ¥'+(state.money>=10000?Math.round(state.money/10000)+'万':state.money.toLocaleString());
   html += '</div>';
-
-  // Decade timeline
-  if (summaryLines) {
-    html += '<div style="margin:12px 0;padding:10px;background:var(--bg-page);border-radius:8px;max-height:160px;overflow-y:auto">';
-    html += '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px">📖 十年回顾</div>';
-    html += summaryLines;
-    html += '</div>';
-  } else {
-    html += '<div style="margin:12px 0;padding:10px;background:var(--bg-page);border-radius:8px">';
-    html += '<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:8px">📖 十年回顾</div>';
-    html += '<div style="font-size:12px;color:var(--text-muted);text-align:center;padding:8px 0">这十年，你一路走来，每一步都算数。</div>';
-    html += '</div>';
-  }
 
   // Finale choices - different per track
   html += '<div class="choices">';
