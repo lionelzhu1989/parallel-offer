@@ -2869,12 +2869,7 @@ function updateTopBar() {
   if (propEl) { propEl.textContent = propCount + '套'; }
   var assetEl = document.getElementById('attrTotalAsset');
   if (assetEl) { assetEl.textContent = totalAsset > state.money ? '总资产 ¥' + (totalAsset >= 10000 ? Math.round(totalAsset/10000) + '万' : '¥' + totalAsset.toLocaleString()) : ''; }
-  document.getElementById('barSalary').style.width = Math.min(100, state.salary / 100000 * 100) + '%';
-  document.getElementById('barSkill').style.width = state.skill + '%';
-  document.getElementById('barNetwork').style.width = state.network + '%';
-  var hb = document.getElementById('barHealth');
 
-  document.getElementById('barHappy').style.width = state.hair + '%';
   var tips = {tipMoney:'存款: ¥'+state.money.toLocaleString()};
   for(var k in tips){var el=document.getElementById(k);if(el)el.textContent=tips[k];}
   var undoBtn = document.querySelector('.undo-btn');
