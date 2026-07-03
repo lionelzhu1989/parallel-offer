@@ -3263,6 +3263,37 @@ var PT_QUESTIONS = [
 var _ptAnswers = [];
 var _ptCurrentQ = 0;
 
+function showCareerSelect() {
+  window.scrollTo(0, 0);
+  updateTopBar();
+  var main = document.getElementById('mainContent');
+  var h = '<div class="setup-section"><div class="setup-header"><div class="setup-title">选择你的职业路线</div>';
+  h += '<div class="setup-subtitle">你的初始属性已由职场人格测试决定</div></div>';
+  // Show personality badge if from test
+  if (state.persona) {
+    h += '<div style="text-align:center;padding:8px;background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(168,85,247,0.1));border-radius:12px;margin:0 12px 8px">';
+    h += '<span style="font-size:13px;color:var(--accent);font-weight:600">🧠 你的职场人格：' + state.persona + '</span></div>';
+  }
+  h += '<div class="track-grid">';
+  var keys = Object.keys(CAREER_TRACKS);
+  for (var i = 0; i < keys.length; i++) {
+    var t = CAREER_TRACKS[keys[i]];
+    h += '<div class="track-card" onclick="selectTrack(\'' + t.id + '\', this)">';
+    h += '<div class="tc-emoji">' + t.emoji + '</div>';
+    h += '<div class="tc-label">' + t.label + '</div>';
+    h += '<div class="tc-desc">' + t.desc + '</div>';
+    var previews = {tech:'你将面对：35岁危机、技术选型争论、开源被star的快乐',biz:'你将面对：KPI冲刺、客户应酬、价格战博弈',state:'你将面对：文件流转、酒桌文化、晋升暗战',mnc:'你将面对：PPT治国、英文邮件、work-life balance',startup:'你将面对：融资路演、现金流焦虑、凌晨三点的bug',gig:'你将面对：甲方改需求、收入不稳定、自由的代价'};
+    if (previews[t.id]) h += '<div class="tc-preview">' + previews[t.id] + '</div>';
+    h += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',biz:'#f59e0b',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',biz:'市场路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
+    h += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
+    h += '</div>';
+  }
+  h += '</div>';
+  h += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置天赋</button>';
+  h += '<div style="text-align:center;margin:12px 0 4px"><button onclick="showGallery()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:8px 20px;border-radius:16px;font-size:12px;cursor:pointer">📖 结局图鉴</button></div>';
+  h += '</div>';
+  main.innerHTML = h;
+}
 function showPersonalityTest() {
   _ptAnswers = [];
   _ptCurrentQ = 0;
@@ -3414,7 +3445,7 @@ function _showPTResult() {
   html += '<div class="pt-result-actions">';
   html += '<button class="pt-share-btn" onclick="sharePTResult()">📤 分享我的人格</button>';
   html += '<button class="pt-continue-btn" onclick="continueFromPT()">🎮 用这个人格开始人生</button>';
-  html += '<button class="pt-skip-btn" onclick="skipPT()">跳过测试，直接开始</button>';
+  html += '<div style="text-align:center;margin-top:8px"><a onclick="skipPT()" style="font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline">跳过测试，随机属性开始</a></div>';
   html += '</div>';
   html += '</div></div>';
   
@@ -3451,27 +3482,27 @@ function continueFromPT() {
   state.hair = r.hair;
   state.money = r.money;
   state.persona = r.personality.short;
-  // Go to track selection
-  showIntro();
+  state._fromPT = true;
+  // Go to career selection
+  showCareerSelect();
 }
 
 function skipPT() {
   var ov = document.getElementById('ptOverlay');
   if (ov) { ov.style.display = 'none'; ov.remove(); }
   window._ptResult = null;
-  showIntro();
+  initState();
+  showCareerSelect();
 }
 
 
 function showIntro() {
-  // Check for challenge referral
   var _params = new URLSearchParams(window.location.search);
   var _from = _params.get('from');
   initState();
   window.scrollTo(0, 0);
   updateTopBar();
   if (_from) { setTimeout(function(){ toast('🔥 ' + _from + ' 向你发起了挑战！测测你的职场结局？'); }, 500); }
-  // Parse rival stats from challenge URL
   var _rv = _params.get('rv');
   if (_rv) {
     try {
@@ -3498,51 +3529,29 @@ function showIntro() {
   } else {
     state._rival = null;
   }
+  // If coming from personality test (attributes already set), go to career select
+  if (state._fromPT) {
+    state._fromPT = false;
+    showCareerSelect();
+    return;
+  }
+  // Welcome page - single entry point
   var main = document.getElementById('mainContent');
-  var html = '<div class="setup-section"><div class="setup-header"><div class="setup-title">平行offer</div><div class="setup-subtitle">选择你的职业路线，开启一段职场人生</div></div><div class="track-grid">';
-
-  // Active buffs display
-  if (state._buffs && state._buffs.length > 0) {
-    html += '<div style="padding:4px 8px;background:rgba(255,150,50,0.1);border-radius:8px;margin:4px 8px">';
-    for (var bi = 0; bi < state._buffs.length; bi++) {
-      var bf = state._buffs[bi];
-      html += '<div style="font-size:11px;color:var(--text-secondary)">⏱ ' + bf.name + ' (' + bf.remaining + '年) - ' + bf.desc + '</div>';
-    }
-    html += '</div>';
-  }
-  var keys = Object.keys(CAREER_TRACKS);
-  for (var i = 0; i < keys.length; i++) {
-    var t = CAREER_TRACKS[keys[i]];
-    html += '<div class="track-card" onclick="selectTrack(\'' + t.id + '\', this)">';
-    html += '<div class="tc-emoji">' + t.emoji + '</div>';
-    html += '<div class="tc-label">' + t.label + '</div>';
-    html += '<div class="tc-desc">' + t.desc + '</div>';
-    var previews = {tech:'你将面对：35岁危机、技术选型争论、开源被star的快乐',biz:'你将面对：KPI冲刺、客户应酬、价格战博弈',state:'你将面对：文件流转、酒桌文化、晋升暗战',mnc:'你将面对：PPT治国、英文邮件、work-life balance',startup:'你将面对：融资路演、现金流焦虑、凌晨三点的bug',gig:'你将面对：甲方改需求、收入不稳定、自由的代价'};
-    if (previews[t.id]) html += '<div class="tc-preview">' + previews[t.id] + '</div>';
-
-    html += '<div style="font-size:10px;color:' + ({tech:'#74b9ff',state:'#00b894',mnc:'#6c5ce7',startup:'#e17055',biz:'#f59e0b',gig:'#dfe6e9'})[t.tag] + ';margin-top:2px">🏷️ ' + ({tech:'技术路线',biz:'市场路线',state:'体制路线',mnc:'精英路线',startup:'创业路线',gig:'自由路线'})[t.tag] + '</div>';
-    html += '<div class="tc-ladder">' + t.ladder.join(' → ') + '</div>';
-    html += '</div>';
-  }
-  html += '</div>';
-  html += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:4px">v30 · 2026.07.03</div>';
-  html += '<div style="text-align:center;margin:8px 0"><button onclick="showChallengeModal()" style="background:linear-gradient(135deg,#f59e0b,#f97316);border:none;color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(245,158,11,0.3)">🏆 本周挑战</button></div>';
-  html += '<button class="confirm-btn" id="step1Btn" disabled onclick="showSetupStep(2)">下一步 → 配置属性</button>';
-  html += '<div style="text-align:center;margin:12px 0 4px"><button onclick="showPersonalityTest()" style="background:linear-gradient(135deg,#6366f1,#a855f7);border:none;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 10px rgba(99,102,241,0.3)">🧠 职场人格测试</button><div style="font-size:10px;color:var(--text-muted);margin-top:4px">回答8个问题，测出你的职场人格，自动生成属性</div></div>';
-  html += '<div class="entry-bar" style="margin-top:12px">';
-  html += '<button class="entry-btn" onclick="showGallery()">📖 图鉴</button>';
-  html += '<button class="entry-btn" onclick="showAchievements()">🏆 成就</button>';
-  html += '<button class="entry-btn" onclick="showLeaderboard()">🥇 排行</button>';
-  html += '<button class="entry-btn" onclick="showInviteModal()">🎁 邀请</button>';
-  html += '</div>';
-  html += '</div>';
-  
-  html += '<div style="text-align:center;margin-top:16px;display:flex;gap:8px;justify-content:center">';
-  html += '<button onclick="exportSave()" style="background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;cursor:pointer">📤 导出存档</button>';
-  html += '<button onclick="importSave()" style="background:linear-gradient(135deg,#3b82f6,#2563eb);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;cursor:pointer">📥 导入存档</button>';
-  html += '<button onclick="resetSave()" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;cursor:pointer">🗑️ 清除</button>';
-  html += '</div>';
-main.innerHTML = html;
+  var h = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:20px">';
+  h += '<div style="font-size:64px;margin-bottom:16px">🎯</div>';
+  h += '<div style="font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">平行 Offer</div>';
+  h += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:32px;text-align:center;line-height:1.6">回答8个职场灵魂拷问<br>测出你的职场人格<br>然后模拟你的人生</div>';
+  h += '<button onclick="showPersonalityTest()" style="background:linear-gradient(135deg,var(--accent),#a855f7);border:none;color:#fff;padding:16px 40px;border-radius:28px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,0.4);width:100%;max-width:300px">🧠 开始测试</button>';
+  h += '<div style="font-size:11px;color:var(--text-muted);margin-top:12px">8道题 · 1分钟 · 测出你的职场人格</div>';
+  h += '<div style="margin-top:24px;display:flex;gap:8px">';
+  h += '<button onclick="showGallery()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:8px 16px;border-radius:16px;font-size:12px;cursor:pointer">📖 图鉴</button>';
+  h += '<button onclick="showAchievements()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:8px 16px;border-radius:16px;font-size:12px;cursor:pointer">🏆 成就</button>';
+  h += '<button onclick="showLeaderboard()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:8px 16px;border-radius:16px;font-size:12px;cursor:pointer">🥇 排行</button>';
+  h += '<button onclick="showInviteModal()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:8px 16px;border-radius:16px;font-size:12px;cursor:pointer">🎁 邀请</button>';
+  h += '</div>';
+  h += '<div style="text-align:center;font-size:10px;color:var(--text-muted);margin-top:20px">v30 · 2026.07.03</div>';
+  h += '</div>';
+  main.innerHTML = h;
 }
 
 function selectTrack(id, el) {
