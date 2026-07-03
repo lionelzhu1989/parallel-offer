@@ -1517,6 +1517,7 @@ body.dark-mode .entry-btn {
 .pt-loading { display:flex; align-items:center; justify-content:center; gap:8px; padding:20px; color:var(--text-muted); font-size:14px; }
 .pt-loading::after { content:''; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
+@keyframes barGrow{from{width:0}to{width:var(--target-w)}}
 </style>
 </head>
 <body>
@@ -3616,6 +3617,36 @@ async function _generateAIQuestion(history) {
   }
 }
 
+
+function shareResult() {
+  // Build share text
+  var personaName = state.persona || '神秘人';
+  var personaData2 = null;
+  for (var pk2 in types) {
+    for (var pi2 = 0; pi2 < types[pk2].length; pi2++) {
+      if (types[pk2][pi2].short === personaName || types[pk2][pi2].name.indexOf(personaName) > -1) {
+        personaData2 = types[pk2][pi2]; break;
+      }
+    }
+    if (personaData2) break;
+  }
+  var motto = personaData2 ? personaData2.motto : '人生如戏，全靠演技';
+  var shareText = '我在「平行Offer」测出了我的打工人格：' + personaName + '\n\n' + 
+    '「' + motto + '」\n\n' +
+    '整活力: ' + getCharm() + ' | 发量: ' + getHairDisplay() + '\n' +
+    '你也来测测？';
+  
+  if (navigator.share) {
+    navigator.share({title: '我的打工人格', text: shareText}).catch(function(){});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareText).then(function(){
+      toast('已复制到剪贴板，去朋友圈秀一下吧！');
+    });
+  } else {
+    toast('已复制到剪贴板');
+  }
+}
+
 function _showPTResult() {
   // Calculate attribute totals
   var totals = {skill:0, network:0, health:0, hair:0, money:0};
@@ -3644,19 +3675,19 @@ function _showPTResult() {
   var totalScore = totals.skill + totals.network + totals.health;
   var types = {
     skill: [
-      { name: '🔬 卷王本王', desc: '你的座右铭是"deadline是第一生产力"。凌晨3点的公司只有你和保安，你俩已经成了朋友。你的代码注释比正文还长，你的GitHub绿得像草坪。同事叫你大佬，你只想说：别叫我，我在debug。', short: '卷王本王', motto: '我不是在加班，我是在实现人生价值（吧）' },
-      { name: '🐛 Bug制造机', desc: '你写的代码每一行都是惊喜（惊吓）。你的PR被review的次数比你的工龄还长。但你有一个优点：你总能发现自己制造的bug——虽然通常是在生产环境。', short: 'Bug制造机', motto: '测试？什么测试？直接上线！' },
-      { name: '📚 考证狂魔', desc: '你的收藏夹里有200个"即将学习"的课程。你的书架上摆满了没拆封的证书教材。你的简历上"正在考取"这一栏比"已获得"长3倍。你坚信：只要证书够多，就不用真正会什么。', short: '考证狂魔', motto: '技多不压身，证多不嫌多' }
+      { name: '🔬 卷王本王', desc: '你凌晨3点还在写代码，保安已经认识你了。同事叫你大佬，你只想说：别叫我，我在debug。', short: '卷王本王', motto: '我不是在加班，我是在实现人生价值（吧）' },
+      { name: '🐛 Bug制造机', desc: '你的代码是惊喜还是惊吓取决于你的心情。你的PR被打回的次数比你的工龄还长，但你总能发现自己的bug——在生产环境。', short: 'Bug制造机', motto: '测试？什么测试？直接上线！' },
+      { name: '📚 考证狂魔', desc: '收藏夹里200个"即将学习"的课程，书架上没拆封的教材。你坚信：只要证书够多，就不用真正会什么。', short: '考证狂魔', motto: '技多不压身，证多不嫌多' }
     ],
     network: [
-      { name: '🤝 社交恐怖分子', desc: '你认识公司每个人，包括保安、保洁、前台、食堂阿姨。你的微信好友比你的代码行数还多。你的社交能量是别人的3倍，但你的代码review次数是别人的0.3倍。', short: '社交恐怖分子', motto: '人脉就是钱脉，代码只是工具' },
-      { name: '🎭 职场端水大师', desc: '你能在程序员面前聊技术，在产品面前聊需求，在老板面前聊战略，在实习生面前聊人生。你是团队的润滑剂，但有时候你也忘了自己到底会什么。', short: '职场端水大师', motto: '谁都不得罪，谁都不得意' },
-      { name: '📢 表情包外交官', desc: '你的微信表情包比你的代码还多。你在每个群里都是最活跃的那个，但你说的话90%都是表情包。你的社交技能点满了，但你的KPI永远是"待定"。', short: '表情包外交官', motto: '一个好表情包胜过千言万语' }
+      { name: '🤝 社交恐怖分子', desc: '认识公司每个人包括食堂阿姨。微信好友比代码行数还多，但review次数是别人的0.3倍。', short: '社交恐怖分子', motto: '人脉就是钱脉，代码只是工具' },
+      { name: '🎭 职场端水大师', desc: '程序员面前聊技术，产品面前聊需求，老板面前聊战略。你是团队润滑剂，但有时忘了自己到底会什么。', short: '职场端水大师', motto: '谁都不得罪，谁都不得意' },
+      { name: '📢 表情包外交官', desc: '表情包比代码还多，每个群里最活跃。社交技能点满了，但KPI永远是"待定"。', short: '表情包外交官', motto: '一个好表情包胜过千言万语' }
     ],
     health: [
-      { name: '🧘 养生朋克', desc: '你一边熬夜一边吃枸杞，一边蹦迪一边贴膏药。你的体检报告比你的代码还干净，你的发量是全公司最让人嫉妒的资产。你坚信：只要我养生够快，猝死就追不上我。', short: '养生朋克', motto: '熬最晚的夜，敷最贵的面膜' },
-      { name: '🐟 摸鱼圣体', desc: '你的工位上永远有一杯茶，你的屏幕上永远有一个"正在加载"的页面。你的KPI是全组最低，但你的快乐指数是全组最高。你用实际行动证明：摸鱼也可以摸出精彩人生。', short: '摸鱼圣体', motto: '上班摸鱼，下班摸鱼，人生就是摸鱼' },
-      { name: '😴 工位睡神', desc: '你的工位上永远有一件外套当被子。你的午休时间从12点睡到下午3点。你的同事们已经习惯了你打呼噜的声音，甚至觉得这是白噪音。你用实际行动证明：睡觉也是一种工作。', short: '工位睡神', motto: '梦里什么都有，包括升职加薪' }
+      { name: '🧘 养生朋克', desc: '一边熬夜一边吃枸杞，一边蹦迪一边贴膏药。你坚信：只要养生够快，猝死就追不上我。', short: '养生朋克', motto: '熬最晚的夜，敷最贵的面膜' },
+      { name: '🐟 摸鱼圣体', desc: '工位永远有杯茶，屏幕永远在"加载"。KPI全组最低，快乐指数全组最高。', short: '摸鱼圣体', motto: '上班摸鱼，下班摸鱼，人生就是摸鱼' },
+      { name: '😴 工位睡神', desc: '工位永远有外套当被子，午休从12点睡到3点。同事们已经习惯你的呼噜声，甚至觉得是白噪音。', short: '工位睡神', motto: '梦里什么都有，包括升职加薪' }
     ]
   };
   
@@ -3739,17 +3770,18 @@ function sharePTResult() {
   if (!window._ptResult) return;
   var p = window._ptResult.personality;
   var r = window._ptResult;
-  var charm = Math.min(100, Math.round((r.skill + r.network) / 2));
-  var shareText = '我在「平行Offer」的职场人格测试中获得了：\n\n' + p.name + '\n' + p.desc.substring(0, 60) + '...\n\n';
-  shareText += '🧠 技能 ' + r.skill + ' | 🤝 人脉 ' + r.network + ' | 💇 发量 ' + r.health + '\n';
-  shareText += '来测测你是什么职场人格？';
+  var motto = p.motto || '人生如戏，全靠演技';
+  var shareText = '我测出我的打工人格是：' + p.name + '\n\n' + 
+    '「' + motto + '」\n\n' +
+    '💪技能' + r.skill + ' 🤝人脉' + r.network + ' 💇发量' + r.health + '\n' +
+    '你也来测测是什么打工人格？';
   
   if (navigator.share) {
-    navigator.share({title: '平行Offer - 职场人格测试', text: shareText}).catch(function(){});
+    navigator.share({title: '我是什么打工人格？', text: shareText}).catch(function(){});
   } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(shareText).then(function(){ toast('📋 已复制到剪贴板，快去分享吧！'); });
+    navigator.clipboard.writeText(shareText).then(function(){ toast('\u{1F4CB} 已复制到剪贴板，去朋友圈秀一下！'); });
   } else {
-    toast('📋 复制这段话分享给朋友吧：' + shareText.substring(0, 50) + '...');
+    toast('\u{1F4CB} 复制这段话分享给朋友吧');
   }
 }
 
