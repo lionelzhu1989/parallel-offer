@@ -4352,11 +4352,12 @@ function _selectAdaptiveQuestions() {
 var AI_API_URL = 'https://api.deepseek.com/v1/chat/completions';  // Set your API endpoint (OpenAI-compatible)
 var AI_API_KEY = 'sk-80feb150523e432bba305509fdaa1409';  // Set your API key
 var AI_MODEL = 'deepseek-chat';  // Model name
-var _aiEnabled = false;  // Will be true if API is configured
+var _aiEnabled = false;  // Disabled: use pre-generated questions only, no real-time replacement
 
 function _checkAIConfig() {
-  _aiEnabled = AI_API_URL.length > 10 && AI_API_KEY.length > 10;
-  return _aiEnabled;
+  // Disabled: all questions come from pre-generated pool
+  _aiEnabled = false;
+  return false;
 }
 _checkAIConfig();  // Initialize AI on load
 
