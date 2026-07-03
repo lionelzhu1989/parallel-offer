@@ -1513,6 +1513,10 @@ body.dark-mode .entry-btn {
 .char-start-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,0.4); }
 .char-start-btn:active { transform:translateY(0); }
 .char-start-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+.pt-loading { display:flex; align-items:center; justify-content:center; gap:8px; padding:20px; color:var(--text-muted); font-size:14px; }
+.pt-loading::after { content:''; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -3408,6 +3412,18 @@ function _selectAdaptiveQuestions() {
   return _ptSelectedQuestions;
 }
 
+
+// === AI Question Generator ===
+var AI_API_URL = '';  // Set your API endpoint (OpenAI-compatible)
+var AI_API_KEY = '';  // Set your API key
+var AI_MODEL = 'gpt-4o-mini';  // Model name
+var _aiEnabled = false;  // Will be true if API is configured
+
+function _checkAIConfig() {
+  _aiEnabled = AI_API_URL.length > 10 && AI_API_KEY.length > 10;
+  return _aiEnabled;
+}
+
 var PT_QUESTIONS = PT_QUESTION_POOL; // Fallback for compatibility
 var _ptCurrentQ = 0;
 
@@ -3451,9 +3467,19 @@ function showPersonalityTest() {
   _showPTQuestion(0);
 }
 
-function _showPTQuestion(idx) {
+async function _showPTQuestion(idx) {
   if (idx >= _ptSelectedQuestions.length || !_ptSelectedQuestions[idx]) { _showPTResult(); return; }
   var q = _ptSelectedQuestions[idx];
+  
+  // Try AI-generated question if enabled
+  if (_aiEnabled && idx > 0) {
+    var history = _ptHistory.slice(0, idx);
+    var aiQ = await _generateAIQuestion(history);
+    if (aiQ) {
+      q = {id: 'ai_' + idx, emoji: aiQ.emoji, text: aiQ.text, tag: 'ai', opts: aiQ.opts};
+      _ptSelectedQuestions[idx] = q; // Override with AI question
+    }
+  }
   _ptCurrentQ = idx;
   var pct = Math.round((idx / _ptSelectedQuestions.length) * 100);
   
@@ -3466,7 +3492,7 @@ function _showPTQuestion(idx) {
   html += '<div style="text-align:center;margin-bottom:12px"><a onclick="skipPT()" style="font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline">跳过测试，直接开始</a></div>';
   if (idx > 0) html += '<div style="text-align:center;margin-bottom:8px"><span style="color:var(--text-muted);font-size:13px;cursor:pointer" onclick="ptBack()">← 上一题</span></div>';
   html += '<div class="pt-question-emoji">' + q.emoji + '</div>';
-  html += '<div class="pt-question-text">' + q.text + '</div>';
+  html += '<div class="pt-question-text">' + q.text + '</div>' + (q.tag === 'ai' ? '<div style="font-size:10px;color:var(--text-muted);text-align:center">🤖 AI 出题</div>' : '');
   html += '<div class="pt-options">';
   for (var i = 0; i < q.opts.length; i++) {
     var o = q.opts[i];
@@ -3508,6 +3534,86 @@ function selectPTAnswer(qIdx, optIdx, el) {
   el.classList.add('selected');
   // Auto advance after short delay
   setTimeout(function(){ _showPTQuestion(qIdx + 1); }, 350);
+}
+
+
+// Generate next question via AI based on previous answers
+async function _generateAIQuestion(history) {
+  if (!_checkAIConfig()) return null;
+  
+  var answerSummary = history.map(function(h, i) {
+    var q = _ptSelectedQuestions[h.qIdx] || PT_QUESTIONS[h.qIdx];
+    if (!q) return '';
+    return 'Q' + (i+1) + ': ' + q.text + ' → ' + q.opts[h.optIdx].label;
+  }).filter(Boolean).join('\n');
+  
+  var prompt = '你是一个职场性格测试出题专家。根据用户前面的回答，出一道新的职场场景选择题。\n\n' +
+    '前面的回答：\n' + (answerSummary || '(这是第一题)') + '\n\n' +
+    '要求：\n' +
+    '1. 题目要简短有趣，贴近打工人真实场景，让人会心一笑\n' +
+    '2. 3个选项，每个选项对应不同的属性增减\n' +
+    '3. 属性有：skill(技能), network(人脉), health(健康), hair(发量)\n' +
+    '4. 每个选项的属性变化在-3到+5之间\n' +
+    '5. 不要和前面的题目重复\n' +
+    '6. 选项要简短有力，像段子一样\n' +
+    '7. emoji要选一个贴合题目的\n\n' +
+    '严格按以下JSON格式返回，不要返回任何其他内容：\n' +
+    '{\n' +
+    '  "emoji": "🎯",\n' +
+    '  "text": "题目内容",\n' +
+    '  "opts": [\n' +
+    '    {"label": "选项1", "desc": "一句话说明", "attrs": {"skill": 0, "network": 0, "health": 0, "hair": 0}},\n' +
+    '    {"label": "选项2", "desc": "一句话说明", "attrs": {"skill": 0, "network": 0, "health": 0, "hair": 0}},\n' +
+    '    {"label": "选项3", "desc": "一句话说明", "attrs": {"skill": 0, "network": 0, "health": 0, "hair": 0}}\n' +
+    '  ]\n' +
+    '}';
+  
+  try {
+    var response = await fetch(AI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + AI_API_KEY
+      },
+      body: JSON.stringify({
+        model: AI_MODEL,
+        messages: [
+          {role: 'system', content: '你是职场性格测试出题专家，返回纯JSON，不要markdown代码块。'},
+          {role: 'user', content: prompt}
+        ],
+        temperature: 0.9,
+        max_tokens: 500
+      })
+    });
+    
+    var data = await response.json();
+    var content = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+    if (!content) return null;
+    
+    // Try to parse JSON from response
+    content = content.trim();
+    // Remove markdown code block if present
+    if (content.startsWith('```')) content = content.replace(/^```json?\n?/, '').replace(/\n?```$/, '');
+    
+    var question = JSON.parse(content);
+    // Validate structure
+    if (question.emoji && question.text && question.opts && question.opts.length >= 2) {
+      // Ensure each option has required fields
+      question.opts.forEach(function(o) {
+        if (!o.attrs) o.attrs = {};
+        if (o.attrs.skill === undefined) o.attrs.skill = 0;
+        if (o.attrs.network === undefined) o.attrs.network = 0;
+        if (o.attrs.health === undefined) o.attrs.health = 0;
+        if (o.attrs.hair === undefined) o.attrs.hair = 0;
+        if (!o.desc) o.desc = '';
+      });
+      return question;
+    }
+    return null;
+  } catch(e) {
+    console.log('AI question generation failed:', e);
+    return null;
+  }
 }
 
 function _showPTResult() {
