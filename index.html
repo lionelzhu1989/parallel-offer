@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行offer · 职场天赋RPG v38</title>
+<title>平行offer · 职场天赋RPG v39</title>
 <style>/* ===== Design System ===== */
 :root {
   --primary: #6366f1;
@@ -5357,7 +5357,7 @@ function startGame() {
   state.talents = _talentSelections.slice();
   state.persona = Object.assign({}, _personaSelections);
   state._shownEvents = {};
-  state._shownRandom = [];
+  state._shownRandom = []; state._recentEventTitles = [];
   state._yearlyRecords = [];
   state._playEnded = false;
   state._endingSaved = false;
@@ -5530,7 +5530,7 @@ function render() {
     state._shownEvents = {};
     pool = events.slice();
   }
-  var event = pick(pool);
+  var event = _pickAdaptiveEvent(pool, state);
   state._shownEvents[event.title] = true;
   window._currentEvent = event;
 
@@ -5807,6 +5807,81 @@ function undoLastChoice() {
 }
 
 
+// ====== Adaptive Event Scoring ======
+// Scores how relevant/dramatic an event is given current state
+function _scoreEvent(event, state) {
+  var score = 0;
+  var hair = state.hair || 50;
+  var skill = state.skill || 30;
+  var network = state.network || 30;
+  var health = state.health || 60;
+  var money = state.money || 5000;
+  var year = state.year || 1;
+  var title = event.title || '';
+  var desc = event.desc || '';
+  var text = title + ' ' + desc;
+  
+  // Dramatic tension: events that create contrast with current state
+  // Low hair → hair-related events are funnier/more dramatic
+  if (hair < 30 && (text.includes('发') || text.includes('头发') || text.includes('理发') || text.includes('植发'))) score += 15;
+  if (hair > 70 && (text.includes('发型') || text.includes('烫发') || text.includes('留长'))) score += 8;
+  
+  // High skill → tech challenges are more interesting
+  if (skill > 60 && (text.includes('Code') || text.includes('Bug') || text.includes('架构') || text.includes('技术'))) score += 10;
+  if (skill < 30 && (text.includes('学') || text.includes('培训') || text.includes('AI'))) score += 8;
+  
+  // High network → social events matter more
+  if (network > 60 && (text.includes('聚会') || text.includes('同学') || text.includes('团建') || text.includes('社交'))) score += 10;
+  if (network > 50 && (text.includes('创业') || text.includes('被挖'))) score += 8;
+  
+  // Low health → health events are dramatic
+  if (health < 35 && (text.includes('病') || text.includes('体检') || text.includes('失眠') || text.includes('猝'))) score += 15;
+  if (health > 70 && (text.includes('健身') || text.includes('运动'))) score += 5;
+  
+  // Money situation
+  if (money < 1000 && (text.includes('奖金') || text.includes('意外') || text.includes('中奖'))) score += 12;
+  if (money > 20000 && (text.includes('投资') || text.includes('炒股') || text.includes('暴雷'))) score += 10;
+  
+  // Year-based drama
+  if (year <= 2 && (text.includes('第一次') || text.includes('入职') || text.includes('新人'))) score += 8;
+  if (year >= 8 && (text.includes('35') || text.includes('十年') || text.includes('资深'))) score += 10;
+  
+  // Chain event bonus: if previous decision set up this event
+  if (state._keyDecisions && state._keyDecisions.length > 0) {
+    if (state._keyDecisions.indexOf('learned_ai') >= 0 && text.includes('AI')) score += 12;
+    if (state._keyDecisions.indexOf('offended_boss') >= 0 && text.includes('领导')) score += 10;
+    if (state._keyDecisions.indexOf('switched_job') >= 0 && text.includes('新公司')) score += 10;
+    if (state._keyDecisions.indexOf('chose_startup') >= 0 && text.includes('创业')) score += 12;
+  }
+  
+  // Recency penalty: events shown recently get penalized
+  if (state._recentEventTitles && state._recentEventTitles.indexOf(title) >= 0) score -= 20;
+  
+  // Random jitter for variety
+  score += Math.random() * 6;
+  
+  return score;
+}
+
+// Pick best event from pool using adaptive scoring
+function _pickAdaptiveEvent(pool, state) {
+  if (pool.length === 0) return null;
+  if (pool.length === 1) return pool[0];
+  
+  var best = null;
+  var bestScore = -Infinity;
+  
+  for (var i = 0; i < pool.length; i++) {
+    var s = _scoreEvent(pool[i], state);
+    if (s > bestScore) {
+      bestScore = s;
+      best = pool[i];
+    }
+  }
+  
+  return best || pool[0];
+}
+
 // ====== Random Event ======
 function showRandomEvent() {
   var pool = [];
@@ -5814,20 +5889,12 @@ function showRandomEvent() {
     if (state._shownRandom.indexOf(RANDOM_EVENTS[i].title) < 0) pool.push(RANDOM_EVENTS[i]);
   }
   if (pool.length === 0) {
-    state._shownRandom = [];
+    state._shownRandom = []; state._recentEventTitles = [];
     pool = RANDOM_EVENTS.slice();
   }
-  // Weighted random
-  var totalW = 0;
-  for (var j = 0; j < pool.length; j++) totalW += pool[j].weight;
-  var r = Math.random() * totalW;
-  var cumul = 0;
-  var event = pool[0];
-  for (var k = 0; k < pool.length; k++) {
-    cumul += pool[k].weight;
-    if (r <= cumul) { event = pool[k]; break; }
-  }
-  state._shownRandom.push(event.title);
+  // Adaptive selection: pick event that creates best dramatic tension
+  var event = _pickAdaptiveEvent(pool, state);
+  state._shownRandom.push(event.title); if(!state._recentEventTitles) state._recentEventTitles=[]; state._recentEventTitles.push(event.title); if(state._recentEventTitles.length>6) state._recentEventTitles.shift();
   window._currentRandomEvent = event;
 
   var html = '<div class="scenario-card" style="border-left:3px solid #ff6b35">';
