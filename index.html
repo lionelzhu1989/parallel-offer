@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行offer · 职场天赋RPG v34</title>
+<title>平行offer · 职场天赋RPG v33</title>
 <style>/* ===== Design System ===== */
 :root {
   --primary: #6366f1;
@@ -3397,69 +3397,38 @@ var PT_QUESTION_POOL = [
     ]}
 ];
 
+// Pre-generated AI questions for variety
+var AI_QUESTIONS = [
+  {"emoji": "💼", "text": "周一早上发现咖啡机坏了，你应该怎么做？", "opts": [{"label": "A. 冲进老板办公室哭诉", "desc": "让全公司都知道你是咖啡因依赖者", "attrs": {"skill": -1, "network": -2, "health": -3, "hair": 0}}, {"label": "B. 优雅地宣布开始无咖啡因实验", "desc": "假装自己是一个养生达人", "attrs": {"skill": 2, "network": 1, "health": 3, "hair": 0}}, {"label": "C. 偷用老板的私人咖啡机", "desc": "在危险边缘疯狂试探", "attrs": {"skill": 4, "network": -3, "health": 0, "hair": 1}}]},
+  {"emoji": "😅", "text": "开会时突然放了一个响屁，如何化解尴尬？", "opts": [{"label": "A. 转头怒视隔壁同事", "desc": "嫁祸于人，职场生存技巧", "attrs": {"skill": -1, "network": -4, "health": 0, "hair": 0}}, {"label": "B. 诚恳道歉并说最近在吃益生菌", "desc": "诚实是最好的策略（大概）", "attrs": {"skill": 1, "network": 0, "health": 3, "hair": 2}}, {"label": "C. 突然站起来宣布会议中场休息", "desc": "转移注意力的艺术大师", "attrs": {"skill": 5, "network": 2, "health": 0, "hair": 3}}]},
+  {"emoji": "📧", "text": "凌晨两点老板发来工作微信，你该如何回复？", "opts": [{"label": "A. 秒回，并附带一份完整的50页PPT", "desc": "震惊！卷王竟在我身边", "attrs": {"skill": 5, "network": 3, "health": -5, "hair": -2}}, {"label": "B. 装死到天亮，然后说刚看到", "desc": "标准社畜求生法则", "attrs": {"skill": 0, "network": -2, "health": 2, "hair": 0}}, {"label": "C. 回复一个意味深长的月亮emoji", "desc": "文艺且模糊的边界感", "attrs": {"skill": 3, "network": 1, "health": 1, "hair": 4}}]},
+  {"emoji": "🤝", "text": "团建时被要求表演节目，你该展示什么？", "opts": [{"label": "A. 一段震惊全场的breaking街舞", "desc": "中年程序员突然灵魂附体", "attrs": {"skill": 4, "network": 5, "health": 2, "hair": -3}}, {"label": "B. 表演三秒入睡的绝活", "desc": "真实到令人心疼", "attrs": {"skill": 1, "network": 0, "health": -1, "hair": 0}}, {"label": "C. 深情朗诵《出师表》", "desc": "让所有人怀疑走错了片场", "attrs": {"skill": 2, "network": -1, "health": 0, "hair": 1}}]},
+  {"emoji": "💻", "text": "发现同事在偷偷看招聘网站，你的反应是？", "opts": [{"label": "A. 凑过去小声说：帮我也投一份", "desc": "携手并进的职场友谊", "attrs": {"skill": 0, "network": 4, "health": 0, "hair": 2}}, {"label": "B. 立刻截图发给HR邀功", "desc": "职场无间道主角", "attrs": {"skill": -2, "network": -5, "health": -1, "hair": -3}}, {"label": "C. 默默删除自己浏览器里的招聘记录", "desc": "心虚但谨慎的生存者", "attrs": {"skill": 3, "network": 1, "health": 0, "hair": 5}}]},
+  {"emoji": "☕", "text": "周一早会的正确应对方式是？", "opts": [{"label": "A. 灵魂出窍式参会", "desc": "眼神涣散，频频点头，实际在脑内播放昨天追的剧", "attrs": {"skill": -1, "network": 0, "health": -2, "hair": 0}}, {"label": "B. 抢麦狂魔式发言", "desc": "对每个议题都发表长篇大论，领导被迫加班延时会", "attrs": {"skill": 2, "network": -3, "health": -1, "hair": 0}}, {"label": "C. 全神贯注式摸鱼", "desc": "一边用电脑装作做笔记，一边偷偷清空购物车", "attrs": {"skill": 0, "network": 3, "health": 0, "hair": 0}}]},
+  {"emoji": "💻", "text": "同事发来60秒语音方阵，你该如何处理？", "opts": [{"label": "A. 语音转文字神器", "desc": "转出鬼画符文字后，凭借想象力回复“好的收到”", "attrs": {"skill": 4, "network": 1, "health": 0, "hair": 1}}, {"label": "B. 假装手机掉进水杯", "desc": "在群里发一张水杯照片，配文“手机进水了，请打字”", "attrs": {"skill": -2, "network": -1, "health": 0, "hair": 2}}, {"label": "C. 以毒攻毒回复语音", "desc": "录一段1分钟纯呼吸声回复过去，并附言‘在听’", "attrs": {"skill": 0, "network": -2, "health": -1, "hair": -3}}]},
+  {"emoji": "💼", "text": "老板突然走到你工位旁，你正在看搞笑视频，怎么办？", "opts": [{"label": "A. 极速切换PPT", "desc": "凭肌肉记忆Alt+Tab，结果切到了桌面上的游戏图标", "attrs": {"skill": 3, "network": 0, "health": -1, "hair": 3}}, {"label": "B. 硬聊工作法", "desc": "转头认真问老板：‘您觉得视频里的猫咪做Excel表格效率高吗？’", "attrs": {"skill": -3, "network": 4, "health": 0, "hair": 0}}, {"label": "C. 假装在学外语", "desc": "把视频台词大声复述成英语，哪怕视频里说的是‘干饭了’", "attrs": {"skill": 1, "network": 0, "health": 0, "hair": 5}}]},
+  {"emoji": "📧", "text": "收到一封标题为‘紧急！关于你的薪资调整’的钓鱼邮件，你？", "opts": [{"label": "A. 反杀黑客", "desc": "回复对方‘我工资都买生发剂了，不如你赞助我？’", "attrs": {"skill": 5, "network": -2, "health": 0, "hair": 4}}, {"label": "B. 转发全公司提醒", "desc": "抄送CEO并打上‘红色警报’，结果被保安带走喝茶", "attrs": {"skill": 2, "network": 3, "health": 0, "hair": -1}}, {"label": "C. 点开链接填密码", "desc": "输入了‘123456’后电脑开始播放《好运来》", "attrs": {"skill": -3, "network": -3, "health": -2, "hair": -3}}]},
+  {"emoji": "🍩", "text": "同事生日蛋糕上插了‘35’蜡烛，你该说什么？", "opts": [{"label": "A. 假装算错", "desc": "惊呼：‘天哪！你看起来像23岁！所以蜡烛是32?’", "attrs": {"skill": 1, "network": 3, "health": 0, "hair": 0}}, {"label": "B. 科普蜡烛材质", "desc": "严肃指出蜡烛含致癌物，然后吹灭后建议改吃水果", "attrs": {"skill": 3, "network": -1, "health": 4, "hair": -2}}, {"label": "C. 直接唱生日歌", "desc": "用走调的嗓音唱完，并加入自创RAP段：’三十-five, 发际线还健在‘", "attrs": {"skill": -1, "network": 2, "health": 0, "hair": 5}}]},
+  {"emoji": "📧", "text": "老板凌晨1点发工作微信，最佳回复是？", "opts": [{"label": "A. 秒回“收到”+表情包", "desc": "展现极致敬业，但可能接手更多任务", "attrs": {"skill": 2, "network": 5, "health": -3, "hair": -1}}, {"label": "B. 假装睡着，明早道歉", "desc": "保住睡眠，但被标记为不积极", "attrs": {"skill": -1, "network": -2, "health": 4, "hair": 3}}, {"label": "C. 回复“好的，我明天一早就处理”后关机", "desc": "平衡响应与休息，保留一丝尊严", "attrs": {"skill": 1, "network": 3, "health": 2, "hair": 0}}]},
+  {"emoji": "💻", "text": "开会时领导让你用PPT即兴演示，而你什么都没准备，怎么办？", "opts": [{"label": "A. 硬着头皮乱讲，靠表情蒙混", "desc": "即兴发挥可能翻车，但显得勇敢", "attrs": {"skill": -3, "network": 0, "health": -2, "hair": -2}}, {"label": "B. 谎称U盘坏了，争取时间手画思维导图", "desc": "拖延战术，考验演技", "attrs": {"skill": 1, "network": -1, "health": 1, "hair": 5}}, {"label": "C. 直接打开空白页，说“我们先来互动提问”", "desc": "把球踢给观众，假装有互动环节", "attrs": {"skill": 3, "network": 4, "health": 0, "hair": 2}}]},
+  {"emoji": "☕", "text": "同事带榴莲蛋糕到工位吃，你怎么应对？", "opts": [{"label": "A. 戴上口罩，默默打开空气净化器", "desc": "物理防御，但显得不合群", "attrs": {"skill": 0, "network": -3, "health": 3, "hair": 1}}, {"label": "B. 凑过去说“这个我超爱！分我一块”", "desc": "融入局中，但可能被熏晕", "attrs": {"skill": -1, "network": 5, "health": -2, "hair": 0}}, {"label": "C. 突然宣布自己乳糖不耐受+过敏", "desc": "道德高地，但以后谎言要圆", "attrs": {"skill": 2, "network": 1, "health": -1, "hair": 4}}]},
+  {"emoji": "📅", "text": "周五下午4:59，老板突然拉群说“大家周末前复盘一下”，你的反应？", "opts": [{"label": "A. 立刻回复并开始加班复盘", "desc": "模范员工，但周末报销", "attrs": {"skill": 4, "network": 3, "health": -5, "hair": -3}}, {"label": "B. 秒回“收到”然后假装网络卡顿消失", "desc": "拖延到周一，靠忘性大蒙混", "attrs": {"skill": -2, "network": 2, "health": 2, "hair": 1}}, {"label": "C. 回复“好的，我已完成！稍后分享给大家”然后粘贴上周周报", "desc": "效率作弊，考验老板记忆力", "attrs": {"skill": 5, "network": -1, "health": 1, "hair": 3}}]},
+  {"emoji": "🎤", "text": "团建被迫表演才艺，你最该选什么节目？", "opts": [{"label": "A. 唱一首跑调版《勇气》", "desc": "自黑路线，气氛欢乐但社死", "attrs": {"skill": -1, "network": 4, "health": 1, "hair": -2}}, {"label": "B. 表演三分钟单手解领带魔术", "desc": "假装有技能，但冷场风险高", "attrs": {"skill": 3, "network": 1, "health": 0, "hair": 5}}, {"label": "C. 朗诵一首自己写的诗《为了KPI》", "desc": "讽刺艺术，懂的人会笑疯", "attrs": {"skill": 1, "network": 3, "health": 2, "hair": 0}}]}
+];
+
+
 // Adaptive question selection: pick next question based on previous answers
 var _ptSelectedQuestions = [];
 function _selectAdaptiveQuestions() {
-  _ptSelectedQuestions = [];
-  var usedTags = {};
-  
-  // Start with a universally relatable question
-  var starters = ['q1', 'q4', 'q18', 'q20'];
-  var pool = PT_QUESTION_POOL.filter(function(q) { return starters.indexOf(q.id) !== -1; });
-  var firstQ = pool[Math.floor(Math.random() * pool.length)];
-  _ptSelectedQuestions.push(firstQ);
-  usedTags[firstQ.tag] = (usedTags[firstQ.tag] || 0) + 1;
-  
-  // Select remaining 7 questions adaptively
-  for (var round = 0; round < 7; round++) {
-    var answers = _ptAnswers.slice(0, round);
-    // Calculate bias from previous answers
-    var bias = {tech:0, social:0, health:0, choice:0, life:0};
-    for (var a = 0; a < answers.length; a++) {
-      var q = _ptSelectedQuestions[a];
-      if (!q) continue;
-      var chosenOpt = q.opts[answers[a]];
-      if (chosenOpt) {
-        var attrs = chosenOpt.attrs;
-        if (attrs.skill > 0) bias.tech += attrs.skill;
-        if (attrs.network > 0) bias.social += attrs.network;
-        if (attrs.health > 0 || attrs.hair > 0) bias.health += (attrs.health || 0) + (attrs.hair || 0);
-      }
-      bias[q.tag] = (bias[q.tag] || 0) + 2;
-    }
-    
-    // Find used IDs
-    var usedIds = {};
-    for (var u = 0; u < _ptSelectedQuestions.length; u++) {
-      usedIds[_ptSelectedQuestions[u].id] = true;
-    }
-    
-    // Get available questions
-    var available = PT_QUESTION_POOL.filter(function(q) { return !usedIds[q.id]; });
-    if (available.length === 0) break;
-    
-    // Score each available question
-    var scored = available.map(function(q) {
-      var score = 0;
-      // Prefer underrepresented tags (diversity)
-      var tagCount = usedTags[q.tag] || 0;
-      score += (3 - tagCount) * 3;
-      // If user is tech-heavy, mix in social/life
-      if (bias.tech > 4 && (q.tag === 'social' || q.tag === 'life')) score += 3;
-      if (bias.social > 4 && (q.tag === 'tech' || q.tag === 'health')) score += 3;
-      if (bias.health < 0 && q.tag === 'health') score += 4;
-      // Small random factor
-      score += Math.random() * 2;
-      return {q: q, score: score};
-    });
-    
-    scored.sort(function(a,b) { return b.score - a.score; });
-    var chosen = scored[0].q;
-    _ptSelectedQuestions.push(chosen);
-    usedTags[chosen.tag] = (usedTags[chosen.tag] || 0) + 1;
+  // Combine static + AI questions for maximum variety
+  var combined = PT_QUESTION_POOL.concat(AI_QUESTIONS);
+  // Shuffle and pick 8
+  var shuffled = combined.slice();
+  for (var i = shuffled.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
   }
-  
-  return _ptSelectedQuestions;
+  _ptSelectedQuestions = shuffled.slice(0, 8);
 }
 
 
@@ -3473,7 +3442,7 @@ function _checkAIConfig() {
   _aiEnabled = AI_API_URL.length > 10 && AI_API_KEY.length > 10;
   return _aiEnabled;
 }
-_checkAIConfig(); console.log("[AI] Config check: _aiEnabled=" + _aiEnabled + ", url=" + AI_API_URL.substring(0,30));  // Initialize AI on load
+_checkAIConfig();  // Initialize AI on load
 
 var PT_QUESTIONS = PT_QUESTION_POOL; // Fallback for compatibility
 var _ptCurrentQ = 0;
@@ -3557,12 +3526,9 @@ async function _showPTQuestion(idx) {
   
   // Try AI question replacement in background (non-blocking)
   if (_aiEnabled && idx > 0 && idx < _ptSelectedQuestions.length) {
-    console.log("[AI] Attempting AI question for idx=" + idx + ", history=" + _ptHistory.length);
     var history = _ptHistory.slice(0, idx);
     _generateAIQuestion(history).then(function(aiQ) {
-      console.log('[AI] Response received:', aiQ);
       if (aiQ && _ptCurrentQ === idx) {
-        console.log("[AI] Question ready, replacing UI");
         var newQ = {id: 'ai_' + idx, emoji: aiQ.emoji, text: aiQ.text, tag: 'ai', opts: aiQ.opts};
         _ptSelectedQuestions[idx] = newQ;
         // Re-render just the question content
@@ -3588,7 +3554,7 @@ async function _showPTQuestion(idx) {
         badge.textContent = '🤖 AI 出题';
         if (textEl) textEl.parentElement.insertBefore(badge, textEl.nextSibling);
       }
-    }).catch(function(e) { console.error('[AI] .catch:', e.message, e); });
+    }).catch(function(e) { console.error('AI question error:', e); });
   }
 }
 
@@ -3616,8 +3582,7 @@ function selectPTAnswer(qIdx, optIdx, el) {
 
 // Generate next question via AI based on previous answers
 async function _generateAIQuestion(history) {
-  console.log("[AI] _generateAIQuestion called, history length:", history.length);
-  if (!_checkAIConfig()) { console.log("[AI] Config check failed"); return null; }
+  if (!_checkAIConfig()) return null;
   
   var answerSummary = history.map(function(h, i) {
     var q = _ptSelectedQuestions[h.qIdx] || PT_QUESTIONS[h.qIdx];
@@ -3690,7 +3655,7 @@ async function _generateAIQuestion(history) {
     }
     return null;
   } catch(e) {
-    console.error('[AI] FAILED:', e.message || e, e);
+    console.error('AI question generation failed:', e.message || e);
     // Show brief toast for debugging
     if (typeof toast === 'function') toast('🤖 AI出题暂不可用，使用题库');
     return null;
