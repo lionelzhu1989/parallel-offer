@@ -3563,41 +3563,45 @@ function _showPTResult() {
   window._ptResult = {
     personality: personality,
     skill: baseSkill, network: baseNetwork,
-    health: baseHealth, hair: baseHair, money: baseMoney
+    health: baseHealth, hair: baseHair, money: baseMoney,
+    charm: Math.min(100, Math.round((baseSkill + baseNetwork) / 2)),
+    hairDisplay: Math.min(100, Math.round((baseHealth + baseHair) / 2))
   };
   
   // Render result screen
   var ov = document.getElementById('ptOverlay');
-  var html = '<div class="pt-body"><div class="pt-result">';
-  html += '<div class="pt-result-emoji">' + personality.name.charAt(0) + personality.name.charAt(1) + '</div>';
-  html += '<div class="pt-result-type">' + personality.name.substring(2) + '</div>';
-  html += '<div class="pt-result-desc">' + personality.desc + '</div>';
+  var html = '<div class="pt-body">';
+  // Big personality card with gradient background
+  html += '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:20px;padding:24px 16px;text-align:center;margin-bottom:16px">';
+  html += '<div style="font-size:48px;margin-bottom:8px">' + personality.name.charAt(0) + personality.name.charAt(1) + '</div>';
+  html += '<div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px">' + personality.name.substring(2) + '</div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;padding:0 8px">' + personality.desc + '</div>';
+  html += '</div>';
   
-  // Attribute preview bars
-  html += '<div class="pt-result-stats">';
-  var statArr = [
-    {emoji:'🎪', label:'整活力', val:baseSkill, color:'#6366f1'},
-    {emoji:'💇', label:'发量', val:baseHair, color:'#f472b6'},
-    {emoji:'🧠', label:'技能', val:baseSkill, color:'#3b82f6'},
-    {emoji:'🤝', label:'人脉', val:baseNetwork, color:'#10b981'}
-  ];
+  // Attribute cards
+  html += '<div style="display:flex;gap:8px;margin-bottom:16px">';
+  var charm = Math.min(100, Math.round((baseSkill + baseNetwork) / 2));
+    var hairDisp = Math.min(100, Math.round((baseHealth + baseHair) / 2));
+    var statArr = [
+      {emoji:'🎪', label:'整活力', val:charm, color:'#6366f1', sub:'技能'+baseSkill+' + 人脉'+baseNetwork},
+      {emoji:'💇', label:'发量', val:hairDisp, color:'#f472b6', sub:'健康'+baseHealth+' + 发量'+baseHair}
+    ];
   for (var s = 0; s < statArr.length; s++) {
     var st = statArr[s];
-    html += '<div class="pt-stat-card">';
-    html += '<div class="pt-stat-emoji">' + st.emoji + '</div>';
-    html += '<div class="pt-stat-val">' + st.val + '</div>';
-    html += '<div class="pt-stat-label">' + st.label + '</div>';
+    html += '<div style="flex:1;text-align:center;padding:12px 8px;background:rgba(255,255,255,0.15);border-radius:12px">';
+    html += '<div style="font-size:24px;margin-bottom:4px">' + st.emoji + '</div>';
+    html += '<div style="font-size:28px;font-weight:800;color:#fff">' + st.val + '</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px">' + st.label + '</div>';
+    if (st.sub) html += '<div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px">' + st.sub + '</div>';
     html += '</div>';
   }
   html += '</div>';
   
   // Action buttons
-  html += '<div class="pt-result-actions">';
-  html += '<button class="pt-share-btn" onclick="sharePTResult()">📤 分享我的人格</button>';
-  html += '<button class="pt-continue-btn" onclick="continueFromPT()">🎮 用这个人格开始人生</button>';
-  html += '<div style="text-align:center;margin-top:8px"><a onclick="skipPT()" style="font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline">跳过测试，随机属性开始</a></div>';
+  html += '<button onclick="sharePTResult()" style="width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;box-shadow:0 4px 12px rgba(16,185,129,0.3)">📤 分享我的人格</button>';
+  html += '<button onclick="continueFromPT()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#a855f7);border:none;color:#fff;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;box-shadow:0 4px 12px rgba(99,102,241,0.3)">🎮 用这个属性开始人生</button>';
+  html += '<div style="text-align:center"><a onclick="skipPT()" style="font-size:11px;color:rgba(255,255,255,0.4);cursor:pointer">跳过测试，随机属性</a></div>';
   html += '</div>';
-  html += '</div></div>';
   
   ov.innerHTML = html;
 }
@@ -3605,9 +3609,11 @@ function _showPTResult() {
 function sharePTResult() {
   if (!window._ptResult) return;
   var p = window._ptResult.personality;
-  // Create a shareable text
+  var r = window._ptResult;
+  var charm = Math.min(100, Math.round((r.skill + r.network) / 2));
+  var hairD = Math.min(100, Math.round((r.health + r.hair) / 2));
   var shareText = '我在「平行Offer」的职场人格测试中获得了：\n\n' + p.name + '\n' + p.desc.substring(0, 60) + '...\n\n';
-  shareText += '整活力 ' + window._ptResult.skill + ' | 发量 ' + window._ptResult.hair + '\n';
+  shareText += '🎪 整活力 ' + charm + ' | 💇 发量 ' + hairD + '\n';
   shareText += '来测测你是什么职场人格？';
   
   if (navigator.share) {
