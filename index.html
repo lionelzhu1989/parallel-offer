@@ -3438,9 +3438,11 @@ function showCareerSelect() {
   h += '</div>';
   main.innerHTML = h;
 }
+var _ptHistory = [];
 function showPersonalityTest() {
   _ptAnswers = [];
   _ptCurrentQ = 0;
+  _ptHistory = [];
   _selectAdaptiveQuestions();
   _showPTQuestion(0);
 }
@@ -3457,6 +3459,7 @@ function _showPTQuestion(idx) {
   html += '</div>';
   
   html += '<div class="pt-body">';
+  if (idx > 0) html += '<div style="text-align:center;margin-bottom:8px"><span style="color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer" onclick="ptBack()">← 上一题</span></div>';
   html += '<div class="pt-question-emoji">' + q.emoji + '</div>';
   html += '<div class="pt-question-text">' + q.text + '</div>';
   html += '<div class="pt-options">';
@@ -3481,7 +3484,18 @@ function _showPTQuestion(idx) {
   ov.style.display = 'flex';
 }
 
+function ptBack() {
+  if (_ptHistory.length === 0) return;
+  var prev = _ptHistory.pop();
+  _ptAnswers[prev.qIdx] = undefined;
+  _showPTQuestion(prev.qIdx);
+}
 function selectPTAnswer(qIdx, optIdx, el) {
+  if (_ptAnswers[qIdx] !== undefined) {
+    // Re-answering - don't push to history again for this slot
+  } else {
+    _ptHistory.push({qIdx: qIdx});
+  }
   _ptAnswers[qIdx] = optIdx;
   // Highlight selected
   var opts = el.parentElement.querySelectorAll('.pt-option');
