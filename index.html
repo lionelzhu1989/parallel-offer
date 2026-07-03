@@ -3535,17 +3535,20 @@ function _showPTResult() {
   var types = {
     skill: [
       { name: '🔬 卷王本王', desc: '你的座右铭是"deadline是第一生产力"。凌晨3点的公司只有你和保安，你俩已经成了朋友。你的代码注释比正文还长，你的GitHub绿得像草坪。同事叫你大佬，你只想说：别叫我，我在debug。', short: '卷王本王', motto: '我不是在加班，我是在实现人生价值（吧）' },
-      { name: '🐛 Bug制造机', desc: '你写的代码每一行都是惊喜（惊吓）。你的PR被review的次数比你的工龄还长。但你有一个优点：你总能发现自己制造的bug——虽然通常是在生产环境。', short: 'Bug制造机', motto: '测试？什么测试？直接上线！' }
+      { name: '🐛 Bug制造机', desc: '你写的代码每一行都是惊喜（惊吓）。你的PR被review的次数比你的工龄还长。但你有一个优点：你总能发现自己制造的bug——虽然通常是在生产环境。', short: 'Bug制造机', motto: '测试？什么测试？直接上线！' },
+      { name: '📚 考证狂魔', desc: '你的收藏夹里有200个"即将学习"的课程。你的书架上摆满了没拆封的证书教材。你的简历上"正在考取"这一栏比"已获得"长3倍。你坚信：只要证书够多，就不用真正会什么。', short: '考证狂魔', motto: '技多不压身，证多不嫌多' }
     ],
     network: [
       { name: '🤝 社交恐怖分子', desc: '你认识公司每个人，包括保安、保洁、前台、食堂阿姨。你的微信好友比你的代码行数还多。你的社交能量是别人的3倍，但你的代码review次数是别人的0.3倍。', short: '社交恐怖分子', motto: '人脉就是钱脉，代码只是工具' },
-      { name: '🎭 职场端水大师', desc: '你能在程序员面前聊技术，在产品面前聊需求，在老板面前聊战略，在实习生面前聊人生。你是团队的润滑剂，但有时候你也忘了自己到底会什么。', short: '职场端水大师', motto: '谁都不得罪，谁都不得意' }
+      { name: '🎭 职场端水大师', desc: '你能在程序员面前聊技术，在产品面前聊需求，在老板面前聊战略，在实习生面前聊人生。你是团队的润滑剂，但有时候你也忘了自己到底会什么。', short: '职场端水大师', motto: '谁都不得罪，谁都不得意' },
+      { name: '📢 表情包外交官', desc: '你的微信表情包比你的代码还多。你在每个群里都是最活跃的那个，但你说的话90%都是表情包。你的社交技能点满了，但你的KPI永远是"待定"。', short: '表情包外交官', motto: '一个好表情包胜过千言万语' }
     ],
     health: [
       { name: '🧘 养生朋克', desc: '你一边熬夜一边吃枸杞，一边蹦迪一边贴膏药。你的体检报告比你的代码还干净，你的发量是全公司最让人嫉妒的资产。你坚信：只要我养生够快，猝死就追不上我。', short: '养生朋克', motto: '熬最晚的夜，敷最贵的面膜' },
-      { name: '🐟 摸鱼圣体', desc: '你的工位上永远有一杯茶，你的屏幕上永远有一个"正在加载"的页面。你的KPI是全组最低，但你的快乐指数是全组最高。你用实际行动证明：摸鱼也可以摸出精彩人生。', short: '摸鱼圣体', motto: '上班摸鱼，下班摸鱼，人生就是摸鱼' }
+      { name: '🐟 摸鱼圣体', desc: '你的工位上永远有一杯茶，你的屏幕上永远有一个"正在加载"的页面。你的KPI是全组最低，但你的快乐指数是全组最高。你用实际行动证明：摸鱼也可以摸出精彩人生。', short: '摸鱼圣体', motto: '上班摸鱼，下班摸鱼，人生就是摸鱼' },
+      { name: '😴 工位睡神', desc: '你的工位上永远有一件外套当被子。你的午休时间从12点睡到下午3点。你的同事们已经习惯了你打呼噜的声音，甚至觉得这是白噪音。你用实际行动证明：睡觉也是一种工作。', short: '工位睡神', motto: '梦里什么都有，包括升职加薪' }
     ]
-  };;
+  };
   
   // Pick sub-type based on secondary attribute
   var typePool = types[maxKey] || types.skill;
@@ -3555,18 +3558,25 @@ function _showPTResult() {
   for (var j = 0; j < keys.length; j++) {
     if (keys[j] !== maxKey && totals[keys[j]] > secondMax) {
       secondMax = totals[keys[j]];
-      subIdx = (totals[keys[j]] > 0) ? 1 : 0;
+      if (totals[keys[j]] > 6) subIdx = 2;
+      else if (totals[keys[j]] > 2) subIdx = 1;
+      else subIdx = 0;
     }
   }
-  var personality = typePool[subIdx];
+  var personality = typePool[Math.min(subIdx, typePool.length - 1)];
   
   // If all stats are very low, it's the "躺平" type
   if (totalScore < -3) {
     personality = { name: '🐟 躺平大师', desc: '你已经看透了。卷不动、卷不起、也不想卷。你的目标只有一个：活着。你的工位是全公司最舒服的，你的抽屉里有零食、眼罩、拖鞋。你用实际行动证明：躺平也可以躺出精彩人生。', short: '躺平大师' };
   }
   // If all stats are very high, it's the "卷王" type
-  if (totals.skill > 4 && totals.network > 4 && totals.health > 4) {
-    personality = { name: '🔥 六边形战士', desc: '你什么都要。技术要最强、人脉要最广、身体还要最好。你6点起床健身、8点到公司写代码、中午社交两小时、晚上还要学习新技能。你的日程表比CEO还满，但你乐在其中。你是团队的顶梁柱，也是同事眼中的怪物。', short: '六边形战士' };
+  if (totals.skill > 8 && totals.network > 8 && totals.health > 8) {
+    personality = { name: '🔥 六边形战士', desc: '你什么都要。技术要最强、人脉要最广、身体还要最好。你6点起床健身、8点到公司写代码、中午社交两小时、晚上还要学习新技能。你的日程表比CEO还满，但你乐在其中。你是团队的顶梁柱，也是同事眼中的怪物。', short: '六边形战士', motto: '别人卷一个方向，我全都要' };
+  }
+  // All dimensions close together = 万金油
+  var spread = Math.max(totals.skill, totals.network, totals.health) - Math.min(totals.skill, totals.network, totals.health);
+  if (spread <= 2 && totalScore >= 0) {
+    personality = { name: '🪙 职场万金油', desc: '你什么都不突出，但什么都会一点。你是团队的"救火队员"，哪里需要往哪搬。你的简历上技能栏写了20项，每项都标注"略懂"。你的职业发展就像一条直线——没有波峰，也没有波谷。', short: '职场万金油', motto: '什么都会一点，什么都不精' };
   }
   
   // Store results for game init
