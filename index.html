@@ -3521,16 +3521,6 @@ function showPersonalityTest() {
 async function _showPTQuestion(idx) {
   if (idx >= _ptSelectedQuestions.length || !_ptSelectedQuestions[idx]) { _showPTResult(); return; }
   var q = _ptSelectedQuestions[idx];
-  
-  // Try AI-generated question if enabled
-  if (_aiEnabled && idx > 0) {
-    var history = _ptHistory.slice(0, idx);
-    var aiQ = await _generateAIQuestion(history);
-    if (aiQ) {
-      q = {id: 'ai_' + idx, emoji: aiQ.emoji, text: aiQ.text, tag: 'ai', opts: aiQ.opts};
-      _ptSelectedQuestions[idx] = q; // Override with AI question
-    }
-  }
   _ptCurrentQ = idx;
   var pct = Math.round((idx / _ptSelectedQuestions.length) * 100);
   
@@ -3564,6 +3554,39 @@ async function _showPTQuestion(idx) {
     document.body.appendChild(ov);
   }
   ov.style.display = 'flex';
+  
+  // Try AI question replacement in background (non-blocking)
+  if (_aiEnabled && idx > 0 && idx < _ptSelectedQuestions.length) {
+    var history = _ptHistory.slice(0, idx);
+    _generateAIQuestion(history).then(function(aiQ) {
+      if (aiQ && _ptCurrentQ === idx) {
+        var newQ = {id: 'ai_' + idx, emoji: aiQ.emoji, text: aiQ.text, tag: 'ai', opts: aiQ.opts};
+        _ptSelectedQuestions[idx] = newQ;
+        // Re-render just the question content
+        var emojiEl = ov.querySelector('.pt-question-emoji');
+        var textEl = ov.querySelector('.pt-question-text');
+        var optsEl = ov.querySelector('.pt-options');
+        if (emojiEl) emojiEl.textContent = newQ.emoji;
+        if (textEl) textEl.textContent = newQ.text;
+        if (optsEl) {
+          var optsHtml = '';
+          for (var j = 0; j < newQ.opts.length; j++) {
+            var o = newQ.opts[j];
+            optsHtml += '<div class="pt-option" onclick="selectPTAnswer(' + idx + ',' + j + ',this)">';
+            optsHtml += '<div class="pt-option-label">' + o.label + '</div>';
+            optsHtml += '<div class="pt-option-desc">' + o.desc + '</div>';
+            optsHtml += '</div>';
+          }
+          optsEl.innerHTML = optsHtml;
+        }
+        // Add AI badge
+        var badge = document.createElement('div');
+        badge.style.cssText = 'font-size:10px;color:var(--text-muted);text-align:center;margin-top:4px';
+        badge.textContent = '🤖 AI 出题';
+        if (textEl) textEl.parentElement.insertBefore(badge, textEl.nextSibling);
+      }
+    }).catch(function(e) { console.error('AI question error:', e); });
+  }
 }
 
 function ptBack() {
@@ -3576,7 +3599,7 @@ function selectPTAnswer(qIdx, optIdx, el) {
   if (_ptAnswers[qIdx] !== undefined) {
     // Re-answering - don't push to history again for this slot
   } else {
-    _ptHistory.push({qIdx: qIdx});
+    _ptHistory.push({qIdx: qIdx, optIdx: optIdx});
   }
   _ptAnswers[qIdx] = optIdx;
   // Highlight selected
