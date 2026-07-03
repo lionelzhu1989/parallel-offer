@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行offer · 职场天赋RPG v12c</title>
+<title>平行offer · 职场天赋RPG v33</title>
 <style>/* ===== Design System ===== */
 :root {
   --primary: #6366f1;
@@ -34,12 +34,20 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
 }
+/* ===== Fun Animations ===== */
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes pulse-glow { 0%,100%{box-shadow:0 0 20px rgba(99,102,241,0.3)} 50%{box-shadow:0 0 40px rgba(99,102,241,0.6)} }
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes slideUp { 0%{opacity:0;transform:translateY(20px)} 100%{opacity:1;transform:translateY(0)} }
+@keyframes bounceIn { 0%{opacity:0;transform:scale(0.3)} 50%{transform:scale(1.05)} 70%{transform:scale(0.9)} 100%{opacity:1;transform:scale(1)} }
+@keyframes gradient-flow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50% } }
+@keyframes shake { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-4px)} 20%,40%,60%,80%{transform:translateX(4px)} }
 
 /* ===== Reset & Base ===== */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  background: var(--bg-page);
-  color: var(--text-primary);
+  background: linear-gradient(180deg, #0f0a1a 0%, #1a1035 30%, #0d1b2a 100%);
+  color: #e2e8f0;
   max-width: 420px;
   margin: 0 auto;
   min-height: 100vh;
@@ -47,6 +55,16 @@ body {
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(244,114,182,0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ===== Top Bar ===== */
@@ -99,7 +117,7 @@ body {
 .attr-item .attr-icon { font-size:14px; }
 .attr-item .attr-label { font-size:10px; color:rgba(255,255,255,0.7); font-weight:500; }
 .attr-item .attr-val { font-weight:800; font-size:15px; color:#fff; line-height:1.1; white-space:nowrap; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
-.attr-item .attr-bar-bg { width:100%; height:3px; background:rgba(255,255,255,0.12); border-radius:2px; overflow:hidden; margin-top:2px; }
+.attr-item .attr-bar-bg { width:100%; height:3px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden; margin-top:2px; }
 .attr-item .attr-bar-fill { height:100%; border-radius:2px; transition:width 0.5s ease; }
 .attr-bar-fill.salary { background:linear-gradient(90deg,#fbbf24,#fb923c); }
 .attr-bar-fill.skill { background:linear-gradient(90deg,#60a5fa,#3b82f6); }
@@ -215,7 +233,7 @@ body {
 .choice-effect { font-size:12px; color:var(--text-secondary); margin-top:8px; padding-top:8px; border-top:1px solid rgba(0,0,0,0.05); }
 .choice-effect .eff-pos { color:#059669; font-weight:700; }
 .choice-effect .eff-neg { color:#dc2626; font-weight:700; }
-.buff-marker { display:inline-block; font-size:11px; padding:3px 10px; border-radius:8px; background:linear-gradient(135deg,#fef3c7,#fde68a); color:#92400e; font-weight:700; margin-top:6px; border:1px solid rgba(245,158,11,0.2); }
+.buff-marker { display:inline-block; font-size:11px; padding:3px 10px; border-radius:8px; background:rgba(245,158,11,0.2); color:#fbbf24; font-weight:700; margin-top:6px; border:1px solid rgba(245,158,11,0.3); }
 
 /* ===== Confirm Button ===== */
 .confirm-btn {
@@ -1022,7 +1040,7 @@ body {
 }
 .gallery-section-count {
   font-size: 10px; font-weight: 600; color: var(--text-muted);
-  background: var(--bg-page); padding: 1px 6px; border-radius: 8px;
+  background: transparent; padding: 1px 6px; border-radius: 8px;
 }
 .gallery-grid {
   display: grid;
@@ -1104,14 +1122,22 @@ body {
 /* ===== Personality Test (职场人格测试) ===== */
 .pt-overlay {
   position:fixed; top:0; left:0; right:0; bottom:0;
-  background:var(--bg-page); z-index:200;
+  background:linear-gradient(180deg, #0f0a1a 0%, #1a1035 50%, #0d1b2a 100%);
+  z-index:200;
   display:flex; flex-direction:column;
   overflow-y:auto;
 }
+.pt-overlay::before {
+  content:'';
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:radial-gradient(circle at 50% 30%, rgba(99,102,241,0.2) 0%, transparent 60%);
+  pointer-events:none;
+}
 .pt-progress {
   position:sticky; top:0; z-index:10;
-  background:var(--bg-page); padding:12px 20px 8px;
-  border-bottom:1px solid var(--border);
+  background:rgba(15,10,26,0.9); padding:12px 20px 8px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
 }
 .pt-progress-bar {
   width:100%; height:6px; background:rgba(99,102,241,0.1);
@@ -1119,11 +1145,13 @@ body {
 }
 .pt-progress-fill {
   height:100%; border-radius:3px;
-  background:linear-gradient(90deg,#6366f1,#a855f7);
+  background:linear-gradient(90deg,#6366f1,#a855f7,#f472b6);
+  background-size:200% 100%;
+  animation:shimmer 2s linear infinite;
   transition:width 0.5s cubic-bezier(0.16,1,0.3,1);
 }
 .pt-progress-text {
-  font-size:11px; color:var(--text-muted);
+  font-size:11px; color:rgba(255,255,255,0.5);
   text-align:center; margin-top:4px;
 }
 .pt-body {
@@ -1137,8 +1165,9 @@ body {
   font-size:40px; text-align:center; margin-bottom:12px;
 }
 .pt-question-text {
-  font-size:17px; font-weight:700; color:var(--text-primary);
+  font-size:18px; font-weight:700; color:#ffffff;
   text-align:center; line-height:1.5; margin-bottom:20px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.3);
 }
 .pt-options {
   display:flex; flex-direction:column; gap:10px;
@@ -1166,7 +1195,8 @@ body {
 
 /* Result Screen */
 .pt-result {
-  text-align:center; padding:24px 20px; max-width:420px; margin:0 auto; width:100%;
+  text-align:center; padding:40px 20px; max-width:420px; margin:0 auto; width:100%;
+  animation:slideUp 0.6s ease-out;
 }
 .pt-result-emoji {
   font-size:64px; margin-bottom:12px;
@@ -1174,25 +1204,32 @@ body {
 }
 @keyframes ptBounce { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
 .pt-result-type {
-  font-size:22px; font-weight:800;
-  background:linear-gradient(135deg,#6366f1,#a855f7,#f472b6);
+  font-size:26px; font-weight:900;
+  background:linear-gradient(135deg,#818cf8,#c084fc,#f472b6,#fb923c);
+  background-size:300% 300%;
+  animation:gradient-flow 3s ease infinite;
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  background-clip:text; margin-bottom:6px;
+  background-clip:text; margin-bottom:8px;
+  letter-spacing:-0.5px;
 }
 .pt-result-desc {
-  font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;
+  font-size:14px; color:rgba(255,255,255,0.6); line-height:1.6; margin-bottom:24px;
+  font-style:italic;
 }
 .pt-result-stats {
   display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:16px 0;
 }
 .pt-stat-card {
-  background:var(--bg-card); border:1px solid var(--border);
-  border-radius:12px; padding:12px 8px; text-align:center;
-  box-shadow:var(--shadow-sm);
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px; padding:14px 8px; text-align:center;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+  transition:transform 0.2s;
 }
+.pt-stat-card:hover { transform:translateY(-2px); }
 .pt-stat-emoji { font-size:24px; margin-bottom:4px; }
-.pt-stat-val { font-size:18px; font-weight:800; color:var(--primary); }
-.pt-stat-label { font-size:10px; color:var(--text-muted); margin-top:2px; }
+.pt-stat-val { font-size:18px; font-weight:800; color:#ffffff; }
+.pt-stat-label { font-size:10px; color:rgba(255,255,255,0.5); margin-top:2px; }
 .pt-result-actions {
   display:flex; flex-direction:column; gap:8px; margin-top:20px;
 }
@@ -1201,17 +1238,29 @@ body {
   font-size:15px; font-weight:700; cursor:pointer; transition:all 0.2s;
 }
 .pt-result-actions .pt-share-btn {
-  background:linear-gradient(135deg,#6366f1,#a855f7); color:#fff;
-  box-shadow:0 4px 16px rgba(99,102,241,0.3);
+  background:linear-gradient(135deg,#6366f1,#a855f7,#f472b6); color:#fff;
+  background-size:200% 200%;
+  animation:gradient-flow 3s ease infinite;
+  box-shadow:0 6px 24px rgba(99,102,241,0.4);
+  font-size:16px;
+  padding:16px;
 }
 .pt-result-actions .pt-continue-btn {
-  background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff;
-  box-shadow:0 4px 16px rgba(245,158,11,0.3);
+  background:linear-gradient(135deg,#f59e0b,#f97316,#ef4444); color:#fff;
+  background-size:200% 200%;
+  animation:gradient-flow 3s ease infinite;
+  box-shadow:0 6px 24px rgba(245,158,11,0.4);
+  font-size:16px;
+  padding:16px;
 }
 .pt-result-actions .pt-skip-btn {
-  background:var(--bg-page); color:var(--text-muted);
-  border:1px solid var(--border) !important;
+  background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.5);
+  border:1px solid rgba(255,255,255,0.15) !important;
   font-size:13px; font-weight:600;
+}
+.pt-result-actions .pt-skip-btn:hover {
+  background:rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.7);
 }
 .pt-bar-mini {
   display:flex; align-items:center; gap:6px; margin:4px 0;
@@ -3855,16 +3904,16 @@ function showIntro() {
   // Welcome page - simple, fun, inviting
   var main = document.getElementById('mainContent');
   var h = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:85vh;padding:24px 20px">';
-  h += '<div style="font-size:72px;margin-bottom:12px">\u{1F3AF}</div>';
-  h += '<div style="font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--accent),#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;letter-spacing:-0.5px">平行Offer</div>';
-  h += '<div style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;text-align:center;line-height:1.6">测测你是什么<br><span style="font-weight:700;color:var(--accent)">打工人格</span></div>';
-  h += '<button onclick="showPersonalityTest()" style="background:linear-gradient(135deg,var(--accent),#a855f7);border:none;color:#fff;padding:18px 48px;border-radius:28px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 6px 24px rgba(99,102,241,0.4);width:100%;max-width:300px">\u{1F9E0} 开始测试</button>';
-  h += '<div style="font-size:12px;color:var(--text-muted);margin-top:12px">8道题 \u00b7 1分钟 \u00b7 超准</div>';
-  h += '<div style="margin-top:20px"><a onclick="skipPT()" style="font-size:13px;color:var(--text-muted);cursor:pointer;text-decoration:underline">或者，直接开始人生</a></div>';
-  h += '<div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">';
-  h += '<button onclick="showGallery()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:10px 18px;border-radius:16px;font-size:12px;cursor:pointer">\u{1F4D6} 图鉴</button>';
-  h += '<button onclick="showAchievements()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:10px 18px;border-radius:16px;font-size:12px;cursor:pointer">\u{1F3C6} 成就</button>';
-  h += '<button onclick="showLeaderboard()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:10px 18px;border-radius:16px;font-size:12px;cursor:pointer">\u{1F947} 排行</button>';
+  h += '<div style="font-size:80px;margin-bottom:16px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(99,102,241,0.4))">\u{1F3AF}</div>';
+  h += '<div style="font-size:36px;font-weight:900;background:linear-gradient(135deg,#818cf8,#c084fc,#f472b6,#fb923c);background-size:300% 300%;animation:gradient-flow 4s ease infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;letter-spacing:-0.5px;text-shadow:0 0 40px rgba(99,102,241,0.3)">平行Offer</div>';
+  h += '<div style="font-size:15px;color:rgba(255,255,255,0.6);margin-bottom:28px;text-align:center;line-height:1.6">测测你是什么<br><span style="font-weight:700;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">打工人格</span></div>';
+  h += '<button onclick="showPersonalityTest()" style="background:linear-gradient(135deg,#6366f1,#a855f7,#f472b6);background-size:200% 200%;animation:gradient-flow 3s ease infinite;border:none;color:#fff;padding:18px 48px;border-radius:28px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 8px 32px rgba(99,102,241,0.5);width:100%;max-width:300px;transition:all 0.3s;letter-spacing:1px">\u{1F9E0} 开始测试</button>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;letter-spacing:2px">8道题 \u00b7 1分钟 \u00b7 超准</div>';
+  h += '<div style="margin-top:24px"><a onclick="skipPT()" style="font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;text-decoration:none;border-bottom:1px dashed rgba(255,255,255,0.2);padding-bottom:2px">或者，直接开始人生</a></div>';
+  h += '<div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">';
+  h += '<button onclick="showGallery()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);padding:12px 20px;border-radius:16px;font-size:12px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.2s">\u{1F4D6} 图鉴</button>';
+  h += '<button onclick="showAchievements()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);padding:12px 20px;border-radius:16px;font-size:12px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.2s">\u{1F3C6} 成就</button>';
+  h += '<button onclick="showLeaderboard()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);padding:12px 20px;border-radius:16px;font-size:12px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.2s">\u{1F947} 排行</button>';
   h += '</div>';
   h += '</div>';
   main.innerHTML = h;
