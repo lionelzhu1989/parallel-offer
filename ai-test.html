@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI API Test</title>
+<style>
+body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #1a1a2e; color: #e0e0e0; }
+h2 { color: #818cf8; }
+#log { background: #0d1117; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; white-space: pre-wrap; margin: 10px 0; min-height: 200px; }
+.ok { color: #10b981; }
+.fail { color: #ef4444; }
+.info { color: #818cf8; }
+</style>
+</head>
+<body>
+<h2>🤖 AI API 连通性测试</h2>
+<p>这个页面测试DeepSeek API是否能从浏览器正常调用。</p>
+<div id="log">正在测试...</div>
+<script>
+var logEl = document.getElementById('log');
+function log(msg, cls) {
+  var span = document.createElement('span');
+  span.className = cls || '';
+  span.textContent = msg + '\n';
+  logEl.appendChild(span);
+}
+
+log('=== AI API 连通性测试 ===', 'info');
+log('');
+
+// Test 1: Direct API call
+log('测试1: 直接调用 DeepSeek API...', 'info');
+var startTime = Date.now();
+
+fetch('https://api.deepseek.com/v1/chat/completions', {
+  method: 'POST',
+  mode: 'cors',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer sk-80feb150523e432bba305509fdaa1409'
+  },
+  body: JSON.stringify({
+    model: 'deepseek-chat',
+    messages: [{role: 'user', content: '返回纯JSON: {"emoji":"💰","text":"API工作正常"}，不要其他内容'}],
+    temperature: 0.9,
+    max_tokens: 100
+  })
+}).then(function(r) {
+  log('收到响应: HTTP ' + r.status, r.ok ? 'ok' : 'fail');
+  return r.json();
+}).then(function(data) {
+  var elapsed = Date.now() - startTime;
+  log('耗时: ' + elapsed + 'ms', 'info');
+  
+  if (data.choices && data.choices[0] && data.choices[0].message) {
+    var content = data.choices[0].message.content;
+    log('AI返回: ' + content, 'ok');
+    try {
+      var parsed = JSON.parse(content);
+      log('JSON解析成功! emoji=' + parsed.emoji + ' text=' + parsed.text, 'ok');
+      log('');
+      log('✅ 测试通过! AI API可以从浏览器正常调用', 'ok');
+    } catch(e) {
+      log('JSON解析失败: ' + e.message, 'fail');
+    }
+  } else {
+    log('响应格式异常: ' + JSON.stringify(data), 'fail');
+  }
+}).catch(function(e) {
+  var elapsed = Date.now() - startTime;
+  log('请求失败 (' + elapsed + 'ms): ' + e.message, 'fail');
+  log('');
+  log('❌ 这说明浏览器无法调用AI API', 'fail');
+  log('可能原因:', 'info');
+  log('  1. CORS被浏览器阻止', 'info');
+  log('  2. 网络问题', 'info');
+  log('  3. API Key无效', 'info');
+});
+</script>
+</body>
+</html>
