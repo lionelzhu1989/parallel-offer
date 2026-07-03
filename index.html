@@ -3187,75 +3187,75 @@ function updateTopBar() {
 // ====== Personality Test (职场人格测试) ======
 var PT_QUESTIONS = [
   {
-    emoji: '💬',
-    text: '同事在工作群吐槽领导，你第一反应是？',
+    emoji: '📱',
+    text: '你发了条加班到凌晨的朋友圈，领导点了赞。你心里在想？',
     opts: [
-      { label: '跟着吐槽几句', desc: '同仇敌忾才是好同事', attrs: {network:5, skill:-1} },
-      { label: '假装没看到', desc: '保命要紧，不掺和', attrs: {health:4, hair:2} },
-      { label: '私聊安慰同事', desc: '暖心但有点社恐', attrs: {network:3, health:2} }
-    ]
-  },
-  {
-    emoji: '⏰',
-    text: '周五下午6点，领导说"这个需求今天要"，你？',
-    opts: [
-      { label: '加班搞定', desc: '打工人没有周末', attrs: {skill:5, health:-5, hair:-3} },
-      { label: '明天再说', desc: 'deadline是第一生产力', attrs: {health:4, skill:-2, hair:2} },
-      { label: '拉同事一起扛', desc: '有难同当', attrs: {network:5, skill:1} }
-    ]
-  },
-  {
-    emoji: '🐛',
-    text: '你发现代码有bug但没人知道，你会？',
-    opts: [
-      { label: '悄悄修掉', desc: '低调解决，不留痕迹', attrs: {skill:5, network:-1} },
-      { label: '主动上报', desc: '坦诚才是好品质', attrs: {skill:2, network:4} },
-      { label: '等别人发现再说', desc: '能拖就拖', attrs: {health:3, hair:3} }
-    ]
-  },
-  {
-    emoji: '🎉',
-    text: '公司团建你最想？',
-    opts: [
-      { label: '和同事嗨到凌晨', desc: '社交就是我的充电方式', attrs: {network:6, health:-2} },
-      { label: '露个面就溜', desc: '社交电量已耗尽', attrs: {skill:2, health:3} },
-      { label: '直接不去', desc: '不如在家撸猫', attrs: {health:4, hair:4, network:-3} }
-    ]
-  },
-  {
-    emoji: '🏆',
-    text: '年终述职PPT你怎么做？',
-    opts: [
-      { label: '50页华丽PPT', desc: '排面就是生产力', attrs: {network:5, skill:2, health:-2} },
-      { label: '3页讲清楚就行', desc: '效率至上', attrs: {skill:5, network:1} },
-      { label: '请假不参加', desc: '述职是不可能述职的', attrs: {health:5, hair:3} }
-    ]
-  },
-  {
-    emoji: '📈',
-    text: '一个你完全不懂的新技术出现了，你？',
-    opts: [
-      { label: '花一周猛学', desc: '技多不压身', attrs: {skill:8, health:-3, hair:-2} },
-      { label: '用老方案凑合', desc: '能跑就行', attrs: {skill:1, health:3, hair:2} },
-      { label: '找个会的人教我', desc: '人脉就是技术力', attrs: {network:5, skill:2} }
-    ]
-  },
-  {
-    emoji: '😴',
-    text: '凌晨2点还在改bug，你内心OS是？',
-    opts: [
-      { label: '"改完就变强了"', desc: '痛并快乐着', attrs: {skill:6, health:-4, hair:-3} },
-      { label: '"明天就辞职"', desc: '每天想辞职100次', attrs: {health:3, hair:3, skill:-2} },
-      { label: '"先睡了再说"', desc: '身体是革命的本钱', attrs: {health:5, hair:5, skill:-1} }
+      { label: '至少领导看到了', desc: '被看见就是一种认可', attrs: {skill:2, network:4, health:-2} },
+      { label: '点赞能当加班费吗', desc: '我要的是钱不是赞', attrs: {skill:4, network:-2, health:2} },
+      { label: '赶紧删了，怕被同事看到', desc: '内卷不能让人知道', attrs: {health:4, hair:3, network:-1} }
     ]
   },
   {
     emoji: '🎯',
-    text: '如果只能选一个，你最想要？',
+    text: '领导找你谈话："你未来3-5年的职业规划是什么？"',
     opts: [
-      { label: '成为技术大牛', desc: '写代码写出传奇', attrs: {skill:10, hair:-2} },
-      { label: '认识所有人', desc: '人脉就是钱脉', attrs: {network:10, skill:-2} },
-      { label: '平安退休', desc: '活到退休就是胜利', attrs: {health:6, hair:6} }
+      { label: '"成为像您一样的人"', desc: '彩虹屁是第一生产力', attrs: {network:5, skill:-1, health:-1} },
+      { label: '"走一步看一步"', desc: '真诚是最大的套路', attrs: {skill:2, health:3, hair:2} },
+      { label: '"说实话没想好"', desc: '不装了，摊牌了', attrs: {skill:3, network:2, health:1} }
+    ]
+  },
+  {
+    emoji: '🏆',
+    text: '同事升职了，你没有。TA请你吃饭"庆祝一下"，你？',
+    opts: [
+      { label: '笑着去，真心恭喜', desc: '格局要大', attrs: {network:5, skill:1, health:-2} },
+      { label: '说加班去不了', desc: '体面地拒绝', attrs: {health:3, hair:2, network:-2} },
+      { label: '去了但全程看手机', desc: '人在心不在', attrs: {health:-2, skill:2, network:1} }
+    ]
+  },
+  {
+    emoji: '💰',
+    text: '年终奖到账，比你预期少了30%。你的第一反应？',
+    opts: [
+      { label: '立刻打开招聘软件', desc: '此处不留爷', attrs: {skill:4, network:-2, health:-1} },
+      { label: '算了，明年再说', desc: '忍一时风平浪静', attrs: {health:3, hair:4, skill:-2} },
+      { label: '找领导谈', desc: '该争取就争取', attrs: {network:3, skill:4, health:-3} }
+    ]
+  },
+  {
+    emoji: '🏖️',
+    text: '你正在度假，老板在群里@你："有个急事"。你？',
+    opts: [
+      { label: '秒回："收到"', desc: '打工人的命不是命', attrs: {network:4, health:-5, hair:-3} },
+      { label: '假装没看到', desc: '已读不回是美德', attrs: {health:5, hair:3, network:-2} },
+      { label: '3小时后回复"刚没看手机"', desc: '拖延战术', attrs: {health:3, hair:2, network:1} }
+    ]
+  },
+  {
+    emoji: '🍜',
+    text: '午饭时间，同事问你"吃什么"，你内心OS？',
+    opts: [
+      { label: '"又到点了？"', desc: '摸鱼摸到忘记吃饭', attrs: {skill:3, health:2, hair:1} },
+      { label: '"随便，别太贵"', desc: '社恐连点餐都怕做决定', attrs: {health:4, hair:3, network:-1} },
+      { label: '"我带了饭，你们去吧"', desc: '省钱+独处=完美午餐', attrs: {skill:2, health:3, hair:4} }
+    ]
+  },
+  {
+    emoji: '💔',
+    text: '面试被问"你的缺点是什么"，你怎么答？',
+    opts: [
+      { label: '"太追求完美"', desc: '经典废话，但管用', attrs: {network:4, skill:1, health:1} },
+      { label: '"有时候太拼了"', desc: '把缺点说成优点', attrs: {skill:3, network:3, health:-3} },
+      { label: '"说实话我有点社恐"', desc: '真诚到面试官都愣了', attrs: {skill:2, health:4, hair:2} }
+    ]
+  },
+  {
+    emoji: '🌅',
+    text: '如果明天是世界末日，你今天最想做的事？',
+    opts: [
+      { label: '把代码提交了', desc: '强迫症晚期，git不能有未提交的', attrs: {skill:8, health:-2, hair:-1} },
+      { label: '约朋友吃顿好的', desc: '人生苦短，先吃饭', attrs: {network:6, health:2, hair:1} },
+      { label: '在家躺着看天花板', desc: '社恐的终极浪漫', attrs: {health:5, hair:5, network:-3} }
     ]
   }
 ];
@@ -3343,16 +3343,16 @@ function _showPTResult() {
   var totalScore = totals.skill + totals.network + totals.health;
   var types = {
     skill: [
-      { name: '🧠 技术极客', desc: '你相信代码能解决一切问题。同事讨论人生，你在debug；同事聊八卦，你在看文档。你的GitHub绿得像春天的草地，但你的社交圈只有外卖小哥。', short: '技术极客' },
-      { name: '🔬 深度工匠', desc: '你对技术有极致追求，代码必须优雅，架构必须清晰。你的同事叫你"大佬"，但其实你只是不想改别人的屎山。', short: '深度工匠' }
+      { name: '🧠 代码永动机', desc: '你凌晨3点还在debug不是因为加班，是因为你真的在享受。你的代码注释比正文还长，你写的README能当论文发。同事叫你"大佬"，其实你只是不想改别人的屎山。', short: '代码永动机' },
+      { name: '🔬 技术偏执狂', desc: '别人用框架你造轮子，别人复制粘贴你手写。你的GitHub contribution图绿得像春天的草地，但你的外卖订单暴露了你的真实生活。', short: '技术偏执狂' }
     ],
     network: [
-      { name: '🤝 社交蝴蝶', desc: '你的微信好友比代码行数还多。每个部门都有你认识的人，食堂阿姨都会多给你打菜。你的人脉就是你的超能力。', short: '社交蝴蝶' },
-      { name: '🎭 职场外交官', desc: '你能把产品经理说哭，也能把程序员哄笑。你是团队的润滑剂，但有时候你也忘了自己到底会什么技术。', short: '职场外交官' }
+      { name: '🤝 人脉永动机', desc: '你认识公司每个人，包括保安和保洁阿姨。食堂阿姨会多给你打菜，前台小姐姐记得你爱喝什么咖啡。你的微信好友比代码行数还多。', short: '人脉永动机' },
+      { name: '🎭 职场端水大师', desc: '你能在程序员面前聊技术，在产品经理面前聊需求，在老板面前聊战略。你是团队的润滑剂，但有时候你也忘了自己到底会什么。', short: '职场端水大师' }
     ],
     health: [
-      { name: '🧘 养生达人', desc: '你坚信活着才是硬道理。9点睡5点起，枸杞泡可乐，护肝片当糖吃。你的发量是全公司最让人嫉妒的资产。', short: '养生达人' },
-      { name: '🐟 佛系咸鱼', desc: '你的座右铭是"能不动就不动"。不加班、不内卷、不焦虑。同事说你没追求，但你每天笑着下班。', short: '佛系咸鱼' }
+      { name: '🧘 养生朋克', desc: '你一边熬夜一边吃枸杞，一边蹦迪一边贴膏药。你的发量是全公司最让人嫉妒的资产，你的体检报告比你的代码还干净。', short: '养生朋克' },
+      { name: '🐟 带薪摸鱼王', desc: '你的工位上永远有一杯茶，你的屏幕上永远有一个"正在加载"的页面。你的KPI是全组最低，但你的快乐指数是全组最高。', short: '带薪摸鱼王' }
     ]
   };
   
@@ -3371,11 +3371,11 @@ function _showPTResult() {
   
   // If all stats are very low, it's the "躺平" type
   if (totalScore < -3) {
-    personality = { name: '🐟 躺平大师', desc: '你已经看透了一切。卷不动、卷不起、也不想卷。你的目标只有一个：活到退休。虽然你的同事觉得你在摸鱼，但你只是在保存体力。', short: '躺平大师' };
+    personality = { name: '🐟 躺平大师', desc: '你已经看透了。卷不动、卷不起、也不想卷。你的目标只有一个：活着。每天上班的意义就是等下班，等发工资，等退休。你的存在证明了：不努力也可以活得很好。', short: '躺平大师' };
   }
   // If all stats are very high, it's the "卷王" type
   if (totals.skill > 4 && totals.network > 4 && totals.health > 4) {
-    personality = { name: '🔥 六边形战士', desc: '你什么都要、什么都不放弃。技术要最强、人脉要最广、身体还要最好。你的日程表比CEO还满，但你乐在其中。', short: '六边形战士' };
+    personality = { name: '🔥 六边形战士', desc: '你什么都要。技术要最强、人脉要最广、身体还要最好。你6点起床健身、8点到公司写代码、中午社交两小时、晚上还要学习新技能。你的日程表比CEO还满，但你乐在其中。', short: '六边形战士' };
   }
   
   // Store results for game init
