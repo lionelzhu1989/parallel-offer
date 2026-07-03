@@ -3559,8 +3559,7 @@ function _showPTResult() {
     personality: personality,
     skill: baseSkill, network: baseNetwork,
     health: baseHealth, hair: baseHair, money: baseMoney,
-    charm: Math.min(100, Math.round((baseSkill + baseNetwork) / 2)),
-    hairDisplay: Math.min(100, Math.round((baseHealth + baseHair) / 2))
+    charm: Math.min(100, Math.round((baseSkill + baseNetwork) / 2))
   };
   
   // Render result screen
@@ -3577,10 +3576,10 @@ function _showPTResult() {
   // Attribute cards
   html += '<div style="display:flex;gap:8px;margin-bottom:16px">';
   var charm = Math.min(100, Math.round((baseSkill + baseNetwork) / 2));
-    var hairDisp = Math.min(100, Math.round((baseHealth + baseHair) / 2));
     var statArr = [
-      {emoji:'🎪', label:'整活力', val:charm, color:'#6366f1', sub:'技能'+baseSkill+' + 人脉'+baseNetwork},
-      {emoji:'💇', label:'发量', val:hairDisp, color:'#f472b6', sub:'健康'+baseHealth+' + 发量'+baseHair}
+      {emoji:'🧠', label:'技能', val:baseSkill, color:'#3b82f6'},
+      {emoji:'🤝', label:'人脉', val:baseNetwork, color:'#10b981'},
+      {emoji:'💇', label:'发量', val:baseHealth, color:'#f472b6'}
     ];
   for (var s = 0; s < statArr.length; s++) {
     var st = statArr[s];
@@ -3607,9 +3606,8 @@ function sharePTResult() {
   var p = window._ptResult.personality;
   var r = window._ptResult;
   var charm = Math.min(100, Math.round((r.skill + r.network) / 2));
-  var hairD = Math.min(100, Math.round((r.health + r.hair) / 2));
   var shareText = '我在「平行Offer」的职场人格测试中获得了：\n\n' + p.name + '\n' + p.desc.substring(0, 60) + '...\n\n';
-  shareText += '🎪 整活力 ' + charm + ' | 💇 发量 ' + hairD + '\n';
+  shareText += '🧠 技能 ' + r.skill + ' | 🤝 人脉 ' + r.network + ' | 💇 发量 ' + r.health + '\n';
   shareText += '来测测你是什么职场人格？';
   
   if (navigator.share) {
