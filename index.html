@@ -3185,82 +3185,231 @@ function updateTopBar() {
 // ====== Setup Step 1: Choose Career Track ======
 
 // ====== Personality Test (职场人格测试) ======
-var PT_QUESTIONS = [
-  {
-    emoji: '📱',
-    text: '你发了条加班到凌晨的朋友圈，领导点了赞。你心里在想？',
+var PT_QUESTION_POOL = [
+  // === 技术向 ===
+  { id: 't1', emoji: '🐛', text: '代码review时发现同事的bug，你会？', tag: 'tech',
     opts: [
-      { label: '至少领导看到了', desc: '被看见就是一种认可', attrs: {skill:2, network:4, health:-2} },
-      { label: '点赞能当加班费吗', desc: '我要的是钱不是赞', attrs: {skill:4, network:-2, health:2} },
-      { label: '赶紧删了，怕被同事看到', desc: '内卷不能让人知道', attrs: {health:4, hair:3, network:-1} }
-    ]
-  },
-  {
-    emoji: '🎯',
-    text: '领导找你谈话："你未来3-5年的职业规划是什么？"',
+      { label: '私聊告诉他', desc: '给他留面子', attrs: {skill:2, network:3, health:1} },
+      { label: '直接在PR里指出来', desc: '代码质量最重要', attrs: {skill:4, network:-1, health:1} },
+      { label: '假装没看到', desc: '多一事不如少一事', attrs: {health:3, hair:2, skill:-2} }
+    ]},
+  { id: 't2', emoji: '🔧', text: '线上突然出bug，凌晨2点，你？', tag: 'tech',
     opts: [
-      { label: '"成为像您一样的人"', desc: '彩虹屁是第一生产力', attrs: {network:5, skill:-1, health:-1} },
-      { label: '"走一步看一步"', desc: '真诚是最大的套路', attrs: {skill:2, health:3, hair:2} },
-      { label: '"说实话没想好"', desc: '不装了，摊牌了', attrs: {skill:3, network:2, health:1} }
-    ]
-  },
-  {
-    emoji: '🏆',
-    text: '同事升职了，你没有。TA请你吃饭"庆祝一下"，你？',
+      { label: '立刻爬起来修', desc: '线上无小事', attrs: {skill:5, health:-4, hair:-3} },
+      { label: '先看看严不严重', desc: '不急的明天再说', attrs: {skill:2, health:2, hair:2} },
+      { label: '设置个告警先睡', desc: '命要紧', attrs: {health:5, hair:4, skill:-1} }
+    ]},
+  { id: 't3', emoji: '📐', text: '技术选型，你倾向用？', tag: 'tech',
     opts: [
-      { label: '笑着去，真心恭喜', desc: '格局要大', attrs: {network:5, skill:1, health:-2} },
-      { label: '说加班去不了', desc: '体面地拒绝', attrs: {health:3, hair:2, network:-2} },
-      { label: '去了但全程看手机', desc: '人在心不在', attrs: {health:-2, skill:2, network:1} }
-    ]
-  },
-  {
-    emoji: '💰',
-    text: '年终奖到账，比你预期少了30%。你的第一反应？',
+      { label: '成熟稳定的老框架', desc: '稳如老狗', attrs: {skill:3, health:3, hair:2} },
+      { label: '最新最潮的技术', desc: '要的就是刺激', attrs: {skill:4, network:1, health:-2} },
+      { label: '先看看大厂怎么选', desc: '抄作业最安全', attrs: {skill:2, network:3, health:1} }
+    ]},
+  { id: 't4', emoji: '📝', text: '你写的代码被同事说"看不懂"，你？', tag: 'tech',
     opts: [
-      { label: '立刻打开招聘软件', desc: '此处不留爷', attrs: {skill:4, network:-2, health:-1} },
-      { label: '算了，明年再说', desc: '忍一时风平浪静', attrs: {health:3, hair:4, skill:-2} },
-      { label: '找领导谈', desc: '该争取就争取', attrs: {network:3, skill:4, health:-3} }
-    ]
-  },
-  {
-    emoji: '🏖️',
-    text: '你正在度假，老板在群里@你："有个急事"。你？',
+      { label: '加注释，写文档', desc: '沟通很重要', attrs: {skill:3, network:3, health:1} },
+      { label: '是他水平不行', desc: '我的代码很优雅', attrs: {skill:4, network:-3, health:1} },
+      { label: '重构一下让它更清晰', desc: '代码即文档', attrs: {skill:5, health:-1, hair:-1} }
+    ]},
+  { id: 't5', emoji: '🚀', text: '你发现了一个能提升团队效率的工具，你？', tag: 'tech',
     opts: [
-      { label: '秒回："收到"', desc: '打工人的命不是命', attrs: {network:4, health:-5, hair:-3} },
-      { label: '假装没看到', desc: '已读不回是美德', attrs: {health:5, hair:3, network:-2} },
-      { label: '3小时后回复"刚没看手机"', desc: '拖延战术', attrs: {health:3, hair:2, network:1} }
-    ]
-  },
-  {
-    emoji: '🍜',
-    text: '午饭时间，同事问你"吃什么"，你内心OS？',
+      { label: '写个分享文档推荐给大家', desc: '好东西要分享', attrs: {skill:3, network:4, health:1} },
+      { label: '自己先用起来', desc: '闷声发大财', attrs: {skill:4, health:2, network:-1} },
+      { label: '等领导问再说', desc: '枪打出头鸟', attrs: {health:3, hair:2, skill:1} }
+    ]},
+  // === 社交向 ===
+  { id: 's1', emoji: '🍻', text: '同事聚餐，领导敬酒，你？', tag: 'social',
     opts: [
-      { label: '"又到点了？"', desc: '摸鱼摸到忘记吃饭', attrs: {skill:3, health:2, hair:1} },
-      { label: '"随便，别太贵"', desc: '社恐连点餐都怕做决定', attrs: {health:4, hair:3, network:-1} },
-      { label: '"我带了饭，你们去吧"', desc: '省钱+独处=完美午餐', attrs: {skill:2, health:3, hair:4} }
-    ]
-  },
-  {
-    emoji: '💔',
-    text: '面试被问"你的缺点是什么"，你怎么答？',
+      { label: '干了，回敬一杯', desc: '给面子', attrs: {network:5, health:-2, skill:1} },
+      { label: '以茶代酒', desc: '意思到了就行', attrs: {network:2, health:2, hair:1} },
+      { label: '说在吃药不能喝', desc: '经典借口', attrs: {health:3, network:1, hair:2} }
+    ]},
+  { id: 's2', emoji: '🗣️', text: '新来的实习生请你帮忙，你？', tag: 'social',
     opts: [
-      { label: '"太追求完美"', desc: '经典废话，但管用', attrs: {network:4, skill:1, health:1} },
-      { label: '"有时候太拼了"', desc: '把缺点说成优点', attrs: {skill:3, network:3, health:-3} },
-      { label: '"说实话我有点社恐"', desc: '真诚到面试官都愣了', attrs: {skill:2, health:4, hair:2} }
-    ]
-  },
-  {
-    emoji: '🌅',
-    text: '如果明天是世界末日，你今天最想做的事？',
+      { label: '二话不说帮', desc: '谁都有新手期', attrs: {network:4, skill:1, health:-1} },
+      { label: '教方法不帮做', desc: '授人以渔', attrs: {skill:3, network:2, health:1} },
+      { label: '说自己也很忙', desc: '真的忙', attrs: {health:3, hair:2, network:-2} }
+    ]},
+  { id: 's3', emoji: '📊', text: '跨部门协作，对方部门总是拖延，你？', tag: 'social',
     opts: [
-      { label: '把代码提交了', desc: '强迫症晚期，git不能有未提交的', attrs: {skill:8, health:-2, hair:-1} },
-      { label: '约朋友吃顿好的', desc: '人生苦短，先吃饭', attrs: {network:6, health:2, hair:1} },
-      { label: '在家躺着看天花板', desc: '社恐的终极浪漫', attrs: {health:5, hair:5, network:-3} }
-    ]
-  }
+      { label: '直接找他们领导', desc: '升级问题', attrs: {network:4, skill:2, health:-2} },
+      { label: '自己多催几次', desc: '伸手不打笑脸人', attrs: {network:3, health:-1, hair:-1} },
+      { label: '在群里@他们', desc: '公开透明', attrs: {network:2, health:-2, skill:1} }
+    ]},
+  { id: 's4', emoji: '🎂', text: '同事过生日，大家都在凑份子，你？', tag: 'social',
+    opts: [
+      { label: '积极参与', desc: '社交不能掉队', attrs: {network:4, health:1, hair:-1} },
+      { label: '随大流，不多不少', desc: '不出头不垫底', attrs: {network:2, health:3, hair:2} },
+      { label: '找个借口不去', desc: '社恐本恐', attrs: {health:4, hair:3, network:-3} }
+    ]},
+  { id: 's5', emoji: '💬', text: '同事在背后议论你，你？', tag: 'social',
+    opts: [
+      { label: '直接去问', desc: '当面说清楚', attrs: {network:3, skill:2, health:-2} },
+      { label: '假装不知道', desc: '清者自清', attrs: {health:4, hair:3, network:-1} },
+      { label: '也加入讨论（关于别人）', desc: '以牙还牙', attrs: {network:2, health:-3, skill:1} }
+    ]},
+  // === 健康/生活向 ===
+  { id: 'h1', emoji: '🏃', text: '你办了健身卡，一个月后？', tag: 'health',
+    opts: [
+      { label: '每周去3次', desc: '自律即自由', attrs: {health:5, hair:3, skill:1} },
+      { label: '去过一次就再也没去', desc: '卡是办了，人没去', attrs: {health:-2, hair:-2, skill:2} },
+      { label: '改成在家跳操', desc: '省钱又方便', attrs: {health:4, hair:2, network:-1} }
+    ]},
+  { id: 'h2', emoji: '😴', text: '你的睡眠质量怎么样？', tag: 'health',
+    opts: [
+      { label: '沾枕头就睡', desc: '心大是福', attrs: {health:5, hair:4, skill:1} },
+      { label: '经常失眠到凌晨', desc: '脑子停不下来', attrs: {health:-3, hair:-4, skill:3} },
+      { label: '作息颠倒但睡够了', desc: '下午3点起床也是起床', attrs: {health:1, hair:1, skill:2} }
+    ]},
+  { id: 'h3', emoji: '🍱', text: '你的午餐通常是？', tag: 'health',
+    opts: [
+      { label: '自己带饭', desc: '健康又省钱', attrs: {health:4, hair:3, skill:2} },
+      { label: '外卖凑合', desc: '能吃就行', attrs: {health:-1, hair:-1, skill:1} },
+      { label: '不吃，省钱', desc: '一顿不吃饿得慌（其实饿习惯了）', attrs: {health:-3, hair:-3, network:2} }
+    ]},
+  { id: 'h4', emoji: '📱', text: '下班后你一般干嘛？', tag: 'health',
+    opts: [
+      { label: '刷手机到凌晨', desc: '报复性熬夜', attrs: {health:-3, hair:-2, skill:2} },
+      { label: '看书/学习', desc: '充实自己', attrs: {skill:4, health:1, hair:1} },
+      { label: '躺着发呆', desc: '什么都不想干', attrs: {health:3, hair:3, network:-1} }
+    ]},
+  { id: 'h5', emoji: '🏥', text: '公司年度体检，你最怕查什么？', tag: 'health',
+    opts: [
+      { label: '怕查出脂肪肝', desc: '外卖吃多了', attrs: {health:-2, hair:-1, skill:2} },
+      { label: '怕查出颈椎问题', desc: '久坐的代价', attrs: {health:-3, hair:-1, skill:3} },
+      { label: '不敢去查', desc: '不查就没有', attrs: {health:-4, hair:-2, network:1} }
+    ]},
+  // === 职场选择向 ===
+  { id: 'c1', emoji: '🚪', text: '同事裸辞了，你内心？', tag: 'choice',
+    opts: [
+      { label: '好羡慕，想跟', desc: '勇气可嘉', attrs: {skill:2, network:2, health:3} },
+      { label: '想不通，太冲动', desc: '稳定最重要', attrs: {health:3, hair:3, skill:1} },
+      { label: '默默更新简历', desc: '悄悄准备', attrs: {skill:4, network:-1, health:-1} }
+    ]},
+  { id: 'c2', emoji: '📈', text: '领导画饼"明年给你升职"，你？', tag: 'choice',
+    opts: [
+      { label: '信了，继续干', desc: '领导不会骗我', attrs: {network:3, health:2, skill:1} },
+      { label: '表面信，实际看机会', desc: '两手准备', attrs: {skill:4, network:2, health:-1} },
+      { label: '直接问什么时候', desc: '把饼落实', attrs: {skill:3, network:1, health:-2} }
+    ]},
+  { id: 'c3', emoji: '💼', text: '你收到了一个薪资翻倍但加班更多的offer，你？', tag: 'choice',
+    opts: [
+      { label: '去！钱到位就行', desc: '搞钱要紧', attrs: {skill:3, health:-4, hair:-3} },
+      { label: '不去，命要紧', desc: '钱够花就行', attrs: {health:5, hair:4, skill:-1} },
+      { label: '谈，看能不能少加点', desc: '争取双赢', attrs: {network:4, skill:2, health:-1} }
+    ]},
+  { id: 'c4', emoji: '🎯', text: '工作3年，你觉得自己？', tag: 'choice',
+    opts: [
+      { label: '越来越专业了', desc: '深耕技术', attrs: {skill:5, health:1, hair:1} },
+      { label: '越来越会做人了', desc: '职场生存法则', attrs: {network:5, skill:1, health:1} },
+      { label: '越来越会摸鱼了', desc: '效率最大化', attrs: {health:4, hair:3, skill:-1} }
+    ]},
+  { id: 'c5', emoji: '🎪', text: '公司年会你被拉去表演节目，你？', tag: 'choice',
+    opts: [
+      { label: '唱歌/跳舞，冲！', desc: '社牛本牛', attrs: {network:5, health:2, hair:-1} },
+      { label: '被迫上台，硬着头皮', desc: '不敢拒绝', attrs: {network:2, health:-2, hair:-1} },
+      { label: '坚决不上，社恐发作', desc: '打死不上', attrs: {health:3, hair:2, network:-3} }
+    ]},
+  // === 生活态度向 ===
+  { id: 'l1', emoji: '🏠', text: '你觉得理想的下班时间是？', tag: 'life',
+    opts: [
+      { label: '18点准时走', desc: '下班就是下班', attrs: {health:5, hair:4, skill:-1} },
+      { label: '19-20点', desc: '稍微加一点可以', attrs: {health:2, hair:1, skill:3} },
+      { label: '做完事再走', desc: '没有固定时间', attrs: {skill:4, health:-2, hair:-1} }
+    ]},
+  { id: 'l2', emoji: '💰', text: '发工资那天你第一件事？', tag: 'life',
+    opts: [
+      { label: '存起来', desc: '安全感来自存款', attrs: {skill:3, health:3, hair:3} },
+      { label: '买想要的东西', desc: '犒劳自己', attrs: {health:3, hair:2, network:2} },
+      { label: '还花呗/信用卡', desc: '月光族的日常', attrs: {health:-1, hair:-1, skill:2} }
+    ]},
+  { id: 'l3', emoji: '🎬', text: '周末你最想？', tag: 'life',
+    opts: [
+      { label: '宅家追剧/打游戏', desc: '快乐肥宅', attrs: {health:3, hair:3, network:-2} },
+      { label: '约朋友出去浪', desc: '社交不能停', attrs: {network:5, health:2, hair:-1} },
+      { label: '学习/提升自己', desc: '卷王本王', attrs: {skill:5, health:-1, hair:-1} }
+    ]},
+  { id: 'l4', emoji: '🐕', text: '如果养宠物你会选？', tag: 'life',
+    opts: [
+      { label: '猫', desc: '高冷但治愈', attrs: {health:3, hair:2, network:-1} },
+      { label: '狗', desc: '热情但需要遛', attrs: {network:4, health:3, skill:-1} },
+      { label: '不养，太麻烦', desc: '自由最重要', attrs: {skill:2, health:2, hair:2} }
+    ]},
+  { id: 'l5', emoji: '✈️', text: '年假你一般怎么用？', tag: 'life',
+    opts: [
+      { label: '出去旅行', desc: '世界那么大', attrs: {network:3, health:3, hair:1} },
+      { label: '在家躺平', desc: '累了一年了', attrs: {health:5, hair:4, network:-2} },
+      { label: '用来面试/看机会', desc: '偷偷努力', attrs: {skill:4, network:-1, health:-2} }
+    ]}
 ];
 
-var _ptAnswers = [];
+// Adaptive question selection: pick next question based on previous answers
+var _ptSelectedQuestions = [];
+function _selectAdaptiveQuestions() {
+  _ptSelectedQuestions = [];
+  var usedTags = {};
+  
+  // Always start with a relatable question (index 0 = mobile朋友圈)
+  var starters = ['t1', 's1', 'c1', 'l1'];
+  var firstQ = PT_QUESTION_POOL.find(function(q) { return starters.indexOf(q.id) !== -1; });
+  // Pick randomly from starters
+  firstQ = PT_QUESTION_POOL.filter(function(q) { return starters.indexOf(q.id) !== -1; })[Math.floor(Math.random() * 4)];
+  _ptSelectedQuestions.push(firstQ);
+  usedTags[firstQ.tag] = (usedTags[firstQ.tag] || 0) + 1;
+  
+  // Select remaining 7 questions adaptively
+  for (var round = 0; round < 7; round++) {
+    var answers = _ptAnswers.slice(0, round);
+    // Calculate bias from previous answers
+    var bias = {tech:0, social:0, health:0, choice:0, life:0};
+    for (var a = 0; a < answers.length; a++) {
+      var q = _ptSelectedQuestions[a];
+      if (!q) continue;
+      var chosenOpt = q.opts[answers[a]];
+      if (chosenOpt) {
+        var attrs = chosenOpt.attrs;
+        if (attrs.skill > 0) bias.tech += attrs.skill;
+        if (attrs.network > 0) bias.social += attrs.network;
+        if (attrs.health > 0 || attrs.hair > 0) bias.health += (attrs.health || 0) + (attrs.hair || 0);
+      }
+      bias[q.tag] = (bias[q.tag] || 0) + 2; // Prefer diverse tags
+    }
+    
+    // Find used IDs
+    var usedIds = {};
+    for (var u = 0; u < _ptSelectedQuestions.length; u++) {
+      usedIds[_ptSelectedQuestions[u].id] = true;
+    }
+    
+    // Get available questions
+    var available = PT_QUESTION_POOL.filter(function(q) { return !usedIds[q.id]; });
+    if (available.length === 0) break;
+    
+    // Score each available question
+    var scored = available.map(function(q) {
+      var score = 0;
+      // Prefer underrepresented tags (diversity)
+      var tagCount = usedTags[q.tag] || 0;
+      score += (3 - tagCount) * 3;
+      // If user is tech-heavy, mix in some social/life questions for contrast
+      if (bias.tech > 4 && (q.tag === 'social' || q.tag === 'life')) score += 3;
+      if (bias.social > 4 && (q.tag === 'tech' || q.tag === 'health')) score += 3;
+      if (bias.health < 0 && q.tag === 'health') score += 4; // If unhealthy, ask health
+      // Small random factor
+      score += Math.random() * 2;
+      return {q: q, score: score};
+    });
+    
+    scored.sort(function(a,b) { return b.score - a.score; });
+    var chosen = scored[0].q;
+    _ptSelectedQuestions.push(chosen);
+    usedTags[chosen.tag] = (usedTags[chosen.tag] || 0) + 1;
+  }
+  
+  return _ptSelectedQuestions;
+}
+
+var PT_QUESTIONS = PT_QUESTION_POOL; // Fallback for compatibility
 var _ptCurrentQ = 0;
 
 function showCareerSelect() {
@@ -3297,14 +3446,15 @@ function showCareerSelect() {
 function showPersonalityTest() {
   _ptAnswers = [];
   _ptCurrentQ = 0;
+  _selectAdaptiveQuestions();
   _showPTQuestion(0);
 }
 
 function _showPTQuestion(idx) {
-  var q = PT_QUESTIONS[idx];
+  var q = _ptSelectedQuestions[idx] || PT_QUESTIONS[idx];
   if (!q) { _showPTResult(); return; }
   _ptCurrentQ = idx;
-  var pct = Math.round((idx / PT_QUESTIONS.length) * 100);
+  var pct = Math.round((idx / _ptSelectedQuestions.length) * 100);
   
   var html = '<div class="pt-progress">';
   html += '<div class="pt-progress-bar"><div class="pt-progress-fill" style="width:' + pct + '%"></div></div>';
@@ -3351,7 +3501,7 @@ function _showPTResult() {
   var totals = {skill:0, network:0, health:0, hair:0, money:0};
   for (var i = 0; i < _ptAnswers.length; i++) {
     var ans = _ptAnswers[i];
-    var q = PT_QUESTIONS[i];
+    var q = _ptSelectedQuestions[i] || PT_QUESTIONS[i];
     if (q && ans !== undefined) {
       var a = q.opts[ans].attrs;
       for (var k in a) { if (totals[k] !== undefined) totals[k] += a[k]; }
