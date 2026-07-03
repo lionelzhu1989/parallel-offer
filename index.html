@@ -4441,34 +4441,15 @@ async function _showPTQuestion(idx) {
   ov.style.display = 'flex';
   
   // Try AI question replacement in background (non-blocking)
-  if (_aiEnabled && idx > 0 && idx < _ptSelectedQuestions.length) {
-    var history = _ptHistory.slice(0, idx);
+  // Rule: only replace the NEXT question (idx+1), never touch the current one
+  if (_aiEnabled && idx >= 0 && idx + 1 < _ptSelectedQuestions.length) {
+    var history = _ptHistory.slice(0, idx + 1);
     _generateAIQuestion(history).then(function(aiQ) {
-      if (aiQ && _ptCurrentQ === idx) {
-        var newQ = {id: 'ai_' + idx, emoji: aiQ.emoji, text: aiQ.text, tag: 'ai', opts: aiQ.opts};
-        _ptSelectedQuestions[idx] = newQ;
-        // Re-render just the question content
-        var emojiEl = ov.querySelector('.pt-question-emoji');
-        var textEl = ov.querySelector('.pt-question-text');
-        var optsEl = ov.querySelector('.pt-options');
-        if (emojiEl) emojiEl.textContent = newQ.emoji;
-        if (textEl) textEl.textContent = newQ.text;
-        if (optsEl) {
-          var optsHtml = '';
-          for (var j = 0; j < newQ.opts.length; j++) {
-            var o = newQ.opts[j];
-            optsHtml += '<div class="pt-option" onclick="selectPTAnswer(' + idx + ',' + j + ',this)">';
-            optsHtml += '<div class="pt-option-label">' + o.label + '</div>';
-            optsHtml += '<div class="pt-option-desc">' + o.desc + '</div>';
-            optsHtml += '</div>';
-          }
-          optsEl.innerHTML = optsHtml;
-        }
-        // Add AI badge
-        var badge = document.createElement('div');
-        badge.style.cssText = 'font-size:10px;color:var(--text-muted);text-align:center;margin-top:4px';
-        badge.textContent = '🤖 AI 出题';
-        if (textEl) textEl.parentElement.insertBefore(badge, textEl.nextSibling);
+      if (aiQ) {
+        // Silently replace the next question in the pool
+        var nextIdx = idx + 1;
+        var newQ = {id: 'ai_' + nextIdx, emoji: aiQ.emoji, text: aiQ.text, tag: 'ai', opts: aiQ.opts};
+        _ptSelectedQuestions[nextIdx] = newQ;
       }
     }).catch(function(e) { console.error('AI question error:', e); });
   }
