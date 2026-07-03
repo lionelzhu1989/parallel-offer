@@ -3654,6 +3654,7 @@ function skipPT() {
   var ov = document.getElementById('ptOverlay');
   if (ov) { ov.style.display = 'none'; ov.remove(); }
   window._ptResult = null;
+  state._fromPT = false;
   initState();
   showCareerSelect();
 }
@@ -3706,6 +3707,7 @@ function showIntro() {
   h += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:32px;text-align:center;line-height:1.6">回答8个职场灵魂拷问<br>测出你的职场人格<br>然后模拟你的人生</div>';
   h += '<button onclick="showPersonalityTest()" style="background:linear-gradient(135deg,var(--accent),#a855f7);border:none;color:#fff;padding:16px 40px;border-radius:28px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,0.4);width:100%;max-width:300px">🧠 开始测试</button>';
   h += '<div style="font-size:11px;color:var(--text-muted);margin-top:12px">8道题 · 1分钟 · 测出你的职场人格</div>';
+  h += '<div style="margin-top:16px"><a onclick="skipPT()" style="font-size:13px;color:var(--text-muted);cursor:pointer;text-decoration:underline">跳过测试，直接开始</a></div>';
   h += '<div style="margin-top:24px;display:flex;gap:8px">';
   h += '<button onclick="showGallery()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:8px 16px;border-radius:16px;font-size:12px;cursor:pointer">📖 图鉴</button>';
   h += '<button onclick="showAchievements()" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);padding:8px 16px;border-radius:16px;font-size:12px;cursor:pointer">🏆 成就</button>';
