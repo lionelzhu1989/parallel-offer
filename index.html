@@ -3597,11 +3597,10 @@ function _showPTResult() {
     ];
   for (var s = 0; s < statArr.length; s++) {
     var st = statArr[s];
-    html += '<div style="flex:1;text-align:center;padding:12px 8px;background:rgba(255,255,255,0.15);border-radius:12px">';
+    html += '<div style="flex:1;text-align:center;padding:12px 8px;background:linear-gradient(135deg,' + st.color + '22,' + st.color + '11);border:1px solid ' + st.color + '33;border-radius:12px">';
     html += '<div style="font-size:24px;margin-bottom:4px">' + st.emoji + '</div>';
-    html += '<div style="font-size:28px;font-weight:800;color:#fff">' + st.val + '</div>';
-    html += '<div style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px">' + st.label + '</div>';
-    if (st.sub) html += '<div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px">' + st.sub + '</div>';
+    html += '<div style="font-size:28px;font-weight:800;color:' + st.color + '">' + st.val + '</div>';
+    html += '<div style="font-size:12px;color:var(--text-secondary);margin-top:2px">' + st.label + '</div>';
     html += '</div>';
   }
   html += '</div>';
@@ -3609,7 +3608,7 @@ function _showPTResult() {
   // Action buttons
   html += '<button onclick="sharePTResult()" style="width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;box-shadow:0 4px 12px rgba(16,185,129,0.3)">📤 分享我的人格</button>';
   html += '<button onclick="continueFromPT()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#a855f7);border:none;color:#fff;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;box-shadow:0 4px 12px rgba(99,102,241,0.3)">🎮 用这个属性开始人生</button>';
-  html += '<div style="text-align:center"><a onclick="skipPT()" style="font-size:11px;color:rgba(255,255,255,0.4);cursor:pointer">跳过测试，随机属性</a></div>';
+  html += '<div style="text-align:center"><a onclick="skipPT()" style="font-size:11px;color:var(--text-muted);cursor:pointer">跳过测试，随机属性</a></div>';
   html += '</div>';
   
   ov.innerHTML = html;
