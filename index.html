@@ -3460,7 +3460,7 @@ function _showPTQuestion(idx) {
   
   html += '<div class="pt-body">';
   html += '<div style="text-align:center;margin-bottom:12px"><a onclick="skipPT()" style="font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline">跳过测试，直接开始</a></div>';
-  if (idx > 0) html += '<div style="text-align:center;margin-bottom:8px"><span style="color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer" onclick="ptBack()">← 上一题</span></div>';
+  if (idx > 0) html += '<div style="text-align:center;margin-bottom:8px"><span style="color:var(--text-muted);font-size:13px;cursor:pointer" onclick="ptBack()">← 上一题</span></div>';
   html += '<div class="pt-question-emoji">' + q.emoji + '</div>';
   html += '<div class="pt-question-text">' + q.text + '</div>';
   html += '<div class="pt-options">';
