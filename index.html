@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>平行offer · 职场天赋RPG v33</title>
+<title>平行offer · 职场天赋RPG v35</title>
 <style>/* ===== Design System ===== */
 :root {
   --primary: #6366f1;
@@ -3397,6 +3399,18 @@ var PT_QUESTION_POOL = [
     ]}
 ];
 
+// The killer first question - always shown first
+var HOOK_QUESTION = {
+  id: 'hook_q1', emoji: '🎤',
+  text: '面试官微笑着说："你还有什么问题想问吗？" 你脱口而出：',
+  tag: 'hook',
+  opts: [
+    {label: '请问试用期交社保吗', desc: '灵魂拷问，面试官的微笑凝固了', attrs: {skill: 2, network: -1, health: 2, hair: 1}},
+    {label: '请问加班有调休吗', desc: '面试官内心：还没入职就想放假？', attrs: {skill: 3, network: -3, health: 1, hair: 2}},
+    {label: '请问团队氛围好吗', desc: '标准答案，但你的表情出卖了你', attrs: {skill: 0, network: 4, health: 0, hair: 0}}
+  ]
+};
+
 // Pre-generated AI questions for variety
 var AI_QUESTIONS = [
   {"emoji": "💼", "text": "周一早上发现咖啡机坏了，你应该怎么做？", "opts": [{"label": "A. 冲进老板办公室哭诉", "desc": "让全公司都知道你是咖啡因依赖者", "attrs": {"skill": -1, "network": -2, "health": -3, "hair": 0}}, {"label": "B. 优雅地宣布开始无咖啡因实验", "desc": "假装自己是一个养生达人", "attrs": {"skill": 2, "network": 1, "health": 3, "hair": 0}}, {"label": "C. 偷用老板的私人咖啡机", "desc": "在危险边缘疯狂试探", "attrs": {"skill": 4, "network": -3, "health": 0, "hair": 1}}]},
@@ -3420,15 +3434,20 @@ var AI_QUESTIONS = [
 // Adaptive question selection: pick next question based on previous answers
 var _ptSelectedQuestions = [];
 function _selectAdaptiveQuestions() {
-  // Combine static + AI questions for maximum variety
+  // Hook question always first
+  var pool = [HOOK_QUESTION];
+  // Combine static + AI questions, shuffle, pick 7 more
   var combined = PT_QUESTION_POOL.concat(AI_QUESTIONS);
-  // Shuffle and pick 8
   var shuffled = combined.slice();
   for (var i = shuffled.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
   }
-  _ptSelectedQuestions = shuffled.slice(0, 8);
+  // Make sure no duplicate of hook
+  for (var k = 0; k < shuffled.length && pool.length < 8; k++) {
+    if (shuffled[k].id !== 'hook_q1') pool.push(shuffled[k]);
+  }
+  _ptSelectedQuestions = pool;
 }
 
 
