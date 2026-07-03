@@ -4296,14 +4296,28 @@ function _selectAdaptiveQuestions() {
         score += optSpread * 2;
       }
       
-      // 3. Theme diversity: penalize same theme as recent questions
+      // 3. Theme coherence: prefer questions that flow naturally from the last question
       var themes = cand._t || [];
-      var recentThemes = [];
+      var lastThemes = selected.length > 0 ? (selected[selected.length - 1]._t || []) : [];
+      var last2Themes = [];
       for (var r = Math.max(0, selected.length - 2); r < selected.length; r++) {
-        recentThemes = recentThemes.concat(selected[r]._t || []);
+        last2Themes = last2Themes.concat(selected[r]._t || []);
       }
+      
+      // Coherence: share theme with LAST question → smooth transition (+25)
+      var sharedWithLast = 0;
       for (var th = 0; th < themes.length; th++) {
-        if (recentThemes.indexOf(themes[th]) >= 0) score -= 20;
+        if (lastThemes.indexOf(themes[th]) >= 0) sharedWithLast++;
+      }
+      if (sharedWithLast > 0) score += 25;
+      
+      // Over-repetition: same theme 3+ times in recent questions → penalize (-15)
+      var themeCounts = {};
+      for (var th2 = 0; th2 < last2Themes.length; th2++) {
+        themeCounts[last2Themes[th2]] = (themeCounts[last2Themes[th2]] || 0) + 1;
+      }
+      for (var th3 = 0; th3 < themes.length; th3++) {
+        if ((themeCounts[themes[th3]] || 0) >= 3) score -= 15;
       }
       
       // 4. Random jitter to avoid deterministic feel
