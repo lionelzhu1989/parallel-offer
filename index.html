@@ -3452,8 +3452,8 @@ function showPersonalityTest() {
 }
 
 function _showPTQuestion(idx) {
-  var q = _ptSelectedQuestions[idx] || PT_QUESTIONS[idx];
-  if (!q) { _showPTResult(); return; }
+  if (idx >= _ptSelectedQuestions.length || !_ptSelectedQuestions[idx]) { _showPTResult(); return; }
+  var q = _ptSelectedQuestions[idx];
   _ptCurrentQ = idx;
   var pct = Math.round((idx / _ptSelectedQuestions.length) * 100);
   
