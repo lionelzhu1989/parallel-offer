@@ -3186,160 +3186,156 @@ function updateTopBar() {
 
 // ====== Personality Test (职场人格测试) ======
 var PT_QUESTION_POOL = [
-  // === 技术向 ===
-  { id: 't1', emoji: '🐛', text: '代码review时发现同事的bug，你会？', tag: 'tech',
+  // === 恶搞职场题 ===
+  { id: 'q1', emoji: '⏰', text: '早上闹钟响了，你？', tag: 'life',
     opts: [
-      { label: '私聊告诉他', desc: '给他留面子', attrs: {skill:2, network:3, health:1} },
-      { label: '直接在PR里指出来', desc: '代码质量最重要', attrs: {skill:4, network:-1, health:1} },
-      { label: '假装没看到', desc: '多一事不如少一事', attrs: {health:3, hair:2, skill:-2} }
+      { label: '立刻起床，自律的一天开始了', desc: '骗谁呢', attrs: {skill:2, network:1, health:3, hair:2} },
+      { label: '再睡5分钟…（循环3次）', desc: '经典永不过时', attrs: {health:-1, hair:-1, skill:2} },
+      { label: '直接关掉，迟到就迟到', desc: '无所谓，反正考勤不重要（重要吗？）', attrs: {health:4, hair:3, network:-3} }
     ]},
-  { id: 't2', emoji: '🔧', text: '线上突然出bug，凌晨2点，你？', tag: 'tech',
+  { id: 'q2', emoji: '📧', text: '领导发邮件说"辛苦了"，你？', tag: 'social',
     opts: [
-      { label: '立刻爬起来修', desc: '线上无小事', attrs: {skill:5, health:-4, hair:-3} },
-      { label: '先看看严不严重', desc: '不急的明天再说', attrs: {skill:2, health:2, hair:2} },
-      { label: '设置个告警先睡', desc: '命要紧', attrs: {health:5, hair:4, skill:-1} }
+      { label: '感动，回复"应该的"', desc: '舔狗本狗', attrs: {network:5, health:-1, skill:-1} },
+      { label: '截图发群里：领导又画饼', desc: '职场老六', attrs: {health:2, hair:2, network:-2} },
+      { label: '已读不回', desc: '回复了就要继续干', attrs: {health:4, hair:3, skill:1} }
     ]},
-  { id: 't3', emoji: '📐', text: '技术选型，你倾向用？', tag: 'tech',
+  { id: 'q3', emoji: '🍕', text: '周五下午6点，领导突然说"开个短会"，你？', tag: 'health',
     opts: [
-      { label: '成熟稳定的老框架', desc: '稳如老狗', attrs: {skill:3, health:3, hair:2} },
-      { label: '最新最潮的技术', desc: '要的就是刺激', attrs: {skill:4, network:1, health:-2} },
-      { label: '先看看大厂怎么选', desc: '抄作业最安全', attrs: {skill:2, network:3, health:1} }
+      { label: '好的马上来', desc: '不敢不来', attrs: {network:3, health:-4, hair:-3} },
+      { label: '假装网络不好', desc: '远程办公の奥义', attrs: {health:4, hair:3, network:-1} },
+      { label: '直接关电脑走人', desc: '00后整顿职场', attrs: {skill:3, health:2, network:-4} }
     ]},
-  { id: 't4', emoji: '📝', text: '你写的代码被同事说"看不懂"，你？', tag: 'tech',
+  { id: 'q4', emoji: '💰', text: '发工资了，你第一件事？', tag: 'life',
     opts: [
-      { label: '加注释，写文档', desc: '沟通很重要', attrs: {skill:3, network:3, health:1} },
-      { label: '是他水平不行', desc: '我的代码很优雅', attrs: {skill:4, network:-3, health:1} },
-      { label: '重构一下让它更清晰', desc: '代码即文档', attrs: {skill:5, health:-1, hair:-1} }
+      { label: '还花呗', desc: '月光族的宿命', attrs: {health:-2, hair:-2, skill:3} },
+      { label: '截图发朋友圈', desc: '虽然不多但要让别人知道', attrs: {network:4, health:1, hair:1} },
+      { label: '存起来假装没发', desc: '闷声发大财', attrs: {health:3, hair:3, skill:2} }
     ]},
-  { id: 't5', emoji: '🚀', text: '你发现了一个能提升团队效率的工具，你？', tag: 'tech',
+  { id: 'q5', emoji: '👔', text: '面试官问"你的缺点是什么"，你说？', tag: 'social',
     opts: [
-      { label: '写个分享文档推荐给大家', desc: '好东西要分享', attrs: {skill:3, network:4, health:1} },
-      { label: '自己先用起来', desc: '闷声发大财', attrs: {skill:4, health:2, network:-1} },
-      { label: '等领导问再说', desc: '枪打出头鸟', attrs: {health:3, hair:2, skill:1} }
+      { label: '"太追求完美了"', desc: '经典废话文学', attrs: {network:4, skill:1, health:1} },
+      { label: '"太老实了"', desc: '老实人最后的倔强', attrs: {health:3, hair:2, skill:2} },
+      { label: '"太穷了"', desc: '真实到面试官沉默', attrs: {skill:3, health:2, hair:3} }
     ]},
-  // === 社交向 ===
-  { id: 's1', emoji: '🍻', text: '同事聚餐，领导敬酒，你？', tag: 'social',
+  { id: 'q6', emoji: '🎯', text: '同事在工位上大声打私人电话，你？', tag: 'health',
     opts: [
-      { label: '干了，回敬一杯', desc: '给面子', attrs: {network:5, health:-2, skill:1} },
-      { label: '以茶代酒', desc: '意思到了就行', attrs: {network:2, health:2, hair:1} },
-      { label: '说在吃药不能喝', desc: '经典借口', attrs: {health:3, network:1, hair:2} }
+      { label: '戴上耳机假装听不到', desc: '降噪耳机是职场必备', attrs: {health:3, hair:2, skill:2} },
+      { label: '也大声打电话报复', desc: '以毒攻毒', attrs: {network:2, health:-2, hair:-1} },
+      { label: '默默录音准备举报', desc: '职场甄嬛', attrs: {skill:3, network:-1, health:-1} }
     ]},
-  { id: 's2', emoji: '🗣️', text: '新来的实习生请你帮忙，你？', tag: 'social',
+  { id: 'q7', emoji: '🏃', text: '公司团建你最怕什么？', tag: 'social',
     opts: [
-      { label: '二话不说帮', desc: '谁都有新手期', attrs: {network:4, skill:1, health:-1} },
-      { label: '教方法不帮做', desc: '授人以渔', attrs: {skill:3, network:2, health:1} },
-      { label: '说自己也很忙', desc: '真的忙', attrs: {health:3, hair:2, network:-2} }
+      { label: '强制表演节目', desc: '社恐の噩梦', attrs: {health:-3, hair:-2, network:4} },
+      { label: '领导非要跟你一队', desc: '全程紧张', attrs: {health:-2, hair:-1, network:3} },
+      { label: '占用周末', desc: '团建=加班', attrs: {health:-4, hair:-3, skill:2} }
     ]},
-  { id: 's3', emoji: '📊', text: '跨部门协作，对方部门总是拖延，你？', tag: 'social',
+  { id: 'q8', emoji: '📊', text: '年终述职PPT你怎么做？', tag: 'tech',
     opts: [
-      { label: '直接找他们领导', desc: '升级问题', attrs: {network:4, skill:2, health:-2} },
-      { label: '自己多催几次', desc: '伸手不打笑脸人', attrs: {network:3, health:-1, hair:-1} },
-      { label: '在群里@他们', desc: '公开透明', attrs: {network:2, health:-2, skill:1} }
+      { label: '认真写10页', desc: '匠人精神', attrs: {skill:5, health:-2, hair:-2} },
+      { label: '抄去年的改改', desc: '聪明人', attrs: {skill:2, health:3, hair:3} },
+      { label: '3页搞定，领导看不懂就行', desc: 'PPT治国', attrs: {network:4, skill:1, health:1} }
     ]},
-  { id: 's4', emoji: '🎂', text: '同事过生日，大家都在凑份子，你？', tag: 'social',
+  { id: 'q9', emoji: '🔧', text: '代码出bug了，你？', tag: 'tech',
     opts: [
-      { label: '积极参与', desc: '社交不能掉队', attrs: {network:4, health:1, hair:-1} },
-      { label: '随大流，不多不少', desc: '不出头不垫底', attrs: {network:2, health:3, hair:2} },
-      { label: '找个借口不去', desc: '社恐本恐', attrs: {health:4, hair:3, network:-3} }
+      { label: '先git blame看看谁写的', desc: '甩锅第一步', attrs: {skill:3, network:-2, health:1} },
+      { label: '偷偷修了不告诉任何人', desc: '低调修bug侠', attrs: {skill:4, health:2, network:-1} },
+      { label: '在群里说"有人知道这个bug吗"', desc: '钓鱼执法', attrs: {network:3, skill:1, health:2} }
     ]},
-  { id: 's5', emoji: '💬', text: '同事在背后议论你，你？', tag: 'social',
+  { id: 'q10', emoji: '🍻', text: '聚餐时领导敬酒到你面前，你？', tag: 'social',
     opts: [
-      { label: '直接去问', desc: '当面说清楚', attrs: {network:3, skill:2, health:-2} },
-      { label: '假装不知道', desc: '清者自清', attrs: {health:4, hair:3, network:-1} },
-      { label: '也加入讨论（关于别人）', desc: '以牙还牙', attrs: {network:2, health:-3, skill:1} }
+      { label: '干了！再来一杯', desc: '酒桌战神', attrs: {network:5, health:-3, hair:-2} },
+      { label: '以茶代酒', desc: '养生朋克', attrs: {health:3, network:1, hair:2} },
+      { label: '说在吃药不能喝', desc: '经典借口（用了5年了）', attrs: {health:2, network:2, hair:1} }
     ]},
-  // === 健康/生活向 ===
-  { id: 'h1', emoji: '🏃', text: '你办了健身卡，一个月后？', tag: 'health',
+  { id: 'q11', emoji: '😴', text: '你每天的睡眠时间大概是？', tag: 'health',
+    opts: [
+      { label: '8小时，雷打不动', desc: '人生赢家', attrs: {health:5, hair:4, skill:1} },
+      { label: '4-6小时，靠咖啡续命', desc: '打工人的命', attrs: {health:-3, hair:-4, skill:4} },
+      { label: '看情况，没事就睡到自然醒', desc: '自由职业の快乐', attrs: {health:4, hair:3, network:-2} }
+    ]},
+  { id: 'q12', emoji: '📱', text: '上班摸鱼被领导发现了，你？', tag: 'life',
+    opts: [
+      { label: '赶紧切到工作页面', desc: '手速决定命运', attrs: {skill:2, health:-2, hair:-1} },
+      { label: '淡定继续，假装在查资料', desc: '心理素质拉满', attrs: {health:3, hair:2, network:1} },
+      { label: '反问领导"您找我？"', desc: '主动出击', attrs: {network:4, skill:1, health:-1} }
+    ]},
+  { id: 'q13', emoji: '💼', text: '你收到一个薪资翻倍但996的offer，你？', tag: 'choice',
+    opts: [
+      { label: '去！搞钱要紧', desc: '年轻人不拼什么时候拼', attrs: {skill:3, health:-5, hair:-4} },
+      { label: '不去，命要紧', desc: '钱够花就行', attrs: {health:5, hair:4, skill:-1} },
+      { label: '谈，看能不能少加点班', desc: '天真', attrs: {network:3, health:-1, skill:2} }
+    ]},
+  { id: 'q14', emoji: '🏖️', text: '年假你一般怎么用？', tag: 'life',
+    opts: [
+      { label: '出去旅行', desc: '世界那么大', attrs: {network:3, health:3, hair:1} },
+      { label: '在家躺平', desc: '累了一年了', attrs: {health:5, hair:4, network:-2} },
+      { label: '用来面试', desc: '偷偷努力', attrs: {skill:4, network:-1, health:-2} }
+    ]},
+  { id: 'q15', emoji: '🏋️', text: '你办了健身卡，一个月后？', tag: 'health',
     opts: [
       { label: '每周去3次', desc: '自律即自由', attrs: {health:5, hair:3, skill:1} },
       { label: '去过一次就再也没去', desc: '卡是办了，人没去', attrs: {health:-2, hair:-2, skill:2} },
       { label: '改成在家跳操', desc: '省钱又方便', attrs: {health:4, hair:2, network:-1} }
     ]},
-  { id: 'h2', emoji: '😴', text: '你的睡眠质量怎么样？', tag: 'health',
+  { id: 'q16', emoji: '🐕', text: '同事说"这个需求很简单"，你？', tag: 'tech',
     opts: [
-      { label: '沾枕头就睡', desc: '心大是福', attrs: {health:5, hair:4, skill:1} },
-      { label: '经常失眠到凌晨', desc: '脑子停不下来', attrs: {health:-3, hair:-4, skill:3} },
-      { label: '作息颠倒但睡够了', desc: '下午3点起床也是起床', attrs: {health:1, hair:1, skill:2} }
+      { label: '信了，然后做了3天', desc: '天真', attrs: {skill:3, health:-3, hair:-2} },
+      { label: '反问"那你自己做？"', desc: '怼回去', attrs: {network:-2, health:3, skill:2} },
+      { label: '先评估工时再回复', desc: '职场老油条', attrs: {skill:4, network:2, health:1} }
     ]},
-  { id: 'h3', emoji: '🍱', text: '你的午餐通常是？', tag: 'health',
+  { id: 'q17', emoji: '🎭', text: '新来的实习生叫你"老师"，你？', tag: 'social',
     opts: [
-      { label: '自己带饭', desc: '健康又省钱', attrs: {health:4, hair:3, skill:2} },
-      { label: '外卖凑合', desc: '能吃就行', attrs: {health:-1, hair:-1, skill:1} },
-      { label: '不吃，省钱', desc: '一顿不吃饿得慌（其实饿习惯了）', attrs: {health:-3, hair:-3, network:2} }
+      { label: '内心窃喜', desc: '终于有人叫我老师了', attrs: {network:3, health:2, hair:1} },
+      { label: '说"别叫我老师，叫哥/姐"', desc: '拉近距离', attrs: {network:4, health:1, skill:1} },
+      { label: '说"叫同事就行"', desc: '保持距离', attrs: {health:3, hair:2, network:-1} }
     ]},
-  { id: 'h4', emoji: '📱', text: '下班后你一般干嘛？', tag: 'health',
+  { id: 'q18', emoji: '🗓️', text: '周一早上你的心情是？', tag: 'life',
     opts: [
-      { label: '刷手机到凌晨', desc: '报复性熬夜', attrs: {health:-3, hair:-2, skill:2} },
-      { label: '看书/学习', desc: '充实自己', attrs: {skill:4, health:1, hair:1} },
-      { label: '躺着发呆', desc: '什么都不想干', attrs: {health:3, hair:3, network:-1} }
+      { label: '充满干劲', desc: '新的一周新的开始', attrs: {skill:3, health:3, hair:2} },
+      { label: '行尸走肉', desc: '灵魂还在被窝里', attrs: {health:-2, hair:-1, skill:3} },
+      { label: '打开日历看看离周五还有几天', desc: '倒计时模式', attrs: {health:2, hair:1, network:1} }
     ]},
-  { id: 'h5', emoji: '🏥', text: '公司年度体检，你最怕查什么？', tag: 'health',
+  { id: 'q19', emoji: '🍳', text: '你的厨艺水平是？', tag: 'life',
     opts: [
-      { label: '怕查出脂肪肝', desc: '外卖吃多了', attrs: {health:-2, hair:-1, skill:2} },
-      { label: '怕查出颈椎问题', desc: '久坐的代价', attrs: {health:-3, hair:-1, skill:3} },
-      { label: '不敢去查', desc: '不查就没有', attrs: {health:-4, hair:-2, network:1} }
+      { label: '能做一桌菜', desc: '隐藏技能', attrs: {health:4, hair:3, network:2} },
+      { label: '只会煮泡面', desc: '够用了', attrs: {health:-1, hair:-1, skill:2} },
+      { label: '外卖就是我的厨艺', desc: '专业点餐10年', attrs: {network:3, health:-2, hair:-1} }
     ]},
-  // === 职场选择向 ===
-  { id: 'c1', emoji: '🚪', text: '同事裸辞了，你内心？', tag: 'choice',
+  { id: 'q20', emoji: '🎬', text: '周末你最想？', tag: 'life',
     opts: [
-      { label: '好羡慕，想跟', desc: '勇气可嘉', attrs: {skill:2, network:2, health:3} },
-      { label: '想不通，太冲动', desc: '稳定最重要', attrs: {health:3, hair:3, skill:1} },
-      { label: '默默更新简历', desc: '悄悄准备', attrs: {skill:4, network:-1, health:-1} }
-    ]},
-  { id: 'c2', emoji: '📈', text: '领导画饼"明年给你升职"，你？', tag: 'choice',
-    opts: [
-      { label: '信了，继续干', desc: '领导不会骗我', attrs: {network:3, health:2, skill:1} },
-      { label: '表面信，实际看机会', desc: '两手准备', attrs: {skill:4, network:2, health:-1} },
-      { label: '直接问什么时候', desc: '把饼落实', attrs: {skill:3, network:1, health:-2} }
-    ]},
-  { id: 'c3', emoji: '💼', text: '你收到了一个薪资翻倍但加班更多的offer，你？', tag: 'choice',
-    opts: [
-      { label: '去！钱到位就行', desc: '搞钱要紧', attrs: {skill:3, health:-4, hair:-3} },
-      { label: '不去，命要紧', desc: '钱够花就行', attrs: {health:5, hair:4, skill:-1} },
-      { label: '谈，看能不能少加点', desc: '争取双赢', attrs: {network:4, skill:2, health:-1} }
-    ]},
-  { id: 'c4', emoji: '🎯', text: '工作3年，你觉得自己？', tag: 'choice',
-    opts: [
-      { label: '越来越专业了', desc: '深耕技术', attrs: {skill:5, health:1, hair:1} },
-      { label: '越来越会做人了', desc: '职场生存法则', attrs: {network:5, skill:1, health:1} },
-      { label: '越来越会摸鱼了', desc: '效率最大化', attrs: {health:4, hair:3, skill:-1} }
-    ]},
-  { id: 'c5', emoji: '🎪', text: '公司年会你被拉去表演节目，你？', tag: 'choice',
-    opts: [
-      { label: '唱歌/跳舞，冲！', desc: '社牛本牛', attrs: {network:5, health:2, hair:-1} },
-      { label: '被迫上台，硬着头皮', desc: '不敢拒绝', attrs: {network:2, health:-2, hair:-1} },
-      { label: '坚决不上，社恐发作', desc: '打死不上', attrs: {health:3, hair:2, network:-3} }
-    ]},
-  // === 生活态度向 ===
-  { id: 'l1', emoji: '🏠', text: '你觉得理想的下班时间是？', tag: 'life',
-    opts: [
-      { label: '18点准时走', desc: '下班就是下班', attrs: {health:5, hair:4, skill:-1} },
-      { label: '19-20点', desc: '稍微加一点可以', attrs: {health:2, hair:1, skill:3} },
-      { label: '做完事再走', desc: '没有固定时间', attrs: {skill:4, health:-2, hair:-1} }
-    ]},
-  { id: 'l2', emoji: '💰', text: '发工资那天你第一件事？', tag: 'life',
-    opts: [
-      { label: '存起来', desc: '安全感来自存款', attrs: {skill:3, health:3, hair:3} },
-      { label: '买想要的东西', desc: '犒劳自己', attrs: {health:3, hair:2, network:2} },
-      { label: '还花呗/信用卡', desc: '月光族的日常', attrs: {health:-1, hair:-1, skill:2} }
-    ]},
-  { id: 'l3', emoji: '🎬', text: '周末你最想？', tag: 'life',
-    opts: [
-      { label: '宅家追剧/打游戏', desc: '快乐肥宅', attrs: {health:3, hair:3, network:-2} },
+      { label: '宅家追剧', desc: '快乐肥宅', attrs: {health:3, hair:3, network:-2} },
       { label: '约朋友出去浪', desc: '社交不能停', attrs: {network:5, health:2, hair:-1} },
       { label: '学习/提升自己', desc: '卷王本王', attrs: {skill:5, health:-1, hair:-1} }
     ]},
-  { id: 'l4', emoji: '🐕', text: '如果养宠物你会选？', tag: 'life',
+  { id: 'q21', emoji: '🤫', text: '你知道同事工资比你高，你？', tag: 'choice',
+    opts: [
+      { label: '默默更新简历', desc: '悄悄努力', attrs: {skill:4, network:-2, health:-1} },
+      { label: '找领导谈', desc: '该争取就争取', attrs: {network:3, skill:2, health:-3} },
+      { label: '假装不知道', desc: '不知道就不难受', attrs: {health:4, hair:3, skill:-1} }
+    ]},
+  { id: 'q22', emoji: '🫠', text: '连续加班一周后，你？', tag: 'health',
+    opts: [
+      { label: '灵魂出窍但还在写代码', desc: '人在工位心已死', attrs: {skill:3, health:-5, hair:-4} },
+      { label: '请一天病假躺平', desc: '身体在抗议', attrs: {health:4, hair:3, skill:-1} },
+      { label: '开始思考人生意义', desc: '哲学时刻', attrs: {health:-1, hair:-1, skill:4} }
+    ]},
+  { id: 'q23', emoji: '🎤', text: '公司年会你被推上台，你？', tag: 'social',
+    opts: [
+      { label: '来就来，唱就唱', desc: '社牛本牛', attrs: {network:5, health:2, hair:-1} },
+      { label: '硬着头皮上去', desc: '不敢拒绝', attrs: {network:2, health:-2, hair:-1} },
+      { label: '说肚子疼溜了', desc: '经典逃避', attrs: {health:2, hair:2, network:-2} }
+    ]},
+  { id: 'q24', emoji: '🐕', text: '如果养宠物你会选？', tag: 'life',
     opts: [
       { label: '猫', desc: '高冷但治愈', attrs: {health:3, hair:2, network:-1} },
       { label: '狗', desc: '热情但需要遛', attrs: {network:4, health:3, skill:-1} },
       { label: '不养，太麻烦', desc: '自由最重要', attrs: {skill:2, health:2, hair:2} }
     ]},
-  { id: 'l5', emoji: '✈️', text: '年假你一般怎么用？', tag: 'life',
+  { id: 'q25', emoji: '🧠', text: '你觉得自己最大的优点是？', tag: 'choice',
     opts: [
-      { label: '出去旅行', desc: '世界那么大', attrs: {network:3, health:3, hair:1} },
-      { label: '在家躺平', desc: '累了一年了', attrs: {health:5, hair:4, network:-2} },
-      { label: '用来面试/看机会', desc: '偷偷努力', attrs: {skill:4, network:-1, health:-2} }
+      { label: '能熬夜', desc: '年轻就是资本（吗？）', attrs: {skill:4, health:-4, hair:-3} },
+      { label: '心态好', desc: '工资不高但快乐', attrs: {health:5, hair:4, skill:-1} },
+      { label: '会social', desc: '认识谁都不怵', attrs: {network:5, health:1, skill:-1} }
     ]}
 ];
 
@@ -3349,11 +3345,10 @@ function _selectAdaptiveQuestions() {
   _ptSelectedQuestions = [];
   var usedTags = {};
   
-  // Always start with a relatable question (index 0 = mobile朋友圈)
-  var starters = ['t1', 's1', 'c1', 'l1'];
-  var firstQ = PT_QUESTION_POOL.find(function(q) { return starters.indexOf(q.id) !== -1; });
-  // Pick randomly from starters
-  firstQ = PT_QUESTION_POOL.filter(function(q) { return starters.indexOf(q.id) !== -1; })[Math.floor(Math.random() * 4)];
+  // Start with a universally relatable question
+  var starters = ['q1', 'q4', 'q18', 'q20'];
+  var pool = PT_QUESTION_POOL.filter(function(q) { return starters.indexOf(q.id) !== -1; });
+  var firstQ = pool[Math.floor(Math.random() * pool.length)];
   _ptSelectedQuestions.push(firstQ);
   usedTags[firstQ.tag] = (usedTags[firstQ.tag] || 0) + 1;
   
@@ -3372,7 +3367,7 @@ function _selectAdaptiveQuestions() {
         if (attrs.network > 0) bias.social += attrs.network;
         if (attrs.health > 0 || attrs.hair > 0) bias.health += (attrs.health || 0) + (attrs.hair || 0);
       }
-      bias[q.tag] = (bias[q.tag] || 0) + 2; // Prefer diverse tags
+      bias[q.tag] = (bias[q.tag] || 0) + 2;
     }
     
     // Find used IDs
@@ -3391,10 +3386,10 @@ function _selectAdaptiveQuestions() {
       // Prefer underrepresented tags (diversity)
       var tagCount = usedTags[q.tag] || 0;
       score += (3 - tagCount) * 3;
-      // If user is tech-heavy, mix in some social/life questions for contrast
+      // If user is tech-heavy, mix in social/life
       if (bias.tech > 4 && (q.tag === 'social' || q.tag === 'life')) score += 3;
       if (bias.social > 4 && (q.tag === 'tech' || q.tag === 'health')) score += 3;
-      if (bias.health < 0 && q.tag === 'health') score += 4; // If unhealthy, ask health
+      if (bias.health < 0 && q.tag === 'health') score += 4;
       // Small random factor
       score += Math.random() * 2;
       return {q: q, score: score};
@@ -3524,18 +3519,18 @@ function _showPTResult() {
   var totalScore = totals.skill + totals.network + totals.health;
   var types = {
     skill: [
-      { name: '🧠 代码永动机', desc: '你凌晨3点还在debug不是因为加班，是因为你真的在享受。你的代码注释比正文还长，你写的README能当论文发。同事叫你"大佬"，其实你只是不想改别人的屎山。', short: '代码永动机' },
-      { name: '🔬 技术偏执狂', desc: '别人用框架你造轮子，别人复制粘贴你手写。你的GitHub contribution图绿得像春天的草地，但你的外卖订单暴露了你的真实生活。', short: '技术偏执狂' }
+      { name: '🔬 卷王本王', desc: '你的座右铭是"deadline是第一生产力"。凌晨3点的公司只有你和保安，你俩已经成了朋友。你的代码注释比正文还长，你的GitHub绿得像草坪。同事叫你大佬，你只想说：别叫我，我在debug。', short: '卷王本王', motto: '我不是在加班，我是在实现人生价值（吧）' },
+      { name: '🐛 Bug制造机', desc: '你写的代码每一行都是惊喜（惊吓）。你的PR被review的次数比你的工龄还长。但你有一个优点：你总能发现自己制造的bug——虽然通常是在生产环境。', short: 'Bug制造机', motto: '测试？什么测试？直接上线！' }
     ],
     network: [
-      { name: '🤝 人脉永动机', desc: '你认识公司每个人，包括保安和保洁阿姨。食堂阿姨会多给你打菜，前台小姐姐记得你爱喝什么咖啡。你的微信好友比代码行数还多。', short: '人脉永动机' },
-      { name: '🎭 职场端水大师', desc: '你能在程序员面前聊技术，在产品经理面前聊需求，在老板面前聊战略。你是团队的润滑剂，但有时候你也忘了自己到底会什么。', short: '职场端水大师' }
+      { name: '🤝 社交恐怖分子', desc: '你认识公司每个人，包括保安、保洁、前台、食堂阿姨。你的微信好友比你的代码行数还多。你的社交能量是别人的3倍，但你的代码review次数是别人的0.3倍。', short: '社交恐怖分子', motto: '人脉就是钱脉，代码只是工具' },
+      { name: '🎭 职场端水大师', desc: '你能在程序员面前聊技术，在产品面前聊需求，在老板面前聊战略，在实习生面前聊人生。你是团队的润滑剂，但有时候你也忘了自己到底会什么。', short: '职场端水大师', motto: '谁都不得罪，谁都不得意' }
     ],
     health: [
-      { name: '🧘 养生朋克', desc: '你一边熬夜一边吃枸杞，一边蹦迪一边贴膏药。你的发量是全公司最让人嫉妒的资产，你的体检报告比你的代码还干净。', short: '养生朋克' },
-      { name: '🐟 带薪摸鱼王', desc: '你的工位上永远有一杯茶，你的屏幕上永远有一个"正在加载"的页面。你的KPI是全组最低，但你的快乐指数是全组最高。', short: '带薪摸鱼王' }
+      { name: '🧘 养生朋克', desc: '你一边熬夜一边吃枸杞，一边蹦迪一边贴膏药。你的体检报告比你的代码还干净，你的发量是全公司最让人嫉妒的资产。你坚信：只要我养生够快，猝死就追不上我。', short: '养生朋克', motto: '熬最晚的夜，敷最贵的面膜' },
+      { name: '🐟 摸鱼圣体', desc: '你的工位上永远有一杯茶，你的屏幕上永远有一个"正在加载"的页面。你的KPI是全组最低，但你的快乐指数是全组最高。你用实际行动证明：摸鱼也可以摸出精彩人生。', short: '摸鱼圣体', motto: '上班摸鱼，下班摸鱼，人生就是摸鱼' }
     ]
-  };
+  };;
   
   // Pick sub-type based on secondary attribute
   var typePool = types[maxKey] || types.skill;
@@ -3552,11 +3547,11 @@ function _showPTResult() {
   
   // If all stats are very low, it's the "躺平" type
   if (totalScore < -3) {
-    personality = { name: '🐟 躺平大师', desc: '你已经看透了。卷不动、卷不起、也不想卷。你的目标只有一个：活着。每天上班的意义就是等下班，等发工资，等退休。你的存在证明了：不努力也可以活得很好。', short: '躺平大师' };
+    personality = { name: '🐟 躺平大师', desc: '你已经看透了。卷不动、卷不起、也不想卷。你的目标只有一个：活着。你的工位是全公司最舒服的，你的抽屉里有零食、眼罩、拖鞋。你用实际行动证明：躺平也可以躺出精彩人生。', short: '躺平大师' };
   }
   // If all stats are very high, it's the "卷王" type
   if (totals.skill > 4 && totals.network > 4 && totals.health > 4) {
-    personality = { name: '🔥 六边形战士', desc: '你什么都要。技术要最强、人脉要最广、身体还要最好。你6点起床健身、8点到公司写代码、中午社交两小时、晚上还要学习新技能。你的日程表比CEO还满，但你乐在其中。', short: '六边形战士' };
+    personality = { name: '🔥 六边形战士', desc: '你什么都要。技术要最强、人脉要最广、身体还要最好。你6点起床健身、8点到公司写代码、中午社交两小时、晚上还要学习新技能。你的日程表比CEO还满，但你乐在其中。你是团队的顶梁柱，也是同事眼中的怪物。', short: '六边形战士' };
   }
   
   // Store results for game init
@@ -3575,7 +3570,8 @@ function _showPTResult() {
   html += '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:20px;padding:24px 16px;text-align:center;margin-bottom:16px">';
   html += '<div style="font-size:48px;margin-bottom:8px">' + personality.name.charAt(0) + personality.name.charAt(1) + '</div>';
   html += '<div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px">' + personality.name.substring(2) + '</div>';
-  html += '<div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;padding:0 8px">' + personality.desc + '</div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;padding:0 8px;margin-bottom:12px">' + personality.desc + '</div>';
+  if (personality.motto) html += '<div style="font-size:11px;color:rgba(255,255,255,0.5);font-style:italic;padding:0 16px">“' + personality.motto + '”</div>';
   html += '</div>';
   
   // Attribute cards
